@@ -5,8 +5,33 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoinPlanner.Start"
         mc:Ignorable="d"
-        Title="StartLoadingView" Height="450" Width="800">
+        WindowStyle="None"
+        Height="326" Width="508">
     <Grid>
-        
+
+        <Image Source="/coinplanner96.png" 
+               Height="96" 
+               Width="96"
+               Margin="60"
+               HorizontalAlignment="Center" 
+               VerticalAlignment="Top"/>
+
+        <TextBlock Text="COIN PLANNER"
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Bottom"
+                   Margin="80"
+                   FontSize="32"
+                   FontWeight="ExtraLight"
+                   FontFamily="Courier New"/>
+
+        <ProgressBar x:Name="ProgressBar"
+                     Width="508"
+                     Height="24"
+                     Minimum="0"
+                     Maximum="100"
+                     Value="0"
+                     IsIndeterminate="False"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Bottom"/>
     </Grid>
 </Window>

@@ -8,4 +8,12 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="coinplanner96.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="coinplanner96.png" />
+  </ItemGroup>
+
 </Project>
