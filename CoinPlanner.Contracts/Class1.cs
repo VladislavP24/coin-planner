@@ -1,4 +1,4 @@
-﻿namespace CoinPlanner.Model
+﻿namespace CoinPlanner.Contracts
 {
     public class Class1
     {

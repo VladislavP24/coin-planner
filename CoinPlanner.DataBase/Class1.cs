@@ -1,4 +1,4 @@
-﻿namespace CoinPlanner.ViewModel
+﻿namespace CoinPlanner.DataBase
 {
     public class Class1
     {

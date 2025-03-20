@@ -1,23 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{1461CE96-6835-4043-8C27-9E004625A97C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinPlanner.UI", "CoinPlanner.UI\CoinPlanner.UI.csproj", "{D338C473-E8BB-4DE1-A14D-DE53FE6FD139}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Localization", "Localization", "{D136D722-B37B-41FC-AB4B-84E724667547}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinPlanner.DataBase", "CoinPlanner.DataBase\CoinPlanner.DataBase.csproj", "{C8EB9359-6C1B-463E-AC4D-8222E47D26AB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataBase", "DataBase", "{2170AF3E-9A42-4790-A582-11957DEEF3A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinPlanner.Localization", "CoinPlanner.Localization\CoinPlanner.Localization.csproj", "{2E5E4B39-585D-49F6-809F-C915AB32D359}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contracts", "Contracts", "{416A4581-52A3-41AE-A6C0-018A7BB24ACC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinPlanner.Contracts", "CoinPlanner.Contracts\CoinPlanner.Contracts.csproj", "{E46CA651-200B-46DD-8B63-C066747C9648}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinPlanner.View", "CoinPlanner.View\CoinPlanner.View.csproj", "{883BA8E2-25CE-41D0-B19C-390E13D60596}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinPlanner.ViewModel", "CoinPlanner.ViewModel\CoinPlanner.ViewModel.csproj", "{010C089B-E233-420E-9CF1-FCE4449EFA63}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinPlanner.Model", "CoinPlanner.Model\CoinPlanner.Model.csproj", "{6FBB5B59-BB1A-454D-AE23-F789B66CF471}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinPlanner.Styles", "CoinPlanner.Styles\CoinPlanner.Styles.csproj", "{F30BA58B-AD29-407B-BB6C-3C18F36F6A28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinPlanner.Start", "CoinPlanner.Start\CoinPlanner.Start.csproj", "{E6B5E925-3CFA-4A3E-BC07-29A8DE95058F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,30 +19,28 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{883BA8E2-25CE-41D0-B19C-390E13D60596}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{883BA8E2-25CE-41D0-B19C-390E13D60596}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{883BA8E2-25CE-41D0-B19C-390E13D60596}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{883BA8E2-25CE-41D0-B19C-390E13D60596}.Release|Any CPU.Build.0 = Release|Any CPU
-		{010C089B-E233-420E-9CF1-FCE4449EFA63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{010C089B-E233-420E-9CF1-FCE4449EFA63}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{010C089B-E233-420E-9CF1-FCE4449EFA63}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{010C089B-E233-420E-9CF1-FCE4449EFA63}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6FBB5B59-BB1A-454D-AE23-F789B66CF471}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6FBB5B59-BB1A-454D-AE23-F789B66CF471}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6FBB5B59-BB1A-454D-AE23-F789B66CF471}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6FBB5B59-BB1A-454D-AE23-F789B66CF471}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F30BA58B-AD29-407B-BB6C-3C18F36F6A28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F30BA58B-AD29-407B-BB6C-3C18F36F6A28}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F30BA58B-AD29-407B-BB6C-3C18F36F6A28}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F30BA58B-AD29-407B-BB6C-3C18F36F6A28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D338C473-E8BB-4DE1-A14D-DE53FE6FD139}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D338C473-E8BB-4DE1-A14D-DE53FE6FD139}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D338C473-E8BB-4DE1-A14D-DE53FE6FD139}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D338C473-E8BB-4DE1-A14D-DE53FE6FD139}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8EB9359-6C1B-463E-AC4D-8222E47D26AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8EB9359-6C1B-463E-AC4D-8222E47D26AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8EB9359-6C1B-463E-AC4D-8222E47D26AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8EB9359-6C1B-463E-AC4D-8222E47D26AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E5E4B39-585D-49F6-809F-C915AB32D359}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E5E4B39-585D-49F6-809F-C915AB32D359}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E5E4B39-585D-49F6-809F-C915AB32D359}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E5E4B39-585D-49F6-809F-C915AB32D359}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E46CA651-200B-46DD-8B63-C066747C9648}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E46CA651-200B-46DD-8B63-C066747C9648}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E46CA651-200B-46DD-8B63-C066747C9648}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E46CA651-200B-46DD-8B63-C066747C9648}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6B5E925-3CFA-4A3E-BC07-29A8DE95058F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6B5E925-3CFA-4A3E-BC07-29A8DE95058F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6B5E925-3CFA-4A3E-BC07-29A8DE95058F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6B5E925-3CFA-4A3E-BC07-29A8DE95058F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{883BA8E2-25CE-41D0-B19C-390E13D60596} = {1461CE96-6835-4043-8C27-9E004625A97C}
-		{010C089B-E233-420E-9CF1-FCE4449EFA63} = {1461CE96-6835-4043-8C27-9E004625A97C}
-		{6FBB5B59-BB1A-454D-AE23-F789B66CF471} = {1461CE96-6835-4043-8C27-9E004625A97C}
-		{F30BA58B-AD29-407B-BB6C-3C18F36F6A28} = {1461CE96-6835-4043-8C27-9E004625A97C}
 	EndGlobalSection
 EndGlobal
