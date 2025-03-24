@@ -22,6 +22,25 @@ namespace CoinPlanner.Start
         public StartLoadingView()
         {
             InitializeComponent();
+
+            SomeLongRunningTask();
+        }
+
+        /// <summary>
+        /// Имитация работы загрузки
+        /// </summary>
+        /// <returns></returns>
+        public async Task SomeLongRunningTask()
+        {
+            for (int i = 0; i <= 100; i++)
+            {
+                await Task.Delay(50);
+
+                Dispatcher.Invoke(() =>
+                {
+                    StartProgressBar.Value = i;
+                });
+            }
         }
     }
 }

@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:CoinPlanner.Start"
         mc:Ignorable="d"
         WindowStyle="None"
-        Height="326" Width="508">
+        Height="326" Width="508"
+        MinHeight="326" MinWidth="508"
+        MaxHeight="326" MaxWidth="508"
+        WindowStartupLocation="CenterScreen">
     <Grid>
 
         <Image Source="/coinplanner96.png" 
@@ -24,7 +27,7 @@
                    FontWeight="ExtraLight"
                    FontFamily="Courier New"/>
 
-        <ProgressBar x:Name="ProgressBar"
+        <ProgressBar x:Name="StartProgressBar"
                      Width="508"
                      Height="24"
                      Minimum="0"
@@ -32,6 +35,7 @@
                      Value="0"
                      IsIndeterminate="False"
                      HorizontalAlignment="Stretch"
-                     VerticalAlignment="Bottom"/>
+                     VerticalAlignment="Bottom"
+                     Foreground="#1D83D4"/>
     </Grid>
 </Window>
