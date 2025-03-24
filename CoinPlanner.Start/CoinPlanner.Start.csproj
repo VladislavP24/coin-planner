@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CoinPlanner.UI\CoinPlanner.UI.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="coinplanner96.png" />
   </ItemGroup>
 
