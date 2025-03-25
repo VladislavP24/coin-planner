@@ -4,14 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoinPlanner.UI.View"
-        xmlns:controls="clr-namespace:CoinPlanner.UI.View.Controls"
         mc:Ignorable="d"
-        WindowStyle="None"
-        AllowsTransparency="True"
         Title="Coin Planner" 
         Height="450" Width="800"
         MinHeight="450" MinWidth="800"
-        Background="#FFCDD0D2">
+        Background="#FFCDD0D2"
+        Icon="pack://application:,,,/CoinPlanner.UI;component/Resources/icon32.ico">
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -19,7 +18,5 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <controls:TemplateControl Grid.Row="0"/>
-        
     </Grid>
 </Window>

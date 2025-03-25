@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\coinplanner32.png" />
     <None Remove="Resources\icon32.ico" />
   </ItemGroup>
 
@@ -17,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\coinplanner32.png" />
     <Resource Include="Resources\icon32.ico" />
   </ItemGroup>
 
