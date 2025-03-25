@@ -21,7 +21,6 @@ namespace CoinPlanner.Start
         {
             await SomeLongRunningTask();
 
-            // После завершения задачи, открываем главное окно и закрываем текущее.
             Dispatcher.Invoke(() =>
             {
                 MainWindowView mainWindowView = new MainWindowView();
