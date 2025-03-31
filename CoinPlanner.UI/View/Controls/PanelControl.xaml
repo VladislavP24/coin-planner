@@ -8,28 +8,11 @@
              d:DesignHeight="1080" d:DesignWidth="1920">
 
     <UserControl.Resources>
-        <Style TargetType="Border" x:Key="RightBorder">
-            <Setter Property="BorderBrush" Value="Black"/>
-            <Setter Property="BorderThickness" Value="0,0,1,0"/>
-            <Setter Property="Margin" Value="0,0,0,0"/>
-        </Style>
-
-        <Style x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ToggleButton">
-                        <Grid>
-                            <Path x:Name="Arrow"
-                                  HorizontalAlignment="Center"
-                                  VerticalAlignment="Center"
-                                  Data="M 0 0 L 4 4 L 8 0 Z"
-                                  Fill="Black"
-                                  Margin="0" />
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/CoinPlanner.UI;component/Styles/PanelStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     
     
@@ -226,11 +209,20 @@
 
             <!-- Панель Пустой грид для добавления -->
             <Grid Grid.Column="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                
                 <Border Grid.Row="1" Style="{StaticResource RightBorder}"/>
                 <Border Grid.Row="2" Style="{StaticResource RightBorder}"/>
                 <Border Grid.Row="3" Style="{StaticResource RightBorder}"/>
             </Grid>
 
+            
             <!-- Панель Планы -->
             <Grid Grid.Column="6">
                 <Border Height="82" 
@@ -241,75 +233,10 @@
 
                 <ComboBox Height="15"
                           Width="92"
-                          Margin="20,66,20,0">
-                    <ComboBox.Style>
-                        <Style TargetType="ComboBox">
-                            <Setter Property="Background" Value="White"/>
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="BorderThickness" Value="1"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ComboBox">
-                                        <Grid>
-                                            <Border x:Name="Border"
-                                                    Background="{TemplateBinding Background}"
-                                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                                    CornerRadius="0">
-                                                <Grid>
-                                                    <ContentPresenter Margin="{TemplateBinding Padding}"
-                                                                      HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                                      IsHitTestVisible="False"
-                                                                      Content="{TemplateBinding SelectionBoxItem}"
-                                                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                                                      ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"/>
+                          Margin="20,66,20,0"
+                          Style="{StaticResource PanelComboBoxStyle}"/>
 
-                                                    <ToggleButton x:Name="ToggleButton"
-                                                                  IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                                                                  Style="{StaticResource ComboBoxToggleButton}"
-                                                                  Grid.Column="1"/>
-                                                </Grid>
-                                            </Border>
 
-                                            <Popup x:Name="Popup"
-                                                   Placement="Bottom"
-                                                   IsOpen="{TemplateBinding IsDropDownOpen}"
-                                                   AllowsTransparency="True"
-                                                   Focusable="False"
-                                                   PopupAnimation="Slide">
-                                                <Border x:Name="PopupBorder"
-                                                        Background="{StaticResource WindowBackground}"
-                                                        BorderBrush="{StaticResource GrayBorderBrush}"
-                                                        BorderThickness="1">
-                                                    <ScrollViewer CanContentScroll="True"
-                                                                  Style="{StaticResource PopupScrollViewer}">
-                                                        <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                                                                        KeyboardNavigation.DirectionalNavigation="Contained" />
-                                                    </ScrollViewer>
-                                                </Border>
-                                            </Popup>
-                                        </Grid>
-
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource HighlightBrush}" />
-                                            </Trigger>
-                                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource FocusBrush}" />
-                                            </Trigger>
-                                            <Trigger Property="IsEnabled" Value="False">
-                                                <Setter Property="Opacity" Value="0.5" />
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ComboBox.Style>
-                </ComboBox>
-                
                 <TextBlock Grid.Row="4"
                            Text="Планы"
                            HorizontalAlignment="Center"
