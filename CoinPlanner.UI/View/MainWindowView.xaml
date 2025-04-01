@@ -7,20 +7,21 @@
         xmlns:control="clr-namespace:CoinPlanner.UI.View.Controls"
         mc:Ignorable="d"
         Title="Coin Planner" 
-        Height="450" Width="800"
+        Height="1080" Width="1920"
         MinHeight="450" MinWidth="800"
         Background="#FFCDD0D2"
+        UseLayoutRounding="True"
         Icon="pack://application:,,,/CoinPlanner.UI;component/Resources/icon32.ico">
     
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Верхняя панель -->
         <Grid Grid.Row="0">
-            <control:PanelControl/>
+            <control:PanelControl VerticalAlignment="Top" Height="170"/>
         </Grid>
 
             

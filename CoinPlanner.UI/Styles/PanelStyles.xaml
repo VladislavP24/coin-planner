@@ -8,25 +8,40 @@
         <Setter Property="Margin" Value="0,0,0,0"/>
     </Style>
 
-    
+
     <Style x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ToggleButton">
                     <Grid>
                         <Path x:Name="Arrow"
-                          HorizontalAlignment="Center"
-                          VerticalAlignment="Center"
-                          Data="M 0 0 L 4 4 L 8 0 Z"
-                          Fill="Black"
-                          Margin="0" />
+                              Fill="{TemplateBinding Foreground}"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="Center"
+                              Data="M 0 0 L 4 4 L 8 0 Z"/>
+                        <!-- Простой треугольник вниз -->
                     </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Arrow" Property="Fill" Value="DarkGray"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Arrow" Property="Fill" Value="Black"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Arrow" Property="Fill" Value="Gray"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="Focusable" Value="False"/>
+        <!-- Важно, чтобы не перехватывал фокус -->
+        <Setter Property="IsTabStop" Value="False" />
+        <!-- Важно, чтобы не перехватывал фокус -->
     </Style>
 
-    
+
     <Style x:Key="PopupScrollViewer" TargetType="ScrollViewer">
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
@@ -71,8 +86,8 @@
                                Focusable="False"
                                PopupAnimation="Slide">
                             <Border x:Name="PopupBorder"
-                                    Background="White"
-                                    BorderBrush="LightGray"
+                                    Background="#CDD0D2"
+                                    BorderBrush="Black"
                                     BorderThickness="1">
                                 <ScrollViewer CanContentScroll="True"
                                               Style="{StaticResource PopupScrollViewer}">
@@ -85,10 +100,10 @@
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="LightBlue" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#2196F3" />
                         </Trigger>
-                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
-                            <Setter TargetName="Border" Property="BorderBrush" Value="Orange" />
+                        <Trigger Property="IsDropDownOpen" Value="True">
+                            <Setter TargetName="Border" Property="BorderBrush" Value="#2196F3" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.5" />
@@ -98,6 +113,31 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
-    
+
+    <!-- Стиль кнопки на панели -->
+    <Style TargetType="Button" x:Key="PanelButton">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderBrush" Value="White" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    >
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#2196F3" />
+                <Setter Property="BorderBrush" Value="Black" />
+                <Setter Property="BorderThickness" Value="1" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
 </ResourceDictionary>

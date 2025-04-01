@@ -4,8 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CoinPlanner.UI.View.Controls"
-             mc:Ignorable="d" 
-             d:DesignHeight="1080" d:DesignWidth="1920">
+             mc:Ignorable="d"
+             UseLayoutRounding="True"
+             d:DesignHeight="170" d:DesignWidth="1820">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -16,7 +17,7 @@
     </UserControl.Resources>
     
     
-    <Border Height="153" Width="1882" Background="White" CornerRadius="10">
+    <Border Margin="21" Background="White" CornerRadius="10" BorderBrush="Black" BorderThickness="1">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -31,32 +32,62 @@
             <!-- Панель Файл -->
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="10"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="20"/>
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="1" Style="{StaticResource RightBorder}">
-                    <Button Content="Создать"
-                            Width="132"
-                            Height="36"
-                            Margin="20,0,20,0"/>
+                <Border Grid.Row="1" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
+                    <Button Width="130"
+                            Height="32"
+                            Margin="5,0,20,0"
+                            Style="{DynamicResource PanelButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/createfile.png" 
+                                   Width="30" 
+                                   Height="30" 
+                                   Margin="-12,0,10,0"
+                                   VerticalAlignment="Center"
+                                   SnapsToDevicePixels="True"/>
+                            <TextBlock Text="Создать" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                        </StackPanel>
+                    </Button>
                 </Border>
 
-                <Border Grid.Row="2" Style="{StaticResource RightBorder}">
-                    <Button Content="Открыть"
-                            Width="132"
-                            Height="36"
-                            Margin="20,0,20,0"/>
+                <Border Grid.Row="2" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
+                    <Button Width="130"
+                            Height="32"
+                            Margin="5,0,20,0"
+                            Style="{DynamicResource PanelButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/openfile.png" 
+                                   Width="30" 
+                                   Height="30" 
+                                   Margin="-7,0,10,0"
+                                   VerticalAlignment="Center"
+                                   SnapsToDevicePixels="True"/>
+                            <TextBlock Text="Открыть" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                        </StackPanel>
+                    </Button>
                 </Border>
 
-                <Border Grid.Row="3" Style="{StaticResource RightBorder}">
-                    <Button Content="Сохранить"
-                            Width="132"
-                            Height="36"
-                            Margin="20,0,20,0"/>
+                <Border Grid.Row="3" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
+                    <Button Width="130"
+                            Height="32"
+                            Margin="5,0,20,0"
+                            Style="{DynamicResource PanelButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/savefile.png" 
+                                   Width="30" 
+                                   Height="30" 
+                                   Margin="5,0,12,0"
+                                   VerticalAlignment="Center"
+                                   SnapsToDevicePixels="True"/>
+                            <TextBlock Text="Сохранить" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                        </StackPanel>
+                    </Button>
                 </Border>
 
                 <TextBlock Grid.Row="4"
@@ -68,7 +99,7 @@
             <!-- Панель Таблица 1 -->
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="10"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
@@ -76,53 +107,117 @@
                 </Grid.RowDefinitions>
 
                 <Button Grid.Row="1"
-                        Content="Добавить"
-                        Width="132"
-                        Height="36"
-                        Margin="20,0,20,0"/>
+                        Width="150"
+                        Height="32"
+                        Margin="5,0,10,0"
+                        HorizontalAlignment="Left"
+                        Style="{DynamicResource PanelButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/addtable.png" 
+                               Width="30" 
+                               Height="30" 
+                               Margin="-35,0,10,0"
+                               VerticalAlignment="Center"
+                               SnapsToDevicePixels="True"/>
+                        <TextBlock Text="Добавить" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                    </StackPanel>
+                </Button>
 
                 <Button Grid.Row="2"
-                        Content="Редактировать"
-                        Width="132"
-                        Height="36"
-                        Margin="20,0,20,0"/>
+                        Width="150"
+                        Height="32"
+                        Margin="5,0,10,0"
+                        HorizontalAlignment="Left"
+                        Style="{DynamicResource PanelButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/edittable.png" 
+                               Width="30" 
+                               Height="30" 
+                               Margin="2,0,10,0"
+                               VerticalAlignment="Center"
+                               SnapsToDevicePixels="True"/>
+                        <TextBlock Text="Редактировать" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                    </StackPanel>
+                </Button>
 
                 <Button Grid.Row="3"
-                        Content="Удалить"
-                        Width="132"
-                        Height="36"
-                        Margin="20,0,20,0"/>
+                        Width="150"
+                        Height="32"
+                        Margin="5,0,10,0"
+                        HorizontalAlignment="Left"
+                        Style="{DynamicResource PanelButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/deletefile.png" 
+                               Width="30" 
+                               Height="30" 
+                               Margin="-40,0,13,0"
+                               VerticalAlignment="Center"
+                               SnapsToDevicePixels="True"/>
+                        <TextBlock Text="Удалить" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                    </StackPanel>
+                </Button>
+                
             </Grid>
 
             <!-- Панель Таблица 2 -->
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="10"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="20"/>
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="1" Style="{StaticResource RightBorder}">
-                    <Button Content="Зачисление"
-                            Width="132"
-                            Height="36"
-                            Margin="20,0,20,0"/>
+                <Border Grid.Row="1" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
+                    <Button Width="135"
+                            Height="32"
+                            Margin="0,0,10,0"
+                            Style="{DynamicResource PanelButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/enrolltable.png" 
+                                   Width="30" 
+                                   Height="30" 
+                                   Margin="5,0,8,0"
+                                   VerticalAlignment="Center"
+                                   SnapsToDevicePixels="True"/>
+                            <TextBlock Text="Зачисление" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                        </StackPanel>
+                    </Button>
                 </Border>
 
-                <Border Grid.Row="2" Style="{StaticResource RightBorder}">
-                    <Button Content="Расходы"
-                            Width="132"
-                            Height="36"
-                            Margin="20,0,20,0"/>
+                <Border Grid.Row="2" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
+                    <Button Width="135"
+                            Height="32"
+                            Margin="0,0,10,0"
+                            Style="{DynamicResource PanelButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/costtable.png" 
+                                   Width="30" 
+                                   Height="30" 
+                                   Margin="-15,0,10,0"
+                                   VerticalAlignment="Center"
+                                   SnapsToDevicePixels="True"/>
+                            <TextBlock Text="Расходы" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                        </StackPanel>
+                    </Button>
                 </Border>
 
-                <Border Grid.Row="3" Style="{StaticResource RightBorder}">
-                    <Button Content="Фиксация"
-                            Width="132"
-                            Height="36"
-                            Margin="20,0,20,0"/>
+                <Border Grid.Row="3" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
+                    <Button Width="135"
+                            Height="32"
+                            Margin="0,0,10,0"
+                            Style="{DynamicResource PanelButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/fixationtable.png" 
+                                   Width="30" 
+                                   Height="30" 
+                                   Margin="-10,0,12,0"
+                                   VerticalAlignment="Center"
+                                   SnapsToDevicePixels="True"/>
+                            <TextBlock Text="Фиксация" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                        </StackPanel>
+                    </Button>
                 </Border>
             </Grid>
 
@@ -132,36 +227,65 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Bottom"/>
 
-            
             <!-- Панель График -->
             <Grid Grid.Column="3">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="10"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="20"/>
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="1" Style="{StaticResource RightBorder}">
-                    <Button Content="Создать"
-                            Width="132"
-                            Height="36"
-                            Margin="20,0,20,0"/>
+                <Border Grid.Row="1" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
+                    <Button Width="130"
+                            Height="32"
+                            Margin="5,0,10,0"
+                            Style="{DynamicResource PanelButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/creategraph.png" 
+                                   Width="30" 
+                                   Height="30" 
+                                   Margin="-15,0,10,0"
+                                   VerticalAlignment="Center"
+                                   SnapsToDevicePixels="True"/>
+                            <TextBlock Text="Создать" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                        </StackPanel>
+                    </Button>
                 </Border>
 
-                <Border Grid.Row="2" Style="{StaticResource RightBorder}">
-                    <Button Content="Открыть"
-                            Width="132"
-                            Height="36"
-                            Margin="20,0,20,0"/>
+                <Border Grid.Row="2" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
+                    <Button Width="130"
+                            Height="32"
+                            Margin="5,0,10,0"
+                            Style="{DynamicResource PanelButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/opengraph.png" 
+                                   Width="30" 
+                                   Height="30" 
+                                   Margin="-10,0,10,0"
+                                   VerticalAlignment="Center"
+                                   SnapsToDevicePixels="True"/>
+                            <TextBlock Text="Открыть" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                        </StackPanel>
+                    </Button>
                 </Border>
 
-                <Border Grid.Row="3" Style="{StaticResource RightBorder}">
-                    <Button Content="Сохранить"
-                            Width="132"
-                            Height="36"
-                            Margin="20,0,20,0"/>
+                <Border Grid.Row="3" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
+                    <Button Width="130"
+                            Height="32"
+                            Margin="5,0,10,0"
+                            Style="{DynamicResource PanelButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/savegraph.png" 
+                                   Width="30" 
+                                   Height="30" 
+                                   Margin="5,0,12,0"
+                                   VerticalAlignment="Center"
+                                   SnapsToDevicePixels="True"/>
+                            <TextBlock Text="Сохранить" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                        </StackPanel>
+                    </Button>
                 </Border>
 
                 <TextBlock Grid.Row="4"
@@ -173,32 +297,62 @@
             <!-- Панель Календарь -->
             <Grid Grid.Column="4">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="10"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="20"/>
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="1" Style="{StaticResource RightBorder}">
-                    <Button Content="Вид"
-                            Width="132"
-                            Height="36"
-                            Margin="20,0,20,0"/>
+                <Border Grid.Row="1" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
+                    <Button Width="130"
+                            Height="32"
+                            Margin="5,0,10,0"
+                            Style="{DynamicResource PanelButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/viewcalendar.png" 
+                                   Width="30" 
+                                   Height="30" 
+                                   Margin="-40,0,10,0"
+                                   VerticalAlignment="Center"
+                                   SnapsToDevicePixels="True"/>
+                            <TextBlock Text="Вид" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                        </StackPanel>
+                    </Button>
                 </Border>
 
-                <Border Grid.Row="2" Style="{StaticResource RightBorder}">
-                    <Button Content="Интервал"
-                            Width="132"
-                            Height="36"
-                            Margin="20,0,20,0"/>
+                <Border Grid.Row="2" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
+                    <Button Width="130"
+                            Height="32"
+                            Margin="5,0,10,0"
+                            Style="{DynamicResource PanelButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/intervalcalendar.png" 
+                                   Width="30" 
+                                   Height="30" 
+                                   Margin="-10,0,10,0"
+                                   VerticalAlignment="Center"
+                                   SnapsToDevicePixels="True"/>
+                            <TextBlock Text="Открыть" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                        </StackPanel>
+                    </Button>
                 </Border>
 
-                <Border Grid.Row="3" Style="{StaticResource RightBorder}">
-                    <Button Content="Отметка"
-                            Width="132"
-                            Height="36"
-                            Margin="20,0,20,0"/>
+                <Border Grid.Row="3" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
+                    <Button Width="130"
+                            Height="32"
+                            Margin="5,0,10,0"
+                            Style="{DynamicResource PanelButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/markcalendar.png" 
+                                   Width="30" 
+                                   Height="30" 
+                                   Margin="5,0,12,0"
+                                   VerticalAlignment="Center"
+                                   SnapsToDevicePixels="True"/>
+                            <TextBlock Text="Сохранить" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                        </StackPanel>
+                    </Button>
                 </Border>
 
                 <TextBlock Grid.Row="4"
@@ -210,7 +364,7 @@
             <!-- Панель Пустой грид для добавления -->
             <Grid Grid.Column="5">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="10"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
@@ -222,18 +376,30 @@
                 <Border Grid.Row="3" Style="{StaticResource RightBorder}"/>
             </Grid>
 
-            
             <!-- Панель Планы -->
             <Grid Grid.Column="6">
-                <Border Height="82" 
-                        Width="92" 
-                        BorderBrush="Black" 
+                <Button Height="82" 
+                        Width="92"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Margin="20,0,20,27"
+                        BorderBrush="Black"
                         BorderThickness="1"
-                        Margin="20,0,20,30"/>
+                        Style="{DynamicResource PanelButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/plan.png" 
+                               Width="60" 
+                               Height="60" 
+                               VerticalAlignment="Center"
+                               SnapsToDevicePixels="True"/>
+                    </StackPanel>
+                </Button>
 
                 <ComboBox Height="15"
                           Width="92"
-                          Margin="20,66,20,0"
+                          Margin="20,70,20,0"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Center"
                           Style="{StaticResource PanelComboBoxStyle}"/>
 
 
