@@ -5,8 +5,60 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CoinPlanner.UI.View.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+             d:DesignHeight="1080" d:DesignWidth="1920">
+    <Border Background="White" CornerRadius="10" BorderBrush="Black" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="128"/>
+            </Grid.RowDefinitions>
+
+            <!-- Верхняя панель -->
+            <Grid Grid.Row="0">
+                <Border Background="Transparent" 
+                        BorderBrush="Black" 
+                        BorderThickness="0,0,0,1"
+                        VerticalAlignment="Bottom"/>
+            </Grid>
+
+            <!-- Нижняя панель -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="50,15,0,0">
+                        <TextBlock Text="Накопления:" FontSize="20" Margin="0,0,10,0"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="300.000" FontSize="20"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="50,0,0,0">
+                        <TextBlock Text="Кредит:" FontSize="20" Margin="0,0,10,0"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="10.000" FontSize="20"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="50,0,0,15">
+                        <TextBlock Text="Остаток:" FontSize="20" Margin="0,0,10,0"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="10.000" FontSize="20"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+
+            </Grid>
             
-    </Grid>
+        </Grid>
+    </Border>
 </UserControl>

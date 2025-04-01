@@ -17,7 +17,7 @@
     </UserControl.Resources>
     
     
-    <Border Margin="21" Background="White" CornerRadius="10" BorderBrush="Black" BorderThickness="1">
+    <Border Background="White" CornerRadius="10" BorderBrush="Black" BorderThickness="1">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>

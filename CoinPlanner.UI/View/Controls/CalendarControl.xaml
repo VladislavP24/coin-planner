@@ -6,7 +6,18 @@
              xmlns:local="clr-namespace:CoinPlanner.UI.View.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+    <Border Background="White" Width="489" CornerRadius="10" BorderBrush="Black" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" 
+                       Text="Календарь" 
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Center"
+                       FontSize="20"/>
+        </Grid>
+    </Border>
 </UserControl>
