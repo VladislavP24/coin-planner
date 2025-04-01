@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:CoinPlanner.UI.View.Controls"
+             xmlns:local="clr-namespace:CoinPlanner.UI.View.Controls" xmlns:system="clr-namespace:System;assembly=netstandard"
              mc:Ignorable="d"
              UseLayoutRounding="True"
              d:DesignHeight="170" d:DesignWidth="1820">
@@ -378,29 +378,41 @@
 
             <!-- Панель Планы -->
             <Grid Grid.Column="6">
-                <Button Height="82" 
+                <Border Height="72" 
                         Width="92"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Center"
-                        Margin="20,0,20,27"
+                        Margin="20,0,20,20 "
                         BorderBrush="Black"
-                        BorderThickness="1"
-                        Style="{DynamicResource PanelButton}">
-                    <StackPanel Orientation="Horizontal">
+                        BorderThickness="1">
+                    <StackPanel>
                         <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/plan.png" 
-                               Width="60" 
-                               Height="60" 
-                               VerticalAlignment="Center"
+                               Width="45" 
+                               Height="45"
+                               Margin="0,5,0,0"
                                SnapsToDevicePixels="True"/>
+                        <TextBlock Text="План 2025"
+                                   FontSize="13"
+                                   Width="65"
+                                   Height="14"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Bottom"/>
                     </StackPanel>
-                </Button>
+                </Border>
 
-                <ComboBox Height="15"
+                <ComboBox x:Name="MyComboBox"
+                          Height="15"
                           Width="92"
-                          Margin="20,70,20,0"
+                          Margin="20,67,20,0"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Center"
-                          Style="{StaticResource PanelComboBoxStyle}"/>
+                          Style="{StaticResource CustomComboBoxStyle}">
+                    <ComboBox.Items>
+                        <system:String>Item 1 sadasdasdasdasd</system:String>
+                        <system:String>Item 2</system:String>
+                        <system:String>Item 3</system:String>
+                    </ComboBox.Items>
+                </ComboBox>
 
 
                 <TextBlock Grid.Row="4"
