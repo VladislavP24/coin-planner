@@ -10,7 +10,7 @@ public class AppDbContext : DbContext
     public DbSet<Plans> Plans { get; set; } = null!;
     public DbSet<Type_Operations> Type_Operations { get; set; } = null!;
 
-    public AppDbContext(string connectionString)
+    public AppDbContext()
         => Database.EnsureCreated();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

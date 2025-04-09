@@ -33,7 +33,6 @@ namespace CoinPlanner.Start
         /// <summary>
         /// Имитация работы загрузки
         /// </summary>
-        /// <returns></returns>
         public async Task SomeLongRunningTask()
         {
             for (int i = 0; i <= 100; i++)
@@ -46,5 +45,6 @@ namespace CoinPlanner.Start
                 });
             }
         }
+
     }
 }

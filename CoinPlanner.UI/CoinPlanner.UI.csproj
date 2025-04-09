@@ -33,6 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\addtable.png" />
     <Resource Include="Resources\coinplanner32.png" />
     <Resource Include="Resources\costtable.png" />

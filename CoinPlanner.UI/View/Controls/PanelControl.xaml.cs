@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CoinPlanner.UI.ViewModel.Controls;
 
 namespace CoinPlanner.UI.View.Controls
 {

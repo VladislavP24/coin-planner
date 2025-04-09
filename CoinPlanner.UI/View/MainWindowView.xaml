@@ -4,7 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoinPlanner.UI.View"
-        xmlns:control="clr-namespace:CoinPlanner.UI.View.Controls"
+        xmlns:control="clr-namespace:CoinPlanner.UI.View.Controls" 
+        xmlns:dialogs="clr-namespace:CoinPlanner.UI.ViewModel.Dialogs" 
+        xmlns:controls="clr-namespace:CoinPlanner.UI.ViewModel.Controls" 
         mc:Ignorable="d"
         Title="Coin Planner" 
         Height="1080" Width="1920"
@@ -21,7 +23,7 @@
 
         <!-- Верхняя панель -->
         <Grid Grid.Row="0">
-            <control:PanelControl VerticalAlignment="Top" Height="130" Margin="20,20,16,20"/>
+            <control:PanelControl DataContext="{Binding PanelViewModel}" VerticalAlignment="Top" Height="130" Margin="20,20,16,20"/>
         </Grid>
 
             
@@ -33,13 +35,13 @@
 
             <!-- Нижняя левая панель -->
             <Grid Grid.Column="0">
-                <control:CalendarControl Margin="20,0,10,16"/>
+                <control:CalendarControl DataContext="{Binding CalendarViewModel}" Margin="20,0,10,16"/>
             </Grid>
 
 
             <!-- Нижняя правая панель -->
             <Grid Grid.Column="1">
-                <control:ContentControl Margin="10,0,20,16"/>
+                <control:ContentControl DataContext="{Binding ContentViewModel}" Margin="10,0,20,16"/>
             </Grid>
         </Grid>
     </Grid>

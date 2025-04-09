@@ -325,6 +325,7 @@
                     <Button Width="130"
                             Height="32"
                             Margin="5,0,10,0"
+                            Command="{Binding DataContext.Interval, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/intervalcalendar.png" 
@@ -333,7 +334,7 @@
                                    Margin="-10,0,10,0"
                                    VerticalAlignment="Center"
                                    SnapsToDevicePixels="True"/>
-                            <TextBlock Text="Открыть" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                            <TextBlock Text="Интервал" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
                         </StackPanel>
                     </Button>
                 </Border>

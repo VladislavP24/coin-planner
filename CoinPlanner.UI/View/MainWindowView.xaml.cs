@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using CoinPlanner.UI.ViewModel;
 
 namespace CoinPlanner.UI.View
 {
@@ -22,6 +23,8 @@ namespace CoinPlanner.UI.View
         public MainWindowView()
         {
             InitializeComponent();
+
+            DataContext = new MainWindowViewModel();
         }
     }
 }
