@@ -6,9 +6,9 @@
       xmlns:local="clr-namespace:CoinPlanner.UI.View.Dialogs"
       mc:Ignorable="d" 
       d:DesignHeight="200" d:DesignWidth="300"
-      Height="230" Width="400"
-      MaxHeight="230" MaxWidth="400"
-      MinHeight="230" MinWidth="400"
+      Height="240" Width="400"
+      MaxHeight="240" MaxWidth="400"
+      MinHeight="240" MinWidth="400"
       Title="Coin Planner" 
       WindowStartupLocation="CenterScreen"
       Icon="pack://application:,,,/CoinPlanner.UI;component/Resources/icon32.ico">
@@ -40,6 +40,11 @@
             <StackPanel Orientation="Horizontal" Margin="10">
                 <Label Content="Начальная дата:" FontSize="15"/>
                 <DatePicker x:Name="StartDatePicker" 
+                            PreviewTextInput="PART_TextBox_PreviewTextInput"
+                            BorderBrush="White"
+                            FontSize="13"
+                            FontWeight="Regular"
+                            Margin="0,4,0,0"
                             SelectedDate="{Binding DataContext.StartDate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:IntervalDialogs}}"/>
             </StackPanel>
         </Grid>
@@ -47,7 +52,12 @@
         <Grid Grid.Row="2">
             <StackPanel Orientation="Horizontal" Margin="10">
                 <Label Content="Конечная дата:" FontSize="15" Margin="0,0,7,0"/>
-                <DatePicker x:Name="EndDatePicker" 
+                <DatePicker x:Name="EndDatePicker"
+                            PreviewTextInput="PART_TextBox_PreviewTextInput"
+                            BorderBrush="White"
+                            FontSize="13"
+                            FontWeight="Regular"
+                            Margin="0,4,0,0"
                             SelectedDate="{Binding DataContext.EndDate, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:IntervalDialogs}}"/>
             </StackPanel>
         </Grid>
@@ -57,16 +67,16 @@
                     BorderBrush="Black"
                     BorderThickness="0,1,0,0"/>
             <Button Content="Ок" 
-                    Height="20" 
-                    Width="60"
+                    Height="30" 
+                    Width="70"
                     HorizontalAlignment="Left"
                     Margin="10,10,0,0"
                     FontSize="15"
                     Command="{Binding DataContext.Ok, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:IntervalDialogs}}"
                     Style="{StaticResource PanelButton}"/>
             <Button Content="Отмена" 
-                    Height="20" 
-                    Width="60"
+                    Height="30" 
+                    Width="70"
                     HorizontalAlignment="Right"
                     Margin="0,10,10,0"
                     FontSize="15"

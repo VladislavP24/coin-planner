@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -14,6 +15,8 @@ public class IntervalDialogsViewModel : ObservableObject
         Cancel = new RelayCommand(CancelCommand);
         _intervalDialogs = intervalDialogs;
         _calendarViewModel = calendarViewModel;
+        StartDate = calendarViewModel.Start;
+        EndDate = calendarViewModel.End;
     }
 
     private CalendarViewModel _calendarViewModel { get; }
@@ -37,9 +40,14 @@ public class IntervalDialogsViewModel : ObservableObject
 
     private void OkCommand() 
     {
+        if (StartDate > EndDate)
+        {
+            MessageBox.Show("Начальная дата больше конечной даты. Измените интервал снова!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
         _calendarViewModel.Start = StartDate;
         _calendarViewModel.End = EndDate;
-
+        _calendarViewModel.UpdateButtons();
         _intervalDialogs.Close();
     }
 

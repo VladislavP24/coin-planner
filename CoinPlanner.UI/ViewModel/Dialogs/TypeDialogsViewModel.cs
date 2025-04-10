@@ -35,10 +35,11 @@ public class TypeDialogsViewModel : ObservableObject
 
     private void OkCommand()
     {
-        if (SelectedItem != null)
+        if (SelectedItem == null)
             return;
 
         _calendarViewModel.Type = SelectedItem;
+        _calendarViewModel.UpdateButtons();
         _typeDialogs.Close();
     }
 
