@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="Resources\addtable.png" />
+    <None Remove="Resources\calendar-interval32.png" />
     <None Remove="Resources\coinplanner32.png" />
     <None Remove="Resources\costtable.png" />
     <None Remove="Resources\createfile.png" />
@@ -38,6 +39,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\addtable.png" />
+    <Resource Include="Resources\calendar-interval32.png" />
     <Resource Include="Resources\coinplanner32.png" />
     <Resource Include="Resources\costtable.png" />
     <Resource Include="Resources\createfile.png" />

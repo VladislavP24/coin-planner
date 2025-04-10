@@ -12,8 +12,10 @@ public class MainWindowViewModel
 {
     public MainWindowViewModel()
     {
-        PanelViewModel = new PanelViewModel();
+        CalendarViewModel = new CalendarViewModel();
+        PanelViewModel = new PanelViewModel(CalendarViewModel);
     }
 
+    public CalendarViewModel CalendarViewModel { get; }
     public PanelViewModel PanelViewModel { get; }
 }

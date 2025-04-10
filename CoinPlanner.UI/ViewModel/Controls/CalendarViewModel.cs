@@ -6,6 +6,15 @@ using System.Threading.Tasks;
 
 namespace CoinPlanner.UI.ViewModel.Controls;
 
-class CalendarViewModel
+public class CalendarViewModel
 {
+    public CalendarViewModel() 
+    {
+        
+    }
+
+    public DateTime Start { get; set; }
+    public DateTime End { get; set; }
+    public string Type { get; set; }
+
 }

@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:CoinPlanner.UI.View.Controls" xmlns:system="clr-namespace:System;assembly=netstandard"
+             xmlns:local="clr-namespace:CoinPlanner.UI.View.Controls" 
+             xmlns:system="clr-namespace:System;assembly=netstandard"
              mc:Ignorable="d"
              UseLayoutRounding="True"
              d:DesignHeight="170" d:DesignWidth="1820">
@@ -308,6 +309,7 @@
                     <Button Width="130"
                             Height="32"
                             Margin="5,0,10,0"
+                            Command="{Binding DataContext.Type, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/viewcalendar.png" 
@@ -331,7 +333,7 @@
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/intervalcalendar.png" 
                                    Width="30" 
                                    Height="30" 
-                                   Margin="-10,0,10,0"
+                                   Margin="0,0,10,0"
                                    VerticalAlignment="Center"
                                    SnapsToDevicePixels="True"/>
                             <TextBlock Text="Интервал" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
