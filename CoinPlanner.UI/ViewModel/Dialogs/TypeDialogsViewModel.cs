@@ -15,6 +15,7 @@ public class TypeDialogsViewModel : ObservableObject
         Cancel = new RelayCommand(CancelCommand);
         _typeDialogs = typeDialogs;
         _calendarViewModel = calendarViewModel;
+        _selectedItem = calendarViewModel.Type;
 
         Items = new ObservableCollection<string> { "Год", "Месяц", "Неделя", "День" };
     }

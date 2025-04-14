@@ -24,21 +24,21 @@ public class CalendarViewModel : ObservableObject
         set => SetProperty(ref _start, value, nameof(Start));
 
     }
-    private DateTime _start;
+    private DateTime _start = DateTime.Now;
 
     public DateTime End
     {
         get => _end;
         set => SetProperty(ref _end, value, nameof(End));
     }
-    private DateTime _end;
+    private DateTime _end = DateTime.Now;
 
     public string Type
     {
         get => _type;
         set => SetProperty(ref _type, value, nameof(Type));
     }
-    private string _type;
+    private string _type = "День";
 
 
     public ObservableCollection<string> Buttons
