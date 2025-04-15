@@ -31,8 +31,8 @@
                         CornerRadius="0">
                     <DataGrid x:Name="NoteBookDataGrid"
                               Margin="0"
-                              ItemsSource="{Binding DynamicNoteBookModelCollection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              SelectedItem="{Binding CurSelectedNoteBook, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding DynamicOperationlCollection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedItem="{Binding CurSelectedOperation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               Background="White"                      
                               BorderBrush="Black" BorderThickness="1"
                               AutoGenerateColumns="False" CanUserAddRows="False"
@@ -65,12 +65,12 @@
                         <DataGrid.Columns>
                             
                             <!-- Столбец номер строки -->
-                            <DataGridTemplateColumn Header="№" Width="0.13*" IsReadOnly="True" SortMemberPath="Id"
+                            <DataGridTemplateColumn Header="№" Width="0.13*" IsReadOnly="True" SortMemberPath="OperId"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid HorizontalAlignment="Stretch">
-                                            <TextBlock Text="{Binding Id, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            <TextBlock Text="{Binding OperId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        Margin="3,0,0,0"
                                                        TextAlignment="Center"
                                                        Foreground="Black"
@@ -83,12 +83,12 @@
                             </DataGridTemplateColumn>
 
                             <!-- Стобец Наиманование -->
-                            <DataGridTemplateColumn Header="Наиманование" Width="1*" SortMemberPath="LastName"
+                            <DataGridTemplateColumn Header="Наиманование" Width="1*" SortMemberPath="OperName"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid HorizontalAlignment="Stretch">
-                                            <TextBox Text="{Binding LastName, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            <TextBox Text="{Binding OperName, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                      Margin="3,0,0,0"
                                                      TextAlignment="Left"
                                                      HorizontalAlignment="Stretch" 
@@ -103,12 +103,12 @@
                             </DataGridTemplateColumn>
 
                             <!-- Столбец Вид операции -->
-                            <DataGridTemplateColumn Header="Вид операции" Width="1*" SortMemberPath="FirstName"
+                            <DataGridTemplateColumn Header="Вид операции" Width="1*" SortMemberPath="OperType"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid HorizontalAlignment="Stretch">
-                                            <TextBox Text="{Binding FirstName, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            <TextBox Text="{Binding OperType, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                      HorizontalAlignment="Stretch"
                                                      VerticalAlignment="Stretch"
                                                      HorizontalContentAlignment="Center" 
@@ -123,11 +123,11 @@
 
 
                             <!-- Столбец Сумма, руб. -->
-                            <DataGridTemplateColumn Header="Сумма, руб." Width="1*" SortMemberPath="SurName"
+                            <DataGridTemplateColumn Header="Сумма, руб." Width="1*" SortMemberPath="OperSum"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBox Text="{Binding SurName, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
+                                        <TextBox Text="{Binding OperSum, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
                                                  HorizontalAlignment="Stretch" 
                                                  VerticalAlignment="Stretch"
                                                  HorizontalContentAlignment="Center" 
@@ -141,11 +141,11 @@
 
 
                             <!-- Столбец Выполнен -->
-                            <DataGridTemplateColumn Header="Выполнен" Width="1*" SortMemberPath="SurName"
+                            <DataGridTemplateColumn Header="Выполнен" Width="1*" SortMemberPath="OperCompleted"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBox Text="{Binding SurName, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
+                                        <TextBox Text="{Binding OperCompleted, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
                                                  HorizontalAlignment="Stretch" 
                                                  VerticalAlignment="Stretch"
                                                  HorizontalContentAlignment="Center" 
@@ -159,11 +159,11 @@
 
 
                             <!--Столбец Время -->
-                            <DataGridTemplateColumn Header="Время" Width="1*" SortMemberPath="PhoneNumber"
+                            <DataGridTemplateColumn Header="Время" Width="1*" SortMemberPath="OperNextDate"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyleRight}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBox Text="{Binding PhoneNumber, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                        <TextBox Text="{Binding OperNextDate, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                  HorizontalAlignment="Stretch" 
                                                  VerticalAlignment="Stretch"
                                                  HorizontalContentAlignment="Center" 
@@ -171,7 +171,7 @@
                                                  TextAlignment="Left"
                                                  Background="Transparent"                 
                                                  BorderThickness="0"
-                                                 PreviewTextInput="TextBox_PreviewTextInput" />
+                                                 PreviewTextInput="TextBox_PreviewTextInput"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

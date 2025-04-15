@@ -17,7 +17,7 @@ public class TypeDialogsViewModel : ObservableObject
         _calendarViewModel = calendarViewModel;
         _selectedItem = calendarViewModel.Type;
 
-        Items = new ObservableCollection<string> { "Год", "Месяц", "Неделя", "День" };
+        Items = new ObservableCollection<string> { "Год", "Месяц", "Неделя", "День", "Интервал" };
     }
 
     private CalendarViewModel _calendarViewModel { get; }

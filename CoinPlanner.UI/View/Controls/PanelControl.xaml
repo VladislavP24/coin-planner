@@ -409,14 +409,10 @@
                           Margin="20,67,20,0"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Center"
-                          Style="{StaticResource CustomComboBoxStyle}">
-                    <ComboBox.Items>
-                        <system:String>Item 1 sadasdasdasdasd</system:String>
-                        <system:String>Item 2</system:String>
-                        <system:String>Item 3</system:String>
-                    </ComboBox.Items>
-                </ComboBox>
-
+                          ItemsSource="{Binding DataContext.Items, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
+                          DisplayMemberPath="PlanName"
+                          SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
+                          Style="{StaticResource CustomComboBoxStyle}"/>
 
                 <TextBlock Grid.Row="4"
                            Text="Планы"

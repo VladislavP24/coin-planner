@@ -1,31 +1,44 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using CoinPlanner.UI.ViewModel.Items;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace CoinPlanner.UI.ViewModel.Controls;
 
 public class CalendarViewModel : ObservableObject
 {
-    public CalendarViewModel() 
+    public CalendarViewModel()
     {
-        Buttons = new ObservableCollection<string>();
+        SendInterval = new RelayCommand(SendIntervalCommand);
         UpdateButtons();
     }
 
+    public EventHandler OnButtonPressed { get; set; }
+    public ICommand SendInterval { get; set; }
+
+    /// <summary>
+    /// Начальная дата
+    /// </summary>
     public DateTime Start
     {
         get => _start;
         set => SetProperty(ref _start, value, nameof(Start));
-
     }
     private DateTime _start = DateTime.Now;
 
+
+    /// <summary>
+    /// Конечная дата
+    /// </summary>
     public DateTime End
     {
         get => _end;
@@ -33,6 +46,10 @@ public class CalendarViewModel : ObservableObject
     }
     private DateTime _end = DateTime.Now;
 
+
+    /// <summary>
+    /// Тип календаря
+    /// </summary>
     public string Type
     {
         get => _type;
@@ -41,15 +58,34 @@ public class CalendarViewModel : ObservableObject
     private string _type = "День";
 
 
-    public ObservableCollection<string> Buttons
+    /// <summary>
+    /// Коллекция Button
+    /// </summary>
+    public ObservableCollection<ButtonItemsViewModel> Buttons
     {
         get => _buttons;
         set => SetProperty(ref _buttons, value, nameof(Buttons));
     }
-    private ObservableCollection<string> _buttons;
+    private ObservableCollection<ButtonItemsViewModel> _buttons = new();
+
+    public DateTime SelectedStart { get; set; }
+    public DateTime? SelectedEnd { get; set; }
+
+    /// <summary>
+    /// Отправка инетервала после нажатия на кнопку
+    /// </summary>
+    private void SendIntervalCommand()
+    {
+        SelectedStart = Buttons.Where(x => x.IsChecked == true).Select(x => x.StartTime).First();
+        SelectedEnd = Buttons.Where(x => x.IsChecked == true).Select(x => x.EndTime).First();
+
+        OnButtonPressed.Invoke(this, EventArgs.Empty);
+    }
 
 
-
+    /// <summary>
+    /// Обновление Button при изменении интервала и типа
+    /// </summary>
     public void UpdateButtons()
     {
         Buttons.Clear();
@@ -57,55 +93,57 @@ public class CalendarViewModel : ObservableObject
         switch (Type)
         {
             case "День":
-                int totalDays = (End - Start).Days + 1; // +1 для включения конечной даты
+                int totalDays = (End - Start).Days + 1;
                 for (int i = 0; i < totalDays; i++)
                 {
                     var date = Start.AddDays(i);
-                    Buttons.Add(date.ToString("dd MMMM yyyy 'г.'"));
+                    Buttons.Add(new ButtonItemsViewModel() { Content = date.ToString("dd MMMM yyyy 'г.'"), StartTime = date, EndTime = null });
                 }
                 break;
 
             case "Неделя":
-                // Находим ближайший понедельник к начальной дате
                 DateTime startOfWeek = Start;
                 while (startOfWeek.DayOfWeek != DayOfWeek.Monday)
                 {
                     startOfWeek = startOfWeek.AddDays(-1);
                 }
 
-                // Генерируем недели от ближайшего понедельника
                 while (startOfWeek <= End)
                 {
                     var weekEnd = startOfWeek.AddDays(6);
-                    if (weekEnd > End) break; // Если конец недели выходит за пределы конечной даты, выходим из цикла
+                    if (weekEnd > End) break;
 
-                    Buttons.Add($"{startOfWeek:dd}-{weekEnd:dd MMMM yyyy 'г.'}");
-                    startOfWeek = startOfWeek.AddDays(7); // Переходим к следующей неделе
+                    Buttons.Add(new ButtonItemsViewModel { Content = $"{startOfWeek:dd}-{weekEnd:dd MMMM yyyy 'г.'}", StartTime = startOfWeek, EndTime = weekEnd });
+                    startOfWeek = startOfWeek.AddDays(7);
                 }
                 break;
 
             case "Месяц":
-                int totalMonths = ((End.Year - Start.Year) * 12) + End.Month - Start.Month + 1; // +1 для включения конечного месяца
+                int totalMonths = ((End.Year - Start.Year) * 12) + End.Month - Start.Month + 1;
                 for (int i = 0; i < totalMonths; i++)
                 {
                     var monthStart = new DateTime(Start.Year, Start.Month, 1).AddMonths(i);
                     if (monthStart <= End)
                     {
-                        Buttons.Add(monthStart.ToString("MMMM yyyy 'г.'"));
+                        Buttons.Add(new ButtonItemsViewModel { Content = monthStart.ToString("MMMM yyyy 'г.'"), StartTime = monthStart, EndTime = null });
                     }
                 }
                 break;
 
             case "Год":
-                int totalYears = End.Year - Start.Year + 1; // +1 для включения конечного года
+                int totalYears = End.Year - Start.Year + 1;
                 for (int i = 0; i < totalYears; i++)
                 {
                     var yearStart = new DateTime(Start.Year + i, 1, 1);
                     if (yearStart <= End)
                     {
-                        Buttons.Add(yearStart.ToString("yyyy 'г.'"));
+                        Buttons.Add(new ButtonItemsViewModel { Content = yearStart.ToString("yyyy 'г.'"), StartTime = yearStart, EndTime = null });
                     }
                 }
+                break;
+
+            case "Интервал":
+                Buttons.Add(new ButtonItemsViewModel { Content = $"{Start:dd MMMM} - {End:dd MMMM yyyy 'г.'}", StartTime = Start, EndTime = End });
                 break;
         }
     }

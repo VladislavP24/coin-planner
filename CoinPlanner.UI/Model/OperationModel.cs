@@ -3,16 +3,74 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CoinPlanner.UI.Model;
 
-public class OperationModel
+public class OperationModel : ObservableObject
 {
-    public int OperId { get; set; }
+    /// <summary>
+    /// Номер операции
+    /// </summary>
+    public int OperId
+    {
+        get => _operId;
+        set => SetProperty(ref _operId, value, nameof(OperId));
+    }
+    private int _operId;
+
+    /// <summary>
+    /// Наименование
+    /// </summary>
+    public string? OperName
+    {
+        get => _operName;
+        set => SetProperty(ref _operName, value, nameof(OperName));
+    }
+    private string? _operName;
+
+    /// <summary>
+    /// Вид операции
+    /// </summary>
+    public string? OperType
+    { 
+        get => _operType;
+        set => SetProperty(ref _operType, value, nameof(OperType));
+    }
+    private string? _operType;
+
+    /// <summary>
+    /// Сумма
+    /// </summary>
+    public string? OperSum
+    {
+        get => _operSum;
+        set => SetProperty(ref _operSum, value, nameof(OperSum));
+    }
+    private string? _operSum;
+
+    /// <summary>
+    /// Выполнен
+    /// </summary>
+    public bool OperCompleted
+    {
+        get => _operCompleted;
+        set => SetProperty(ref _operCompleted, value, nameof(OperCompleted));
+    }
+    private bool _operCompleted;
+
+    /// <summary>
+    /// Время
+    /// </summary>
+    public bool OperNextDate
+    {
+        get => _operNextDate;
+        set => SetProperty(ref _operNextDate, value, nameof(OperNextDate));
+    }
+    private bool _operNextDate;
+
+    /// <summary>
+    /// Номер плана
+    /// </summary>
     public int OperPlanId { get; set; }
-    public string? OperName { get; set; }
-    public int OperType_Id { get; set; }
-    public double OperSum { get; set; }
-    public bool OperCompleted { get; set; }
-    public DateTime OperNextDate { get; set; }
 }

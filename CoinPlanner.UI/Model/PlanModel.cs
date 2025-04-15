@@ -12,5 +12,4 @@ public class PlanModel
     public string? PlanName { get; set; }
     public DateTime DataCreate { get; set; }
     public DateTime DataUpdate { get; set; }
-    public List<OperationModel>? OperationModels { get; set; }
 }

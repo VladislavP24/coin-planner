@@ -34,12 +34,13 @@
                 <ItemsControl ItemsSource="{Binding Buttons}" Margin="10" VerticalAlignment="Top">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <ToggleButton Content="{Binding}"
+                            <ToggleButton Content="{Binding Content}"
                                           IsChecked="{Binding IsChecked}"
                                           Width="430" 
                                           Height="57" 
-                                          Margin="5" 
-                                          Style="{StaticResource CustomToggleButtonStyle}" />
+                                          Margin="5"
+                                          Command="{Binding DataContext.SendInterval, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:CalendarControl}}"
+                                          Style="{StaticResource CustomToggleButtonStyle}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

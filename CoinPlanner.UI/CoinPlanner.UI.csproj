@@ -34,6 +34,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CoinPlanner.DataBase\CoinPlanner.DataBase.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\addtable.png" />
     <Resource Include="Resources\calendar-interval32.png" />
     <Resource Include="Resources\coinplanner32.png" />
