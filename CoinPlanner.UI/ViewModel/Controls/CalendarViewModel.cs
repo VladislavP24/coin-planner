@@ -115,7 +115,8 @@ public class CalendarViewModel : ObservableObject
                 while (startOfWeek <= End)
                 {
                     var weekEnd = startOfWeek.AddDays(6);
-                    if (weekEnd > End) break;
+                    if (weekEnd > End.AddDays(6)) 
+                        break;
 
                     Buttons.Add(new ButtonItemsViewModel { Content = $"{startOfWeek:dd}-{weekEnd:dd MMMM yyyy 'г.'}", StartTime = startOfWeek, EndTime = weekEnd.AddDays(1) });
                     startOfWeek = startOfWeek.AddDays(7);
