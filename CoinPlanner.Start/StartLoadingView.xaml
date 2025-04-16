@@ -10,7 +10,8 @@
         MinHeight="326" MinWidth="508"
         MaxHeight="326" MaxWidth="508"
         WindowStartupLocation="CenterScreen"
-        Icon="pack://application:,,,/CoinPlanner.Start;component/Resources/icon32.ico">
+        Icon="pack://application:,,,/CoinPlanner.Start;component/Resources/icon32.ico"
+        Title="Coin Planner">
     <Grid>
 
         <Image Source="pack://application:,,,/CoinPlanner.Start;component/Resources/coinplanner96.png" 

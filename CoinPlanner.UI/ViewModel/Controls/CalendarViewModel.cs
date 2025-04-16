@@ -68,7 +68,7 @@ public class CalendarViewModel : ObservableObject
     }
     private ObservableCollection<ButtonItemsViewModel> _buttons = new();
 
-    public DateTime SelectedStart { get; set; }
+    public DateTime? SelectedStart { get; set; }
     public DateTime? SelectedEnd { get; set; }
 
     /// <summary>
@@ -76,8 +76,12 @@ public class CalendarViewModel : ObservableObject
     /// </summary>
     private void SendIntervalCommand()
     {
-        SelectedStart = Buttons.Where(x => x.IsChecked == true).Select(x => x.StartTime).First();
-        SelectedEnd = Buttons.Where(x => x.IsChecked == true).Select(x => x.EndTime).First();
+        SelectedStart = Buttons.Where(x => x.IsChecked == true).Select(x => x.StartTime).FirstOrDefault();
+        SelectedEnd = Buttons.Where(x => x.IsChecked == true).Select(x => x.EndTime).FirstOrDefault();
+
+        // Сброc IsCheked
+        foreach (var button in Buttons.Where(x => x.IsChecked == true))
+            button.IsChecked = false;
 
         OnButtonPressed.Invoke(this, EventArgs.Empty);
     }
@@ -113,7 +117,7 @@ public class CalendarViewModel : ObservableObject
                     var weekEnd = startOfWeek.AddDays(6);
                     if (weekEnd > End) break;
 
-                    Buttons.Add(new ButtonItemsViewModel { Content = $"{startOfWeek:dd}-{weekEnd:dd MMMM yyyy 'г.'}", StartTime = startOfWeek, EndTime = weekEnd });
+                    Buttons.Add(new ButtonItemsViewModel { Content = $"{startOfWeek:dd}-{weekEnd:dd MMMM yyyy 'г.'}", StartTime = startOfWeek, EndTime = weekEnd.AddDays(1) });
                     startOfWeek = startOfWeek.AddDays(7);
                 }
                 break;
@@ -125,7 +129,9 @@ public class CalendarViewModel : ObservableObject
                     var monthStart = new DateTime(Start.Year, Start.Month, 1).AddMonths(i);
                     if (monthStart <= End)
                     {
-                        Buttons.Add(new ButtonItemsViewModel { Content = monthStart.ToString("MMMM yyyy 'г.'"), StartTime = monthStart, EndTime = null });
+                        var monthEnd = monthStart.AddMonths(1).AddDays(-1);
+
+                        Buttons.Add(new ButtonItemsViewModel { Content = monthStart.ToString("MMMM yyyy 'г.'"), StartTime = monthStart, EndTime = monthEnd.AddDays(1) });
                     }
                 }
                 break;
@@ -137,13 +143,15 @@ public class CalendarViewModel : ObservableObject
                     var yearStart = new DateTime(Start.Year + i, 1, 1);
                     if (yearStart <= End)
                     {
-                        Buttons.Add(new ButtonItemsViewModel { Content = yearStart.ToString("yyyy 'г.'"), StartTime = yearStart, EndTime = null });
+                        var yearEnd = new DateTime(yearStart.Year, 12, 31);
+
+                        Buttons.Add(new ButtonItemsViewModel { Content = yearStart.ToString("yyyy 'г.'"), StartTime = yearStart, EndTime = yearEnd.AddDays(1) });
                     }
                 }
                 break;
 
             case "Интервал":
-                Buttons.Add(new ButtonItemsViewModel { Content = $"{Start:dd MMMM} - {End:dd MMMM yyyy 'г.'}", StartTime = Start, EndTime = End });
+                Buttons.Add(new ButtonItemsViewModel { Content = $"{Start:dd MMMM} - {End:dd MMMM yyyy 'г.'}", StartTime = Start, EndTime = End.AddDays(1) });
                 break;
         }
     }

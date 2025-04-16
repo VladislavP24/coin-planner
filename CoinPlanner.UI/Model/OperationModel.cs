@@ -42,32 +42,32 @@ public class OperationModel : ObservableObject
     /// <summary>
     /// Сумма
     /// </summary>
-    public string? OperSum
+    public double? OperSum
     {
         get => _operSum;
         set => SetProperty(ref _operSum, value, nameof(OperSum));
     }
-    private string? _operSum;
+    private double? _operSum;
 
     /// <summary>
     /// Выполнен
     /// </summary>
-    public bool OperCompleted
+    public string OperCompleted
     {
         get => _operCompleted;
         set => SetProperty(ref _operCompleted, value, nameof(OperCompleted));
     }
-    private bool _operCompleted;
+    private string _operCompleted;
 
     /// <summary>
     /// Время
     /// </summary>
-    public bool OperNextDate
+    public string OperNextDate
     {
         get => _operNextDate;
         set => SetProperty(ref _operNextDate, value, nameof(OperNextDate));
     }
-    private bool _operNextDate;
+    private string _operNextDate;
 
     /// <summary>
     /// Номер плана

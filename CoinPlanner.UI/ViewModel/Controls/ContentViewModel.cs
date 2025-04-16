@@ -21,16 +21,24 @@ public class ContentViewModel : ObservableObject
 
     public void UpdateOperation(object sender, EventArgs e)
     {
+        DynamicOperationCollection.Clear();
         if (_calendarViewModel.SelectedStart == null || _calendarViewModel.SelectedEnd == null || _panelViewModel.SelectedItemPlan == null)
             return;
-        
-        foreach (var oper in _dBProcessing.OperationsList)
-        {
-            int i = 1;
+
+        int i = 1;
+        foreach (var oper in _dBProcessing.OperationsList.Where(x => x.Oper_Next_Date >= _calendarViewModel.SelectedStart 
+                                                                  && x.Oper_Next_Date <= _calendarViewModel.SelectedEnd)
+                                                         .Where(x => x.Oper_Plan_Id == _panelViewModel.SelectedItemPlan.PlanId))
+        {       
             DynamicOperationCollection.Add(new OperationModel
             {
                 OperId = i,
-                OperName = 
+                OperName = oper.Oper_Name,
+                OperType = oper.Type_Name,
+                OperSum = oper.Oper_Sum,
+                OperCompleted = oper.Oper_Completed == true ? "Да" : "Нет",
+                OperNextDate = oper.Oper_Next_Date.ToString("dd MMMM yyyy 'г.'"),
+                OperPlanId = oper.Oper_Plan_Id
             });
 
             i++;

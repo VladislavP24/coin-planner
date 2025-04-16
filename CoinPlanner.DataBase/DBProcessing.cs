@@ -39,9 +39,10 @@ public class DBProcessing
             using (AppDbContext db = new AppDbContext())
             {
                 PlansList = db.Plans.FromSqlRaw("SELECT * FROM plans").ToList();
-                OperationsList = db.Database.SqlQueryRaw<Operations>("SELECT o.oper_id, t.type_name as type_name, o.oper_name, o.oper_sum, o.oper_completed, o.oper_next_date, o.oper_plan_id " +
-                                                                     "FROM operations o, type_operations t " +
-                                                                     "WHERE o.oper_plan_id = t.type_id " +
+                OperationsList = db.Database.SqlQueryRaw<Operations>("SELECT o.oper_id, t.type_name AS type_name, o.oper_name, o.oper_sum, o.oper_completed, o.oper_next_date, o.oper_plan_id " +
+                                                                     "FROM operations o " +
+                                                                     "JOIN plans p ON o.oper_plan_id = p.plan_id " +
+                                                                     "JOIN type_operations t ON o.oper_type_id = t.type_id " +
                                                                      "ORDER BY o.oper_id;").ToList();
             }
             return true;

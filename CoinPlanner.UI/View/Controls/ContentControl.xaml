@@ -31,7 +31,7 @@
                         CornerRadius="0">
                     <DataGrid x:Name="NoteBookDataGrid"
                               Margin="0"
-                              ItemsSource="{Binding DynamicOperationlCollection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              ItemsSource="{Binding DynamicOperationCollection, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               SelectedItem="{Binding CurSelectedOperation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                               Background="White"                      
                               BorderBrush="Black" BorderThickness="1"
@@ -161,6 +161,9 @@
                             <!--Столбец Время -->
                             <DataGridTemplateColumn Header="Время" Width="1*" SortMemberPath="OperNextDate"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyleRight}">
+                                <DataGridTemplateColumn.CellStyle>
+                                    <Style TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellStyleRight}" />
+                                </DataGridTemplateColumn.CellStyle>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBox Text="{Binding OperNextDate, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
