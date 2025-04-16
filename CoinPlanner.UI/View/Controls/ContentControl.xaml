@@ -4,11 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CoinPlanner.UI.View.Controls"
+             xmlns:converters="clr-namespace:CoinPlanner.UI.View.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1920">
 
     <UserControl.Resources>
         <ResourceDictionary>
+            <converters:OperationTypeToBrushConverter x:Key="OperationTypeToBrushConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/CoinPlanner.UI;component/Styles/ContentStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -50,6 +52,8 @@
                               CellStyle="{DynamicResource DataGridCellStyle}">
 
                         <DataGrid.Resources>
+                            <converters:OperationTypeToBrushConverter x:Key="OperationTypeToBrushConverter"/>
+                            
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="Border.CornerRadius" Value="0" />
                                 <Setter Property="BorderBrush" Value="#CDD0D2" />
@@ -61,6 +65,12 @@
                                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
                             </Style>
                         </DataGrid.Resources>
+
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Setter Property="Background" Value="{Binding Converter={StaticResource OperationTypeToBrushConverter}}"/>
+                            </Style>
+                        </DataGrid.RowStyle>
 
                         <DataGrid.Columns>
                             
