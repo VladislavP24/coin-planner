@@ -98,15 +98,12 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid HorizontalAlignment="Stretch">
-                                            <TextBox Text="{Binding OperName, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                     Margin="3,0,0,0"
-                                                     TextAlignment="Left"
-                                                     HorizontalAlignment="Stretch" 
-                                                     VerticalAlignment="Stretch"
-                                                     HorizontalContentAlignment="Center" 
-                                                     VerticalContentAlignment="Center"  
-                                                     BorderThickness="0" 
-                                                     Background="Transparent"/>
+                                            <TextBlock Text="{Binding OperName, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       Margin="3,0,0,0"
+                                                       TextAlignment="Left"
+                                                       HorizontalAlignment="Stretch" 
+                                                       VerticalAlignment="Stretch"
+                                                       Background="Transparent"/>
                                         </Grid>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
@@ -118,14 +115,12 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid HorizontalAlignment="Stretch">
-                                            <TextBox Text="{Binding OperType, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                     HorizontalAlignment="Stretch"
-                                                     VerticalAlignment="Stretch"
-                                                     HorizontalContentAlignment="Center" 
-                                                     VerticalContentAlignment="Center"
-                                                     TextAlignment="Left"
-                                                     BorderThickness="0" 
-                                                     Background="Transparent"/>
+                                            <TextBlock Text="{Binding OperType, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       Margin="3,0,0,0"
+                                                       HorizontalAlignment="Stretch"
+                                                       VerticalAlignment="Stretch"
+                                                       TextAlignment="Left"
+                                                       Background="Transparent"/>
                                         </Grid>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
@@ -137,14 +132,12 @@
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBox Text="{Binding OperSum, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
-                                                 HorizontalAlignment="Stretch" 
-                                                 VerticalAlignment="Stretch"
-                                                 HorizontalContentAlignment="Center" 
-                                                 VerticalContentAlignment="Center"
-                                                 TextAlignment="Left"
-                                                 Background="Transparent"
-                                                 BorderThickness="0"/>
+                                        <TextBlock Text="{Binding OperSum, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
+                                                   Margin="3,0,0,0"
+                                                   HorizontalAlignment="Stretch" 
+                                                   VerticalAlignment="Stretch"
+                                                   TextAlignment="Left"
+                                                   Background="Transparent"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -155,14 +148,12 @@
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBox Text="{Binding OperCompleted, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
-                                                 HorizontalAlignment="Stretch" 
-                                                 VerticalAlignment="Stretch"
-                                                 HorizontalContentAlignment="Center" 
-                                                 VerticalContentAlignment="Center"
-                                                 TextAlignment="Left"
-                                                 Background="Transparent"
-                                                 BorderThickness="0"/>
+                                        <TextBlock Text="{Binding OperCompleted, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
+                                                   Margin="3,0,0,0"
+                                                   HorizontalAlignment="Stretch" 
+                                                   VerticalAlignment="Stretch"
+                                                   TextAlignment="Left"
+                                                   Background="Transparent"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -170,21 +161,19 @@
 
                             <!--Столбец Время -->
                             <DataGridTemplateColumn Header="Время" Width="1*" SortMemberPath="OperNextDate"
+                                                    IsReadOnly="True"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyleRight}">
                                 <DataGridTemplateColumn.CellStyle>
                                     <Style TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellStyleRight}" />
                                 </DataGridTemplateColumn.CellStyle>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBox Text="{Binding OperNextDate, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                                                 HorizontalAlignment="Stretch" 
-                                                 VerticalAlignment="Stretch"
-                                                 HorizontalContentAlignment="Center" 
-                                                 VerticalContentAlignment="Center"
-                                                 TextAlignment="Left"
-                                                 Background="Transparent"                 
-                                                 BorderThickness="0"
-                                                 PreviewTextInput="TextBox_PreviewTextInput"/>
+                                        <TextBlock Text="{Binding OperNextDate, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                   Margin="3,0,0,0"
+                                                   HorizontalAlignment="Stretch" 
+                                                   VerticalAlignment="Stretch"
+                                                   TextAlignment="Left"
+                                                   Background="Transparent"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

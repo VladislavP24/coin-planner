@@ -20,6 +20,7 @@ public class MainWindowViewModel
         ContentViewModel = new ContentViewModel(CalendarViewModel, PanelViewModel, dbProcessing);
 
         CalendarViewModel.OnButtonPressed += ContentViewModel.UpdateOperation;
+        PanelViewModel.OnButtonPressed += ContentViewModel.UpdateOperation;
     }
 
     public CalendarViewModel CalendarViewModel { get; }

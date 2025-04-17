@@ -22,6 +22,9 @@ public class CalendarViewModel : ObservableObject
         UpdateButtons();
     }
 
+    /// <summary>
+    /// Событие вызывается при нажатии на ToggleButton
+    /// </summary>
     public EventHandler OnButtonPressed { get; set; }
     public ICommand SendInterval { get; set; }
 

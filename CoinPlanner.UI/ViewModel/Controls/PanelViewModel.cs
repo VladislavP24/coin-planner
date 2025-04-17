@@ -35,17 +35,43 @@ public class PanelViewModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// Событие вызывается при выборе значения из ComboBox
+    /// </summary>
+    public EventHandler OnButtonPressed { get; set; }
+
     private CalendarViewModel _calendarViewModel { get; set; }
     private DBProcessing _dBProcessing { get; set; }
+
+    public ICommand CreateFile { get; set; }
+    public ICommand OpenFile { get; set; }
+    public ICommand SaveFile { get; set; }
+
+    public ICommand AddData { get; set; }
+    public ICommand EditData { get; set; }
+    public ICommand DeleteData { get; set; }
+    public ICommand EnrollmentsSort { get; set; }
+    public ICommand ExpensesSort { get; set; }
+    public ICommand Fixation { get; set; }
+
+    public ICommand OpenGraph { get; set; }
+    public ICommand OpenTable { get; set; }
+    public ICommand Synchronization { get; set; }
+
     public ICommand Interval { get; set; }
     public ICommand Type { get; set; }
+    public ICommand Mark { get; set; }
 
     public ObservableCollection<PlanModel> Items { get; set; } = new(); // Элементы комбобокс Планы
 
     public PlanModel SelectedItemPlan  // Выбранный элемент из комбобокс Планы
     {
         get => _selectedItemPlan;
-        set => SetProperty(ref _selectedItemPlan, value, nameof(SelectedItemPlan));
+        set
+        {
+            SetProperty(ref _selectedItemPlan, value, nameof(SelectedItemPlan));
+            OnButtonPressed.Invoke(this, EventArgs.Empty);
+        }
     }
     private PlanModel _selectedItemPlan;
 

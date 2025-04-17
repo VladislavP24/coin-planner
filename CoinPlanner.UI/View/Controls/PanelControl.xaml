@@ -228,7 +228,7 @@
                        HorizontalAlignment="Center"
                        VerticalAlignment="Bottom"/>
 
-            <!-- Панель График -->
+            <!-- Панель Контент -->
             <Grid Grid.Column="3">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="10"/>
@@ -239,24 +239,7 @@
                 </Grid.RowDefinitions>
 
                 <Border Grid.Row="1" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
-                    <Button Width="130"
-                            Height="32"
-                            Margin="5,0,10,0"
-                            Style="{DynamicResource PanelButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/creategraph.png" 
-                                   Width="30" 
-                                   Height="30" 
-                                   Margin="-15,0,10,0"
-                                   VerticalAlignment="Center"
-                                   SnapsToDevicePixels="True"/>
-                            <TextBlock Text="Создать" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
-                        </StackPanel>
-                    </Button>
-                </Border>
-
-                <Border Grid.Row="2" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
-                    <Button Width="130"
+                    <Button Width="150"
                             Height="32"
                             Margin="5,0,10,0"
                             Style="{DynamicResource PanelButton}">
@@ -264,33 +247,50 @@
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/opengraph.png" 
                                    Width="30" 
                                    Height="30" 
-                                   Margin="-10,0,10,0"
+                                   Margin="-47,0,12,0"
                                    VerticalAlignment="Center"
                                    SnapsToDevicePixels="True"/>
-                            <TextBlock Text="Открыть" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                            <TextBlock Text="График" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                        </StackPanel>
+                    </Button>
+                </Border>
+
+                <Border Grid.Row="2" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
+                    <Button Width="150"
+                            Height="32"
+                            Margin="5,0,10,0"
+                            Style="{DynamicResource PanelButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/opentable.png" 
+                                   Width="30" 
+                                   Height="30" 
+                                   Margin="-40,0,12,0"
+                                   VerticalAlignment="Center"
+                                   SnapsToDevicePixels="True"/>
+                            <TextBlock Text="Таблица" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
                         </StackPanel>
                     </Button>
                 </Border>
 
                 <Border Grid.Row="3" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
-                    <Button Width="130"
+                    <Button Width="150"
                             Height="32"
                             Margin="5,0,10,0"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
-                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/savegraph.png" 
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/synchro.png" 
                                    Width="30" 
                                    Height="30" 
                                    Margin="5,0,12,0"
                                    VerticalAlignment="Center"
                                    SnapsToDevicePixels="True"/>
-                            <TextBlock Text="Сохранить" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                            <TextBlock Text="Синхр. данные" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
                         </StackPanel>
                     </Button>
                 </Border>
 
                 <TextBlock Grid.Row="4"
-                           Text="График"
+                           Text="Контент"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Bottom"/>
             </Grid>

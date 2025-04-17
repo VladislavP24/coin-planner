@@ -13,7 +13,6 @@
     <None Remove="Resources\coinplanner32.png" />
     <None Remove="Resources\costtable.png" />
     <None Remove="Resources\createfile.png" />
-    <None Remove="Resources\creategraph.png" />
     <None Remove="Resources\deletefile.png" />
     <None Remove="Resources\edittable.png" />
     <None Remove="Resources\enrolltable.png" />
@@ -23,9 +22,10 @@
     <None Remove="Resources\markcalendar.png" />
     <None Remove="Resources\openfile.png" />
     <None Remove="Resources\opengraph.png" />
+    <None Remove="Resources\opentable.png" />
     <None Remove="Resources\plan.png" />
     <None Remove="Resources\savefile.png" />
-    <None Remove="Resources\savegraph.png" />
+    <None Remove="Resources\synchro.png" />
     <None Remove="Resources\viewcalendar.png" />
   </ItemGroup>
 
@@ -43,7 +43,6 @@
     <Resource Include="Resources\coinplanner32.png" />
     <Resource Include="Resources\costtable.png" />
     <Resource Include="Resources\createfile.png" />
-    <Resource Include="Resources\creategraph.png" />
     <Resource Include="Resources\deletefile.png" />
     <Resource Include="Resources\edittable.png" />
     <Resource Include="Resources\enrolltable.png" />
@@ -53,9 +52,10 @@
     <Resource Include="Resources\markcalendar.png" />
     <Resource Include="Resources\openfile.png" />
     <Resource Include="Resources\opengraph.png" />
+    <Resource Include="Resources\opentable.png" />
     <Resource Include="Resources\plan.png" />
     <Resource Include="Resources\savefile.png" />
-    <Resource Include="Resources\savegraph.png" />
+    <Resource Include="Resources\synchro.png" />
     <Resource Include="Resources\viewcalendar.png" />
   </ItemGroup>
 
