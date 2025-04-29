@@ -40,6 +40,16 @@ public class OperationModel : ObservableObject
     private string? _operType;
 
     /// <summary>
+    /// Вид операции
+    /// </summary>
+    public string? OperCategory
+    {
+        get => _operCategory;
+        set => SetProperty(ref _operCategory, value, nameof(OperCategory));
+    }
+    private string? _operCategory;
+
+    /// <summary>
     /// Сумма
     /// </summary>
     public double? OperSum
@@ -52,22 +62,22 @@ public class OperationModel : ObservableObject
     /// <summary>
     /// Выполнен
     /// </summary>
-    public string OperCompleted
+    public string? OperCompleted
     {
         get => _operCompleted;
         set => SetProperty(ref _operCompleted, value, nameof(OperCompleted));
     }
-    private string _operCompleted;
+    private string? _operCompleted;
 
     /// <summary>
     /// Время
     /// </summary>
-    public string OperNextDate
+    public string? OperNextDate
     {
         get => _operNextDate;
         set => SetProperty(ref _operNextDate, value, nameof(OperNextDate));
     }
-    private string _operNextDate;
+    private string? _operNextDate;
 
     /// <summary>
     /// Номер плана

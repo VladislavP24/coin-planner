@@ -38,7 +38,7 @@
                                           IsChecked="{Binding IsChecked}"
                                           Width="430" 
                                           Height="57" 
-                                          Margin="5"
+                                          Margin="4"
                                           Command="{Binding DataContext.SendInterval, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:CalendarControl}}"
                                           Style="{StaticResource CustomToggleButtonStyle}"/>
                         </DataTemplate>

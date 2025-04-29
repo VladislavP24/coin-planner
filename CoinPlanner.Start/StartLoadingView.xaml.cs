@@ -47,7 +47,7 @@ namespace CoinPlanner.Start
 
             if (isConnected)
             {
-                bool isLoaded = await _dbProcessing.LoadDataFromDatabaseAsync();
+                bool isLoaded = _dbProcessing.LoadDataFromDatabaseAsync();
                 if (!isLoaded)
                     MessageBox.Show("Не удалось загрузить данные из базы данных", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }

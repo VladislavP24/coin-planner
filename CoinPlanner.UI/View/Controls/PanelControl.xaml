@@ -112,6 +112,7 @@
                         Height="32"
                         Margin="5,0,10,0"
                         HorizontalAlignment="Left"
+                        Command="{Binding DataContext.AddData, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                         Style="{DynamicResource PanelButton}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/addtable.png" 
@@ -173,7 +174,7 @@
                 <Border Grid.Row="1" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
                     <Button Width="135"
                             Height="32"
-                            Margin="0,0,10,0"
+                            Margin="0,0,9,0"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/enrolltable.png" 
@@ -182,7 +183,7 @@
                                    Margin="5,0,8,0"
                                    VerticalAlignment="Center"
                                    SnapsToDevicePixels="True"/>
-                            <TextBlock Text="Зачисление" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                            <TextBlock Text="Зачисления" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
                         </StackPanel>
                     </Button>
                 </Border>
@@ -190,7 +191,7 @@
                 <Border Grid.Row="2" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
                     <Button Width="135"
                             Height="32"
-                            Margin="0,0,10,0"
+                            Margin="0,0,9,0"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/costtable.png" 
@@ -207,7 +208,7 @@
                 <Border Grid.Row="3" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
                     <Button Width="135"
                             Height="32"
-                            Margin="0,0,10,0"
+                            Margin="0,0,9,0"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/fixationtable.png" 

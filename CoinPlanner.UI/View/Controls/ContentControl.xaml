@@ -127,6 +127,24 @@
                             </DataGridTemplateColumn>
 
 
+                            <!-- Столбец Категория -->
+                            <DataGridTemplateColumn Header="Категория" Width="1*" SortMemberPath="OperCategory"
+                                                    HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <TextBlock Text="{Binding OperCategory, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       Margin="3,0,0,0"
+                                                       HorizontalAlignment="Stretch"
+                                                       VerticalAlignment="Stretch"
+                                                       TextAlignment="Left"
+                                                       Background="Transparent"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+
                             <!-- Столбец Сумма, руб. -->
                             <DataGridTemplateColumn Header="Сумма, руб." Width="1*" SortMemberPath="OperSum"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
@@ -145,7 +163,10 @@
 
                             <!-- Столбец Выполнен -->
                             <DataGridTemplateColumn Header="Выполнен" Width="1*" SortMemberPath="OperCompleted"
-                                                    HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
+                                                    HeaderStyle="{StaticResource DataGridColumnHeaderStyleRight}">
+                                <DataGridTemplateColumn.CellStyle>
+                                    <Style TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellStyleRight}" />
+                                </DataGridTemplateColumn.CellStyle>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding OperCompleted, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
