@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Xml;
 using CoinPlanner.DataBase;
 using CoinPlanner.DataBase.ModelsDB;
 using CoinPlanner.UI.Model;
@@ -16,31 +17,17 @@ namespace CoinPlanner.UI.ViewModel.Controls;
 
 public class PanelViewModel : ObservableObject
 {
-    public PanelViewModel(CalendarViewModel calendarViewModel, DBProcessing dBProcessing) 
+    public PanelViewModel(CalendarViewModel calendarViewModel, ContentViewModel contentViewModel, DBProcessing dBProcessing) 
     {
-        Interval = new RelayCommand(IntervalCommand);
-        Type = new RelayCommand(TypeCommand);
+        BindingCommandToButton();
         _calendarViewModel = calendarViewModel;
+        _contentViewModel = contentViewModel;
         _dBProcessing = dBProcessing;
-
-        foreach(var plan in dBProcessing.PlansList)
-        {
-            Items.Add(new PlanModel() 
-            {
-                PlanId = plan.Plan_Id,
-                PlanName = plan.Plan_Name,
-                DataCreate = plan.Data_Create,
-                DataUpdate = plan.Data_Update
-            });
-        }
+        ModelConvert();
     }
 
-    /// <summary>
-    /// Событие вызывается при выборе значения из ComboBox
-    /// </summary>
-    public EventHandler OnButtonPressed { get; set; }
-
     private CalendarViewModel _calendarViewModel { get; set; }
+    private ContentViewModel _contentViewModel { get; set; }
     private DBProcessing _dBProcessing { get; set; }
 
     public ICommand CreateFile { get; set; }
@@ -63,6 +50,7 @@ public class PanelViewModel : ObservableObject
     public ICommand Mark { get; set; }
 
     public ObservableCollection<PlanModel> Items { get; set; } = new(); // Элементы комбобокс Планы
+    private Dictionary<int, string> Categories { get; set; } = new();
 
     public PlanModel SelectedItemPlan  // Выбранный элемент из комбобокс Планы
     {
@@ -70,10 +58,39 @@ public class PanelViewModel : ObservableObject
         set
         {
             SetProperty(ref _selectedItemPlan, value, nameof(SelectedItemPlan));
-            OnButtonPressed.Invoke(this, EventArgs.Empty);
+            _contentViewModel.Plan = value;
+            _contentViewModel.UpdateOperation();
         }
     }
     private PlanModel _selectedItemPlan;
+
+
+    public void ModelConvert()
+    {
+        foreach (var plan in _dBProcessing.PlansList)
+        {
+            Items.Add(new PlanModel()
+            {
+                PlanId = plan.Plan_Id,
+                PlanName = plan.Plan_Name,
+                DataCreate = plan.Data_Create,
+                DataUpdate = plan.Data_Update
+            });
+        }
+
+        foreach (var category in _dBProcessing.CategoriesList)
+            Categories.Add(category.Category_Id, category.Category_Name);
+    }
+
+
+    #region Команды на панели
+
+    public void BindingCommandToButton()
+    {
+        Interval = new RelayCommand(IntervalCommand);
+        Type = new RelayCommand(TypeCommand);
+        AddData = new RelayCommand(AddDataCommand);
+    }
 
     public void IntervalCommand()
     {
@@ -86,4 +103,12 @@ public class PanelViewModel : ObservableObject
         TypeDialogs typeDialogs = new TypeDialogs(_calendarViewModel);
         typeDialogs.ShowDialog();
     }
+
+    public void AddDataCommand()
+    {
+        AddDataDialogs addDataDialogs = new AddDataDialogs(_contentViewModel, Categories);
+        addDataDialogs.ShowDialog();
+    }
+
+    #endregion
 }

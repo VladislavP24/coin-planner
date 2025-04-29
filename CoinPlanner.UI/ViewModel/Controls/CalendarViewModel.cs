@@ -16,16 +16,14 @@ namespace CoinPlanner.UI.ViewModel.Controls;
 
 public class CalendarViewModel : ObservableObject
 {
-    public CalendarViewModel()
+    public CalendarViewModel(ContentViewModel contentViewModel)
     {
+        _contentViewModel = contentViewModel;
         SendInterval = new RelayCommand(SendIntervalCommand);
         UpdateButtons();
     }
 
-    /// <summary>
-    /// Событие вызывается при нажатии на ToggleButton
-    /// </summary>
-    public EventHandler OnButtonPressed { get; set; }
+    private ContentViewModel _contentViewModel;
     public ICommand SendInterval { get; set; }
 
     /// <summary>
@@ -71,22 +69,19 @@ public class CalendarViewModel : ObservableObject
     }
     private ObservableCollection<ButtonItemsViewModel> _buttons = new();
 
-    public DateTime? SelectedStart { get; set; }
-    public DateTime? SelectedEnd { get; set; }
 
     /// <summary>
     /// Отправка инетервала после нажатия на кнопку
     /// </summary>
     private void SendIntervalCommand()
     {
-        SelectedStart = Buttons.Where(x => x.IsChecked == true).Select(x => x.StartTime).FirstOrDefault();
-        SelectedEnd = Buttons.Where(x => x.IsChecked == true).Select(x => x.EndTime).FirstOrDefault();
+        _contentViewModel.StartDate = Buttons.Where(x => x.IsChecked == true).Select(x => x.StartTime).FirstOrDefault();
+        _contentViewModel.EndDate = Buttons.Where(x => x.IsChecked == true).Select(x => x.EndTime).FirstOrDefault();
+        _contentViewModel.UpdateOperation();
 
         // Сброc IsCheked
         foreach (var button in Buttons.Where(x => x.IsChecked == true))
             button.IsChecked = false;
-
-        OnButtonPressed.Invoke(this, EventArgs.Empty);
     }
 
 

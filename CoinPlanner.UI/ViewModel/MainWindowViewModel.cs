@@ -15,12 +15,9 @@ public class MainWindowViewModel
     public MainWindowViewModel(DBProcessing dbProcessing)
     {
         // Определение ViewModel`ей
-        CalendarViewModel = new CalendarViewModel();
-        PanelViewModel = new PanelViewModel(CalendarViewModel, dbProcessing);
-        ContentViewModel = new ContentViewModel(CalendarViewModel, PanelViewModel, dbProcessing);
-
-        CalendarViewModel.OnButtonPressed += ContentViewModel.UpdateOperation;
-        PanelViewModel.OnButtonPressed += ContentViewModel.UpdateOperation;
+        ContentViewModel = new ContentViewModel(dbProcessing);
+        CalendarViewModel = new CalendarViewModel(ContentViewModel);
+        PanelViewModel = new PanelViewModel(CalendarViewModel, ContentViewModel, dbProcessing); 
     }
 
     public CalendarViewModel CalendarViewModel { get; }

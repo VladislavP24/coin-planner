@@ -1,40 +1,44 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
 using CoinPlanner.DataBase;
 using CoinPlanner.UI.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace CoinPlanner.UI.ViewModel.Controls;
 
 public class ContentViewModel : ObservableObject
 {
-    public ContentViewModel(CalendarViewModel calendarViewModel, PanelViewModel panelViewModel, DBProcessing dBProcessing) 
+    public ContentViewModel(DBProcessing dBProcessing) 
     {
         _dBProcessing = dBProcessing;
-        _calendarViewModel = calendarViewModel;
-        _panelViewModel = panelViewModel;
-        UpdateOperation(this, EventArgs.Empty);
     }
 
     private DBProcessing _dBProcessing;
-    private CalendarViewModel _calendarViewModel;
-    private PanelViewModel _panelViewModel;
+    public DateTime? StartDate { get; set; }
+    public DateTime? EndDate { get; set; }
+    public PlanModel? Plan { get; set; }
 
-    public void UpdateOperation(object sender, EventArgs e)
+    /// <summary>
+    /// Обноавление данных в таблице в зависимости о параметров
+    /// </summary>
+    public void UpdateOperation()
     {
         DynamicOperationCollection.Clear();
-        if (_calendarViewModel.SelectedStart == null || _calendarViewModel.SelectedEnd == null || _panelViewModel.SelectedItemPlan == null)
+        if (StartDate == null || EndDate == null || Plan == null)
             return;
 
         int i = 1;
-        foreach (var oper in _dBProcessing.OperationsList.Where(x => x.Oper_Next_Date >= _calendarViewModel.SelectedStart 
-                                                                  && x.Oper_Next_Date <= _calendarViewModel.SelectedEnd)
-                                                         .Where(x => x.Oper_Plan_Id == _panelViewModel.SelectedItemPlan.PlanId))
+        foreach (var oper in _dBProcessing.OperationsList.Where(x => x.Oper_Next_Date >= StartDate
+                                                                  && x.Oper_Next_Date <= EndDate)
+                                                         .Where(x => x.Oper_Plan_Id == Plan.PlanId))
         {       
             DynamicOperationCollection.Add(new OperationModel
             {
                 OperId = i,
                 OperName = oper.Oper_Name,
                 OperType = oper.Type_Name,
+                OperCategory = oper.Category_Name,
                 OperSum = oper.Oper_Sum,
                 OperCompleted = oper.Oper_Completed == true ? "Да" : "Нет",
                 OperNextDate = oper.Oper_Next_Date.ToString("dd MMMM yyyy 'г.'"),
@@ -44,6 +48,7 @@ public class ContentViewModel : ObservableObject
             i++;
         }
     }
+
 
     /// <summary>
     /// Коллекция записной книжки
@@ -59,12 +64,10 @@ public class ContentViewModel : ObservableObject
     /// <summary>
     /// Выбранная строчка в записной книжке
     /// </summary>
-    public OperationModel CurSelectedOperation
+    public OperationModel? CurSelectedOperation
     {
         get => _curSelectedOperation;
         set => SetProperty(ref _curSelectedOperation, value, nameof(CurSelectedOperation));
     }
-    private OperationModel _curSelectedOperation;
-
-
+    private OperationModel? _curSelectedOperation;
 }
