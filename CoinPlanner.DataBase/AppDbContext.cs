@@ -1,12 +1,14 @@
-﻿using CoinPlanner.DataBase.ModelsDB;
+﻿using CoinPlanner.DataBase.ModelsDb;
+using CoinPlanner.DataBase.ModelsDB;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoinPlanner.DataBase;
 
 public class AppDbContext : DbContext
 {
-    public DbSet<Operations> Operations { get; set; } = null!;
-    public DbSet<Plans> Plans { get; set; } = null!;
+    public DbSet<Operations> operations { get; set; } = null!;
+    public DbSet<Plans> plans { get; set; } = null!;
+    public DbSet<Categories> categories { get; set; } = null!;
 
     public AppDbContext()
         => Database.EnsureCreated();
