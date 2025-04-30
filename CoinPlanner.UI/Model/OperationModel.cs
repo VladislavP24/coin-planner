@@ -22,42 +22,42 @@ public class OperationModel : ObservableObject
     /// <summary>
     /// Наименование
     /// </summary>
-    public string? OperName
+    public string OperName
     {
         get => _operName;
         set => SetProperty(ref _operName, value, nameof(OperName));
     }
-    private string? _operName;
+    private string _operName;
 
     /// <summary>
     /// Вид операции
     /// </summary>
-    public string? OperType
+    public string OperType
     { 
         get => _operType;
         set => SetProperty(ref _operType, value, nameof(OperType));
     }
-    private string? _operType;
+    private string _operType;
 
     /// <summary>
     /// Вид операции
     /// </summary>
-    public string? OperCategory
+    public string OperCategory
     {
         get => _operCategory;
         set => SetProperty(ref _operCategory, value, nameof(OperCategory));
     }
-    private string? _operCategory;
+    private string _operCategory;
 
     /// <summary>
     /// Сумма
     /// </summary>
-    public double? OperSum
+    public double OperSum
     {
         get => _operSum;
         set => SetProperty(ref _operSum, value, nameof(OperSum));
     }
-    private double? _operSum;
+    private double _operSum;
 
     /// <summary>
     /// Выполнен
