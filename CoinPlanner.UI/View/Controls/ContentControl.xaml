@@ -162,7 +162,7 @@
 
 
                             <!-- Столбец Выполнен -->
-                            <DataGridTemplateColumn Header="Выполнен" Width="1*" SortMemberPath="OperCompleted"
+                            <DataGridTemplateColumn Header="Выполнен" Width="0.5*" SortMemberPath="OperCompleted"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyleRight}">
                                 <DataGridTemplateColumn.CellStyle>
                                     <Style TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellStyleRight}" />

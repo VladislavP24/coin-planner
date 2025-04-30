@@ -1,4 +1,7 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using CoinPlanner.DataBase;
 using CoinPlanner.UI.ViewModel.Controls;
 using CoinPlanner.UI.ViewModel.Dialogs;
 
@@ -10,11 +13,20 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class AddDataDialogs : Window
     {
-        public AddDataDialogs(ContentViewModel contentViewModel, Dictionary<int, string> categories)
+        public AddDataDialogs(DBProcessing dBProcessing, PanelViewModel panelViewModel, ContentViewModel contentViewModel)
         {
             InitializeComponent();
 
-            DataContext = new AddDataDialogsViewmodel(this, contentViewModel, categories);
+            DataContext = new AddDataDialogsViewmodel(this, dBProcessing, panelViewModel, contentViewModel);
+        }
+
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!char.IsDigit(e.Text, 0) && e.Text != ".")
+                e.Handled = true;
+
+            if (e.Text == "." && ((TextBox)sender).Text.Contains("."))
+                e.Handled = true;
         }
     }
 }

@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoinPlanner.UI.View.Dialogs"
         mc:Ignorable="d"
-                d:DesignHeight="200" d:DesignWidth="300"
-        Height="150" Width="400"
-        MaxHeight="150" MaxWidth="400"
-        MinHeight="150" MinWidth="400"
+        d:DesignHeight="200" d:DesignWidth="300"
+        Height="180" Width="400"
+        MaxHeight="180" MaxWidth="400"
+        MinHeight="180" MinWidth="400"
         Title="Coin Planner" 
         WindowStartupLocation="CenterScreen"
         Icon="pack://application:,,,/CoinPlanner.UI;component/Resources/icon32.ico">
@@ -24,48 +24,44 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="50"/>
             <RowDefinition Height="35"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
-            <TextBlock Text="Укажите, в каком виде будет отображен календарь:"
+            <TextBlock Text="Укажите номер строки операции из плана, которую необходимо удалить:"
                TextWrapping="Wrap"
                Margin="15,5,5,5"
                FontSize="15"/>
         </Grid>
 
         <Grid Grid.Row="1">
-            <StackPanel Orientation="Vertical">
-                <TextBlock Text="Вид календаря    - "
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Номер строки для удаления: "
                            TextWrapping="Wrap"
                            Margin="15,5,0,5"
                            FontSize="15"/>
+                <TextBox Text="{Binding DataContext.NumberRow, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DeleteDataDialogs}}"
+                         Width="100"
+                         TextWrapping="Wrap"
+                         Margin="15,5,0,5"
+                         FontSize="15"
+                         PreviewTextInput="TextBox_PreviewTextInput"/>
             </StackPanel>
-
-            <ComboBox x:Name="MyComboBox"
-                      Height="25"
-                      Width="90"
-                      Margin="0"
-                      VerticalAlignment="Center"
-                      HorizontalAlignment="Center"
-                      ItemsSource="{Binding DataContext.Items, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:TypeDialogs}}"
-                      SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:TypeDialogs}}"
-                      Style="{StaticResource TypeComboBoxStyle}"/>
         </Grid>
 
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="2" Margin="0,10,0,0">
             <Border VerticalAlignment="Top"
                     BorderBrush="Black"
-                    BorderThickness="0,1,0,0"/>
+                    BorderThickness="0,0.1,0,0"/>
             <Button Content="Ок" 
                     Height="30" 
                     Width="70"
                     HorizontalAlignment="Left"
                     Margin="10,10,0,0"
                     FontSize="15"
-                    Command="{Binding DataContext.Ok, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:TypeDialogs}}"
+                    Command="{Binding DataContext.Ok, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DeleteDataDialogs}}"
                     Style="{StaticResource PanelButton}"/>
             <Button Content="Отмена" 
                     Height="30" 
@@ -73,7 +69,7 @@
                     HorizontalAlignment="Right"
                     Margin="0,10,10,0"
                     FontSize="15"
-                    Command="{Binding DataContext.Cancel, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:TypeDialogs}}"
+                    Command="{Binding DataContext.Cancel, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DeleteDataDialogs}}"
                     Style="{StaticResource PanelButton}"/>
         </Grid>
     </Grid>

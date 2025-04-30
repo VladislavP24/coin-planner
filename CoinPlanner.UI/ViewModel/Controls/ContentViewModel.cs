@@ -41,7 +41,7 @@ public class ContentViewModel : ObservableObject
                 OperCategory = oper.Category_Name,
                 OperSum = oper.Oper_Sum,
                 OperCompleted = oper.Oper_Completed == true ? "Да" : "Нет",
-                OperNextDate = oper.Oper_Next_Date.ToString("dd MMMM yyyy 'г.'"),
+                OperNextDate = oper.Oper_Next_Date.ToString("HH:mm:ss dd MMMM yyyy 'г.'"),
                 OperPlanId = oper.Oper_Plan_Id
             });
 

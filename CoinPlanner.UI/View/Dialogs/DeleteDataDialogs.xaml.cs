@@ -11,6 +11,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using CoinPlanner.DataBase;
+using CoinPlanner.UI.ViewModel.Controls;
+using CoinPlanner.UI.ViewModel.Dialogs;
 
 namespace CoinPlanner.UI.View.Dialogs
 {
@@ -19,9 +22,17 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class DeleteDataDialogs : Window
     {
-        public DeleteDataDialogs()
+        public DeleteDataDialogs(DBProcessing dBProcessing, ContentViewModel contentViewModel, PanelViewModel panelViewModel)
         {
             InitializeComponent();
+
+            DataContext = new DeleteDataDialogsViewModel(this, dBProcessing, contentViewModel, panelViewModel);
+        }
+
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!char.IsDigit(e.Text, 0))
+                e.Handled = true;
         }
     }
 }

@@ -130,6 +130,7 @@
                         Height="32"
                         Margin="5,0,10,0"
                         HorizontalAlignment="Left"
+                        Command="{Binding DataContext.EditData, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                         Style="{DynamicResource PanelButton}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/edittable.png" 
@@ -147,6 +148,7 @@
                         Height="32"
                         Margin="5,0,10,0"
                         HorizontalAlignment="Left"
+                        Command="{Binding DataContext.DeleteData, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                         Style="{DynamicResource PanelButton}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/deletefile.png" 
@@ -309,7 +311,7 @@
                 <Border Grid.Row="1" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
                     <Button Width="130"
                             Height="32"
-                            Margin="5,0,10,0"
+                            Margin="3,0,10,0"
                             Command="{Binding DataContext.Type, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
@@ -327,7 +329,7 @@
                 <Border Grid.Row="2" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
                     <Button Width="130"
                             Height="32"
-                            Margin="5,0,10,0"
+                            Margin="3,0,10,0"
                             Command="{Binding DataContext.Interval, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
@@ -343,7 +345,7 @@
                 </Border>
 
                 <Border Grid.Row="3" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
-                    <Button Width="130"
+                    <Button Width="127"
                             Height="32"
                             Margin="5,0,10,0"
                             Style="{DynamicResource PanelButton}">

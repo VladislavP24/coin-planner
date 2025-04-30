@@ -50,7 +50,7 @@ public class PanelViewModel : ObservableObject
     public ICommand Mark { get; set; }
 
     public ObservableCollection<PlanModel> Items { get; set; } = new(); // Элементы комбобокс Планы
-    private Dictionary<int, string> Categories { get; set; } = new();
+    public Dictionary<int, string> Categories { get; set; } = new();
 
     public PlanModel SelectedItemPlan  // Выбранный элемент из комбобокс Планы
     {
@@ -90,6 +90,8 @@ public class PanelViewModel : ObservableObject
         Interval = new RelayCommand(IntervalCommand);
         Type = new RelayCommand(TypeCommand);
         AddData = new RelayCommand(AddDataCommand);
+        DeleteData = new RelayCommand(DeleteDataCommand);
+        EditData = new RelayCommand(EditDataCommand);
     }
 
     public void IntervalCommand()
@@ -106,8 +108,20 @@ public class PanelViewModel : ObservableObject
 
     public void AddDataCommand()
     {
-        AddDataDialogs addDataDialogs = new AddDataDialogs(_contentViewModel, Categories);
+        AddDataDialogs addDataDialogs = new AddDataDialogs(_dBProcessing, this, _contentViewModel);
         addDataDialogs.ShowDialog();
+    }
+
+    public void EditDataCommand()
+    {
+        EditDataDialogs editDataDialogs = new EditDataDialogs(_dBProcessing, _contentViewModel, this);
+        editDataDialogs.ShowDialog();
+    }
+
+    public void DeleteDataCommand()
+    {
+        DeleteDataDialogs deleteDataDialogs = new DeleteDataDialogs(_dBProcessing, _contentViewModel, this);
+        deleteDataDialogs.ShowDialog();
     }
 
     #endregion
