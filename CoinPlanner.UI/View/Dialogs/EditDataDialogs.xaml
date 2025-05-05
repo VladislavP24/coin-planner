@@ -46,7 +46,7 @@
                            TextWrapping="Wrap"
                            Margin="15,5,0,5"
                            FontSize="15"/>
-                <TextBox Text="{Binding DataContext.NumberRow, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:EditDataDialogs}, Mode=TwoWay}"
+                <TextBox Text="{Binding DataContext.NumberRow, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:EditDataDialogs}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Width="210"
                          TextWrapping="Wrap"
                          Margin="22,5,0,5"

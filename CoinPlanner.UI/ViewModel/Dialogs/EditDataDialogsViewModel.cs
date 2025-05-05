@@ -47,10 +47,36 @@ public class EditDataDialogsViewModel : ObservableObject
     }
     private int _numberRow;
 
-    public string Name { get; set; }
-    public double Sum { get; set; }
-    public bool Completed { get; set; }
-    public DateTime Date { get; set; } = new DateTime(2025, 1, 01, 0, 0, 0);
+    public string Name
+    {
+        get => _name;
+        set => SetProperty(ref _name, value, nameof(Name));
+    }
+    private string _name;
+
+
+    public double Sum
+    {
+        get => _sum;
+        set => SetProperty(ref _sum, value, nameof(Sum));
+    }
+    private double _sum;
+
+
+    public bool Completed
+    {
+        get => _completed;
+        set => SetProperty(ref _completed, value, nameof(Completed));
+    }
+    private bool _completed;
+
+
+    public DateTime Date
+    {
+        get => _date;
+        set => SetProperty(ref _date, value, nameof(Date));
+    }
+    private DateTime _date = new DateTime(2025, 1, 01, 0, 0, 0);
 
 
     //ComboBox Items and Selected
@@ -97,8 +123,20 @@ public class EditDataDialogsViewModel : ObservableObject
     {
         if (_panelViewModel.SelectedItemPlan != null)
         {
+            _dBProcessing.OperationsList.Add(new DataBase.ModelsDB.Operations
+            {
+                Oper_Id = _dBProcessing.OperationsList.Count + 1,
+                Oper_Name = Name,
+                Type_Name = TypeSelected,
+                Category_Name = CategorySelected,
+                Oper_Sum = Sum,
+                Oper_Completed = Completed,
+                Oper_Next_Date = Date,
+                Oper_Plan_Id = _panelViewModel.SelectedItemPlan.PlanId
+            });
         }
 
+        _contentViewModel.UpdateOperation();
         _editDataDialogs.Close();
     }
     private void CancelCommand()
