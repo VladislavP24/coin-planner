@@ -44,6 +44,7 @@
                     <Button Width="130"
                             Height="32"
                             Margin="5,0,20,0"
+                            Foreground="Red"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/createfile.png" 
@@ -61,6 +62,7 @@
                     <Button Width="130"
                             Height="32"
                             Margin="5,0,20,0"
+                            Foreground="Red"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/openfile.png" 
@@ -78,6 +80,7 @@
                     <Button Width="130"
                             Height="32"
                             Margin="5,0,20,0"
+                            Foreground="Red"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/savefile.png" 
@@ -177,6 +180,7 @@
                     <Button Width="135"
                             Height="32"
                             Margin="0,0,9,0"
+                            Foreground="Red"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/enrolltable.png" 
@@ -194,6 +198,7 @@
                     <Button Width="135"
                             Height="32"
                             Margin="0,0,9,0"
+                            Foreground="Red"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/costtable.png" 
@@ -245,6 +250,7 @@
                     <Button Width="150"
                             Height="32"
                             Margin="5,0,10,0"
+                            Foreground="Red"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/opengraph.png" 
@@ -262,6 +268,7 @@
                     <Button Width="150"
                             Height="32"
                             Margin="5,0,10,0"
+                            Foreground="Red"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/opentable.png" 
@@ -279,6 +286,7 @@
                     <Button Width="150"
                             Height="32"
                             Margin="5,0,10,0"
+                            Command="{Binding DataContext.Synchronization, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/synchro.png" 
@@ -348,6 +356,7 @@
                     <Button Width="127"
                             Height="32"
                             Margin="5,0,10,0"
+                            Foreground="Red"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/markcalendar.png" 
