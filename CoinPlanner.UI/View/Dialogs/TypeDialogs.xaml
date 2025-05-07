@@ -32,14 +32,14 @@
 
         <Grid Grid.Row="0">
             <TextBlock Text="Укажите, в каком виде будет отображен календарь:"
-               TextWrapping="Wrap"
-               Margin="15,5,5,5"
-               FontSize="15"/>
+                       TextWrapping="Wrap"
+                       Margin="15,5,5,5"
+                       FontSize="15"/>
         </Grid>
 
         <Grid Grid.Row="1">
             <StackPanel Orientation="Vertical">
-                <TextBlock Text="Вид календаря    - "
+                <TextBlock Text="Вид календаря:"
                            TextWrapping="Wrap"
                            Margin="15,5,0,5"
                            FontSize="15"/>
@@ -47,7 +47,7 @@
 
             <ComboBox x:Name="MyComboBox"
                       Height="25"
-                      Width="90"
+                      Width="100"
                       Margin="0"
                       VerticalAlignment="Center"
                       HorizontalAlignment="Center"
