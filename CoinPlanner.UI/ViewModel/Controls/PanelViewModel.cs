@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Xml;
 using CoinPlanner.DataBase;
@@ -17,18 +18,18 @@ namespace CoinPlanner.UI.ViewModel.Controls;
 
 public class PanelViewModel : ObservableObject
 {
-    public PanelViewModel(CalendarViewModel calendarViewModel, ContentViewModel contentViewModel, DBProcessing dBProcessing) 
+    public PanelViewModel(CalendarViewModel calendarViewModel, ContentViewModel contentViewModel, DataService dataService) 
     {
         BindingCommandToButton();
         _calendarViewModel = calendarViewModel;
         _contentViewModel = contentViewModel;
-        _dBProcessing = dBProcessing;
+        _dataService = dataService;
         ModelConvert();
     }
 
     private CalendarViewModel _calendarViewModel { get; set; }
     private ContentViewModel _contentViewModel { get; set; }
-    private DBProcessing _dBProcessing { get; set; }
+    private DataService _dataService { get; set; }
 
     public ICommand CreateFile { get; set; }
     public ICommand OpenFile { get; set; }
@@ -67,18 +68,18 @@ public class PanelViewModel : ObservableObject
 
     public void ModelConvert()
     {
-        foreach (var plan in _dBProcessing.PlansList)
+        foreach (var plan in _dataService.PlansList)
         {
             Items.Add(new PlanModel()
             {
                 PlanId = plan.Plan_Id,
                 PlanName = plan.Plan_Name,
-                DataCreate = plan.Data_Create,
-                DataUpdate = plan.Data_Update
+                DataCreate = plan.Date_Create,
+                DataUpdate = plan.Date_Update
             });
         }
 
-        foreach (var category in _dBProcessing.CategoriesList)
+        foreach (var category in _dataService.CategoriesList)
             Categories.Add(category.Category_Id, category.Category_Name);
     }
 
@@ -92,6 +93,7 @@ public class PanelViewModel : ObservableObject
         AddData = new RelayCommand(AddDataCommand);
         DeleteData = new RelayCommand(DeleteDataCommand);
         EditData = new RelayCommand(EditDataCommand);
+        Synchronization = new RelayCommand(SynchronizationCommand);
     }
 
     public void IntervalCommand()
@@ -108,20 +110,35 @@ public class PanelViewModel : ObservableObject
 
     public void AddDataCommand()
     {
-        AddDataDialogs addDataDialogs = new AddDataDialogs(_dBProcessing, this, _contentViewModel);
+        AddDataDialogs addDataDialogs = new AddDataDialogs(_dataService, this, _contentViewModel);
         addDataDialogs.ShowDialog();
     }
 
     public void EditDataCommand()
     {
-        EditDataDialogs editDataDialogs = new EditDataDialogs(_dBProcessing, _contentViewModel, this);
+        EditDataDialogs editDataDialogs = new EditDataDialogs(_dataService, _contentViewModel, this);
         editDataDialogs.ShowDialog();
     }
 
     public void DeleteDataCommand()
     {
-        DeleteDataDialogs deleteDataDialogs = new DeleteDataDialogs(_dBProcessing, _contentViewModel, this);
+        DeleteDataDialogs deleteDataDialogs = new DeleteDataDialogs(_dataService, _contentViewModel, this);
         deleteDataDialogs.ShowDialog();
+    }
+
+
+    public void SynchronizationCommand()
+    {
+        if (_dataService.SaveDataToDatabaseAsync())
+        {
+            MessageBox.Show("Синхронизация данных прошла успешно!",
+                            "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        else
+        {
+            MessageBox.Show("Не удалось провести синхронизацию данных. Проверьте подключение к БД.",
+                             "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 
     #endregion

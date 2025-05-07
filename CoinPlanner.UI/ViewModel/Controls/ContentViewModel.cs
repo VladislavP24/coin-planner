@@ -9,12 +9,12 @@ namespace CoinPlanner.UI.ViewModel.Controls;
 
 public class ContentViewModel : ObservableObject
 {
-    public ContentViewModel(DBProcessing dBProcessing) 
+    public ContentViewModel(DataService dataService) 
     {
-        _dBProcessing = dBProcessing;
+        _dataService = dataService;
     }
 
-    private DBProcessing _dBProcessing;
+    private DataService _dataService;
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public PlanModel? Plan { get; set; }
@@ -29,7 +29,7 @@ public class ContentViewModel : ObservableObject
             return;
 
         int i = 1;
-        foreach (var oper in _dBProcessing.OperationsList.Where(x => x.Oper_Next_Date >= StartDate
+        foreach (var oper in _dataService.OperationsList.Where(x => x.Oper_Next_Date >= StartDate
                                                                   && x.Oper_Next_Date <= EndDate)
                                                          .Where(x => x.Oper_Plan_Id == Plan.PlanId))
         {       
@@ -41,7 +41,7 @@ public class ContentViewModel : ObservableObject
                 OperCategory = oper.Category_Name,
                 OperSum = oper.Oper_Sum,
                 OperCompleted = oper.Oper_Completed == true ? "Да" : "Нет",
-                OperNextDate = oper.Oper_Next_Date.ToString("HH:mm:ss dd MMMM yyyy 'г.'"),
+                OperNextDate = oper.Oper_Next_Date.ToString("HH:mm  dd-MM-yyyy 'г.'"),
                 OperPlanId = oper.Oper_Plan_Id
             });
 

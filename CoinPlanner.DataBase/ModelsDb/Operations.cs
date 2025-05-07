@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace CoinPlanner.DataBase.ModelsDB;
 public class Operations
 {
     [Key]
+    [Column("oper_id")]
     public int Oper_Id { get; set; }
     public int Oper_Plan_Id { get; set; }
     public string? Oper_Name { get; set; }

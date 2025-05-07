@@ -16,10 +16,10 @@ namespace CoinPlanner.UI.ViewModel.Dialogs;
 
 public class EditDataDialogsViewModel : ObservableObject
 {
-    public EditDataDialogsViewModel(EditDataDialogs editDataDialogs, DBProcessing dBProcessing, ContentViewModel contentViewModel, PanelViewModel panelViewModel) 
+    public EditDataDialogsViewModel(EditDataDialogs editDataDialogs, DataService dataService, ContentViewModel contentViewModel, PanelViewModel panelViewModel) 
     {
         _editDataDialogs = editDataDialogs;
-        _dBProcessing = dBProcessing;
+        _dataService = dataService;
         _contentViewModel = contentViewModel;
         _panelViewModel = panelViewModel;
         Ok = new RelayCommand(OkCommand);
@@ -29,7 +29,7 @@ public class EditDataDialogsViewModel : ObservableObject
             CategoryItems.Add(category.Value);
     }
 
-    private DBProcessing _dBProcessing;
+    private DataService _dataService;
     private ContentViewModel _contentViewModel;
     private EditDataDialogs _editDataDialogs;
     private PanelViewModel _panelViewModel;
@@ -121,24 +121,37 @@ public class EditDataDialogsViewModel : ObservableObject
 
     private void OkCommand()
     {
-        if (_panelViewModel.SelectedItemPlan != null)
+        if (_panelViewModel.SelectedItemPlan == null)
         {
-            _dBProcessing.OperationsList.Add(new DataBase.ModelsDB.Operations
+            _editDataDialogs.Close();
+            return;
+        }   
+        
+        int row = 0;
+        foreach (var oper in _dataService.OperationsList.Where(x => x.Oper_Next_Date >= _contentViewModel.StartDate && x.Oper_Next_Date <= _contentViewModel.EndDate) .Where(x => x.Oper_Plan_Id == _contentViewModel.Plan.PlanId))
+        {
+            row++;
+            if (row == NumberRow)
             {
-                Oper_Id = _dBProcessing.OperationsList.Count + 1,
-                Oper_Name = Name,
-                Type_Name = TypeSelected,
-                Category_Name = CategorySelected,
-                Oper_Sum = Sum,
-                Oper_Completed = Completed,
-                Oper_Next_Date = Date,
-                Oper_Plan_Id = _panelViewModel.SelectedItemPlan.PlanId
-            });
+                oper.Oper_Id = _dataService.OperationsList.Count + 1;
+                oper.Oper_Name = Name;
+                oper.Type_Name = TypeSelected;
+                oper.Category_Name = CategorySelected;
+                oper.Oper_Sum = Sum;
+                oper.Oper_Completed = Completed;
+                oper.Oper_Next_Date = Date;
+                oper.Oper_Plan_Id = _panelViewModel.SelectedItemPlan.PlanId;
+
+                _dataService.OperCondition.Add(oper.Oper_Id, 2);
+                _dataService.OperationsList.Remove(oper);
+                break;
+            }
         }
 
         _contentViewModel.UpdateOperation();
         _editDataDialogs.Close();
     }
+
     private void CancelCommand()
         => _editDataDialogs.Close();
 }

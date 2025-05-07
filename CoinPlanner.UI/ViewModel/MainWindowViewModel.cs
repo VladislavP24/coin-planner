@@ -12,12 +12,12 @@ namespace CoinPlanner.UI.ViewModel;
 
 public class MainWindowViewModel
 {
-    public MainWindowViewModel(DBProcessing dbProcessing)
+    public MainWindowViewModel(DataService dataService)
     {
         // Определение ViewModel`ей
-        ContentViewModel = new ContentViewModel(dbProcessing);
+        ContentViewModel = new ContentViewModel(dataService);
         CalendarViewModel = new CalendarViewModel(ContentViewModel);
-        PanelViewModel = new PanelViewModel(CalendarViewModel, ContentViewModel, dbProcessing); 
+        PanelViewModel = new PanelViewModel(CalendarViewModel, ContentViewModel, dataService); 
     }
 
     public CalendarViewModel CalendarViewModel { get; }

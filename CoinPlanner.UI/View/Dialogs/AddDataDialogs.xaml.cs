@@ -13,11 +13,11 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class AddDataDialogs : Window
     {
-        public AddDataDialogs(DBProcessing dBProcessing, PanelViewModel panelViewModel, ContentViewModel contentViewModel)
+        public AddDataDialogs(DataService dataService, PanelViewModel panelViewModel, ContentViewModel contentViewModel)
         {
             InitializeComponent();
 
-            DataContext = new AddDataDialogsViewmodel(this, dBProcessing, panelViewModel, contentViewModel);
+            DataContext = new AddDataDialogsViewmodel(this, dataService, panelViewModel, contentViewModel);
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)

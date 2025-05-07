@@ -15,17 +15,17 @@ namespace CoinPlanner.UI.ViewModel.Dialogs;
 
 public class DeleteDataDialogsViewModel
 {
-    public DeleteDataDialogsViewModel(DeleteDataDialogs deleteDataDialogs, DBProcessing dBProcessing, ContentViewModel contentViewModel, PanelViewModel panelViewModel) 
+    public DeleteDataDialogsViewModel(DeleteDataDialogs deleteDataDialogs, DataService dataService, ContentViewModel contentViewModel, PanelViewModel panelViewModel) 
     {
         _deleteDataDialogs = deleteDataDialogs;
         _contentViewModel = contentViewModel;
-        _dBProcessing = dBProcessing;
+        _dataService = dataService;
         _panelViewModel = panelViewModel;
         Ok = new RelayCommand(OkCommand);
         Cancel = new RelayCommand(CancelCommand);
     }
 
-    private DBProcessing _dBProcessing;
+    private DataService _dataService;
     private ContentViewModel _contentViewModel;
     private DeleteDataDialogs _deleteDataDialogs;
     private PanelViewModel _panelViewModel;
@@ -36,20 +36,22 @@ public class DeleteDataDialogsViewModel
 
     private void OkCommand()
     {
-        if (_panelViewModel.SelectedItemPlan != null)
+        if (_panelViewModel.SelectedItemPlan == null)
         {
-            int row = 0;
+            _deleteDataDialogs.Close();
+            return;
+        }
 
-            foreach (var oper in _dBProcessing.OperationsList.Where(x => x.Oper_Next_Date >= _contentViewModel.StartDate && x.Oper_Next_Date <= _contentViewModel.EndDate) 
-                                                             .Where(x => x.Oper_Plan_Id == _contentViewModel.Plan.PlanId))
+        int row = 0;
+        foreach (var oper in _dataService.OperationsList.Where(x => x.Oper_Next_Date >= _contentViewModel.StartDate && x.Oper_Next_Date <= _contentViewModel.EndDate)
+                                                         .Where(x => x.Oper_Plan_Id == _contentViewModel.Plan.PlanId))
+        {
+            row++;
+            if (row == NumberRow)
             {
-                row++;
-
-                if (row == NumberRow)
-                {
-                    _dBProcessing.OperationsList.Remove(oper);
-                    break;
-                }             
+                _dataService.OperCondition.Add(oper.Oper_Id, 3);
+                _dataService.OperationsList.Remove(oper);
+                break;
             }
         }
 

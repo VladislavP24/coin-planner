@@ -20,8 +20,8 @@
     <Border Background="White">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="700"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="150"/>
             </Grid.RowDefinitions>
 
             <!-- Верхняя панель -->
@@ -75,7 +75,7 @@
                         <DataGrid.Columns>
                             
                             <!-- Столбец номер строки -->
-                            <DataGridTemplateColumn Header="№" Width="0.13*" IsReadOnly="True" SortMemberPath="OperId"
+                            <DataGridTemplateColumn Header="№" Width="0.2*" IsReadOnly="True" SortMemberPath="OperId"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -110,7 +110,7 @@
                             </DataGridTemplateColumn>
 
                             <!-- Столбец Вид операции -->
-                            <DataGridTemplateColumn Header="Вид операции" Width="1*" SortMemberPath="OperType"
+                            <DataGridTemplateColumn Header="Вид операции" Width="0.8*" SortMemberPath="OperType"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -128,7 +128,7 @@
 
 
                             <!-- Столбец Категория -->
-                            <DataGridTemplateColumn Header="Категория" Width="1*" SortMemberPath="OperCategory"
+                            <DataGridTemplateColumn Header="Категория" Width="1.2*" SortMemberPath="OperCategory"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>

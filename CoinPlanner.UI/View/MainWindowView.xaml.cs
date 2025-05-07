@@ -9,11 +9,11 @@ namespace CoinPlanner.UI.View
     /// </summary>
     public partial class MainWindowView : Window
     {
-        public MainWindowView(DBProcessing dbProcessing)
+        public MainWindowView(DataService dataService)
         {
             InitializeComponent();
 
-            DataContext = new MainWindowViewModel(dbProcessing);
+            DataContext = new MainWindowViewModel(dataService);
         }
     }
 }

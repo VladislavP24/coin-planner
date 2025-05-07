@@ -22,11 +22,11 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class EditDataDialogs : Window
     {
-        public EditDataDialogs(DBProcessing dBProcessing, ContentViewModel contentViewModel, PanelViewModel panelViewModel)
+        public EditDataDialogs(DataService dataService, ContentViewModel contentViewModel, PanelViewModel panelViewModel)
         {
             InitializeComponent();
 
-            DataContext = new EditDataDialogsViewModel(this, dBProcessing, contentViewModel, panelViewModel);
+            DataContext = new EditDataDialogsViewModel(this, dataService, contentViewModel, panelViewModel);
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)

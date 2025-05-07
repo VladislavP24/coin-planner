@@ -16,10 +16,10 @@ namespace CoinPlanner.UI.ViewModel.Dialogs;
 
 public class AddDataDialogsViewmodel : ObservableObject
 {
-    public AddDataDialogsViewmodel(AddDataDialogs addDataDialogs, DBProcessing dBProcessing, PanelViewModel panelViewModel, ContentViewModel contentViewModel) 
+    public AddDataDialogsViewmodel(AddDataDialogs addDataDialogs, DataService dataService, PanelViewModel panelViewModel, ContentViewModel contentViewModel) 
     {
         _panelViewModel = panelViewModel;
-        _dBProcessing = dBProcessing;
+        _dataService = dataService;
         _addDataDialogs = addDataDialogs;
         _contentViewModel = contentViewModel;
 
@@ -31,7 +31,7 @@ public class AddDataDialogsViewmodel : ObservableObject
     }
 
     private AddDataDialogs _addDataDialogs;
-    private DBProcessing _dBProcessing;
+    private DataService _dataService;
     private PanelViewModel _panelViewModel;
     private ContentViewModel _contentViewModel;
 
@@ -67,20 +67,24 @@ public class AddDataDialogsViewmodel : ObservableObject
 
     private void OkCommand()
     {
-        if (_panelViewModel.SelectedItemPlan != null)
+        if (_panelViewModel.SelectedItemPlan == null)
         {
-            _dBProcessing.OperationsList.Add(new DataBase.ModelsDB.Operations
-            {
-                Oper_Id = _dBProcessing.OperationsList.Count + 1,
-                Oper_Name = Name,
-                Type_Name = TypeSelected,
-                Category_Name = CategorySelected,
-                Oper_Sum = Sum,
-                Oper_Completed = Completed,
-                Oper_Next_Date = Date,
-                Oper_Plan_Id = _panelViewModel.SelectedItemPlan.PlanId
-            });
+            _addDataDialogs.Close();
+            return;
         }
+
+        _dataService.OperCondition.Add(_dataService.OperationsList.Count + 1, 1);
+        _dataService.OperationsList.Add(new DataBase.ModelsDB.Operations
+        {
+            Oper_Id = _dataService.OperationsList.Count + 1,
+            Oper_Name = Name,
+            Type_Name = TypeSelected,
+            Category_Name = CategorySelected,
+            Oper_Sum = Sum,
+            Oper_Completed = Completed,
+            Oper_Next_Date = Date,
+            Oper_Plan_Id = _panelViewModel.SelectedItemPlan.PlanId,
+        });
 
         _contentViewModel.UpdateOperation();
         _addDataDialogs.Close();

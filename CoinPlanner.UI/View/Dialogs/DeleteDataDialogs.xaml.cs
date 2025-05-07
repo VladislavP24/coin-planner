@@ -22,11 +22,11 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class DeleteDataDialogs : Window
     {
-        public DeleteDataDialogs(DBProcessing dBProcessing, ContentViewModel contentViewModel, PanelViewModel panelViewModel)
+        public DeleteDataDialogs(DataService dataService, ContentViewModel contentViewModel, PanelViewModel panelViewModel)
         {
             InitializeComponent();
 
-            DataContext = new DeleteDataDialogsViewModel(this, dBProcessing, contentViewModel, panelViewModel);
+            DataContext = new DeleteDataDialogsViewModel(this, dataService, contentViewModel, panelViewModel);
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
