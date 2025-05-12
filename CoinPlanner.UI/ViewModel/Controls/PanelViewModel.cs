@@ -31,24 +31,20 @@ public class PanelViewModel : ObservableObject
     private ContentViewModel _contentViewModel { get; set; }
     private DataService _dataService { get; set; }
 
-    public ICommand CreateFile { get; set; }
-    public ICommand OpenFile { get; set; }
-    public ICommand SaveFile { get; set; }
+    public bool IsCheckedEnroll
+    {
+        get => _isChekedEnroll;
+        set => SetProperty(ref _isChekedEnroll, value, nameof(IsCheckedEnroll));
+    }
+    private bool _isChekedEnroll = false;
 
-    public ICommand AddData { get; set; }
-    public ICommand EditData { get; set; }
-    public ICommand DeleteData { get; set; }
-    public ICommand EnrollmentsSort { get; set; }
-    public ICommand ExpensesSort { get; set; }
-    public ICommand Fixation { get; set; }
+    public bool IsCheckedExpenses
+    {
+        get => _isCheckedExpenses;
+        set => SetProperty(ref _isCheckedExpenses, value, nameof(IsCheckedExpenses));
+    }
+    private bool _isCheckedExpenses = false;
 
-    public ICommand OpenGraph { get; set; }
-    public ICommand OpenTable { get; set; }
-    public ICommand Synchronization { get; set; }
-
-    public ICommand Interval { get; set; }
-    public ICommand Type { get; set; }
-    public ICommand Mark { get; set; }
 
     public ObservableCollection<PlanModel> Items { get; set; } = new(); // Элементы комбобокс Планы
     public Dictionary<int, string> Categories { get; set; } = new();
@@ -86,6 +82,28 @@ public class PanelViewModel : ObservableObject
 
     #region Команды на панели
 
+    public ICommand CreatePlan { get; set; }
+    public ICommand DeletePlan { get; set; }
+    public ICommand SavePlan { get; set; }
+    public ICommand OpenPlan { get; set; }
+    public ICommand RenamePlan { get; set; }
+    public ICommand ConvertPlan { get; set; }
+
+    public ICommand AddData { get; set; }
+    public ICommand EditData { get; set; }
+    public ICommand DeleteData { get; set; }
+    public ICommand EnrollmentsSort { get; set; }
+    public ICommand ExpensesSort { get; set; }
+    public ICommand Fixation { get; set; }
+
+    public ICommand OpenGraph { get; set; }
+    public ICommand OpenTable { get; set; }
+    public ICommand Synchronization { get; set; }
+
+    public ICommand Interval { get; set; }
+    public ICommand Type { get; set; }
+    public ICommand Mark { get; set; }
+
     public void BindingCommandToButton()
     {
         Interval = new RelayCommand(IntervalCommand);
@@ -94,6 +112,8 @@ public class PanelViewModel : ObservableObject
         DeleteData = new RelayCommand(DeleteDataCommand);
         EditData = new RelayCommand(EditDataCommand);
         Synchronization = new RelayCommand(SynchronizationCommand);
+        EnrollmentsSort = new RelayCommand(SortCommand);
+        ExpensesSort = new RelayCommand(SortCommand);
     }
 
     public void IntervalCommand()
@@ -141,5 +161,16 @@ public class PanelViewModel : ObservableObject
         }
     }
 
+    public void SortCommand()
+    {
+        if (IsCheckedEnroll && !IsCheckedExpenses)
+            _contentViewModel.IsType = "Зачисление";
+        else if (!IsCheckedEnroll && IsCheckedExpenses)
+            _contentViewModel.IsType = "Оплата";
+        else
+            _contentViewModel.IsType = "Все операции";
+
+        _contentViewModel.UpdateOperation();
+    }
     #endregion
 }

@@ -8,7 +8,7 @@
         <Setter Property="Margin" Value="0,0,0,0"/>
     </Style>
 
-    <!-- Стиль кнопки на панели -->
+    <!-- Стиль для Button кнопки на панели -->
     <Style TargetType="Button" x:Key="PanelButton">
         <Setter Property="Background" Value="White" />
         <Setter Property="BorderBrush" Value="White" />
@@ -33,6 +33,55 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <!-- Стиль для ToggleButton кнопки на панели -->
+    <Style TargetType="ToggleButton" x:Key="PanelToggleButton">
+        <Setter Property="Background" Value="White" />
+        <Setter Property="BorderBrush" Value="White" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="5">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" Value="True" />
+                    <Condition Property="IsChecked" Value="False" />
+                </MultiTrigger.Conditions>
+                <Setter Property="Background" Value="#2196F3" />
+                <Setter Property="BorderBrush" Value="Black" />
+                <Setter Property="BorderThickness" Value="1" />
+            </MultiTrigger>
+            
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsMouseOver" Value="False" />
+                    <Condition Property="IsChecked" Value="False" />
+                </MultiTrigger.Conditions>
+                <Setter Property="Background" Value="White" />
+                <Setter Property="BorderBrush" Value="White" />
+                <Setter Property="BorderThickness" Value="0" />
+            </MultiTrigger>
+
+            <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Background" Value="#2196F3" />
+                <Setter Property="BorderBrush" Value="Black" />
+                <Setter Property="BorderThickness" Value="1" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
+
 
     <!-- Стиль ComboBox на панели -->
     <Style x:Key="CustomComboBoxStyle" TargetType="{x:Type ComboBox}">

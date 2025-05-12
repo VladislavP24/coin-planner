@@ -18,6 +18,7 @@ public class ContentViewModel : ObservableObject
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public PlanModel? Plan { get; set; }
+    public string IsType { get; set; } = "Все операции";
 
     /// <summary>
     /// Обноавление данных в таблице в зависимости о параметров
@@ -30,8 +31,9 @@ public class ContentViewModel : ObservableObject
 
         int i = 1;
         foreach (var oper in _dataService.OperationsList.Where(x => x.Oper_Next_Date >= StartDate
-                                                                  && x.Oper_Next_Date <= EndDate)
-                                                         .Where(x => x.Oper_Plan_Id == Plan.PlanId))
+                                                                 && x.Oper_Next_Date <= EndDate)
+                                                        .Where(x => x.Oper_Plan_Id == Plan.PlanId)
+                                                        .Where(x => x.Type_Name == IsType || IsType == "Все операции"))
         {       
             DynamicOperationCollection.Add(new OperationModel
             {
