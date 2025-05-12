@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using CoinPlanner.DataBase;
+using CoinPlanner.UI.ViewModel.Controls;
 using CoinPlanner.UI.ViewModel.Dialogs;
 
 namespace CoinPlanner.UI.View.Dialogs
@@ -8,11 +10,11 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class DeletePlanDialogs : Window
     {
-        public DeletePlanDialogs()
+        public DeletePlanDialogs(PanelViewModel panelViewModel, DataService dataService)
         {
             InitializeComponent();
 
-            DataContext = new DeletePlanDialogsViewModel();
+            DataContext = new DeletePlanDialogsViewModel(panelViewModel, dataService);
         }
     }
 }

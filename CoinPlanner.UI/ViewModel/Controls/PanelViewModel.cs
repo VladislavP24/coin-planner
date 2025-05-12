@@ -24,7 +24,11 @@ public class PanelViewModel : ObservableObject
         _calendarViewModel = calendarViewModel;
         _contentViewModel = contentViewModel;
         _dataService = dataService;
-        ModelConvert();
+
+        foreach (var category in _dataService.CategoriesList)
+            Categories.Add(category.Category_Id, category.Category_Name);
+
+        PlanUpdate();
     }
 
     private CalendarViewModel _calendarViewModel { get; set; }
@@ -62,7 +66,7 @@ public class PanelViewModel : ObservableObject
     private PlanModel _selectedItemPlan;
 
 
-    public void ModelConvert()
+    public void PlanUpdate()
     {
         foreach (var plan in _dataService.PlansList)
         {
@@ -74,9 +78,6 @@ public class PanelViewModel : ObservableObject
                 DataUpdate = plan.Date_Update
             });
         }
-
-        foreach (var category in _dataService.CategoriesList)
-            Categories.Add(category.Category_Id, category.Category_Name);
     }
 
 
@@ -178,19 +179,19 @@ public class PanelViewModel : ObservableObject
 
     public void CreatePlanCommand()
     {
-        CreatePlanDialogs createPlanDialogs = new CreatePlanDialogs();
+        CreatePlanDialogs createPlanDialogs = new CreatePlanDialogs(this, _dataService);
         createPlanDialogs.ShowDialog();
     }
 
     public void DeletePlanCommand()
     {
-        DeletePlanDialogs deletePlanDialogs = new DeletePlanDialogs();
+        DeletePlanDialogs deletePlanDialogs = new DeletePlanDialogs(this, _dataService);
         deletePlanDialogs.ShowDialog();
     }
 
     public void RenamePlanCommand()
     {
-        RenamePlanDialogs renamePlanDialogs = new RenamePlanDialogs();
+        RenamePlanDialogs renamePlanDialogs = new RenamePlanDialogs(this, _dataService);
         renamePlanDialogs.ShowDialog();
     }
     #endregion
