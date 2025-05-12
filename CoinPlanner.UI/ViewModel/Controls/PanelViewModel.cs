@@ -114,6 +114,9 @@ public class PanelViewModel : ObservableObject
         Synchronization = new RelayCommand(SynchronizationCommand);
         EnrollmentsSort = new RelayCommand(SortCommand);
         ExpensesSort = new RelayCommand(SortCommand);
+        CreatePlan = new RelayCommand(CreatePlanCommand);
+        DeletePlan = new RelayCommand(DeletePlanCommand);
+        RenamePlan = new RelayCommand(RenamePlanCommand);
     }
 
     public void IntervalCommand()
@@ -171,6 +174,21 @@ public class PanelViewModel : ObservableObject
             _contentViewModel.IsType = "Все операции";
 
         _contentViewModel.UpdateOperation();
+    }
+
+    public void CreatePlanCommand()
+    {
+
+    }
+
+    public void DeletePlanCommand()
+    {
+
+    }
+
+    public void RenamePlanCommand()
+    {
+
     }
     #endregion
 }

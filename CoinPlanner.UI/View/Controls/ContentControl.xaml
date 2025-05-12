@@ -16,7 +16,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    
+
     <Border Background="White">
         <Grid>
             <Grid.RowDefinitions>
@@ -53,7 +53,7 @@
 
                         <DataGrid.Resources>
                             <converters:OperationTypeToBrushConverter x:Key="OperationTypeToBrushConverter"/>
-                            
+
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="Border.CornerRadius" Value="0" />
                                 <Setter Property="BorderBrush" Value="#CDD0D2" />
@@ -73,7 +73,7 @@
                         </DataGrid.RowStyle>
 
                         <DataGrid.Columns>
-                            
+
                             <!-- Столбец номер строки -->
                             <DataGridTemplateColumn Header="№" Width="0.2*" IsReadOnly="True" SortMemberPath="OperId"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
@@ -203,7 +203,7 @@
                 </Border>
             </Grid>
 
-            
+
             <!-- Нижняя панель -->
             <Border Grid.Row="1" Background="White" BorderBrush="Black" BorderThickness="1,0,1,1">
                 <Grid Grid.Row="1">
@@ -243,7 +243,6 @@
 
                 </Grid>
             </Border>
-
         </Grid>
     </Border>
 </UserControl>

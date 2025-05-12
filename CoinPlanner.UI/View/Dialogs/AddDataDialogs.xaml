@@ -133,9 +133,6 @@
         </Grid>
 
         <Grid Grid.Row="2" Margin="0,10,0,10">
-            <Border VerticalAlignment="Top"
-                    BorderBrush="Black"
-                    BorderThickness="0,0.1,0,0"/>
             <Button Content="Ок" 
                     Height="30" 
                     Width="70"
@@ -143,6 +140,8 @@
                     VerticalAlignment="Center"
                     Margin="10,10,0,0"
                     FontSize="15"
+                    BorderThickness="1"
+                    BorderBrush="Gray"
                     Command="{Binding DataContext.Ok, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:AddDataDialogs}}"
                     Style="{StaticResource PanelButton}"/>
             <Button Content="Отмена" 
@@ -152,6 +151,8 @@
                     VerticalAlignment="Center"
                     Margin="0,10,10,0"
                     FontSize="15"
+                    BorderThickness="1"
+                    BorderBrush="Gray"
                     Command="{Binding DataContext.Cancel, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:AddDataDialogs}}"
                     Style="{StaticResource PanelButton}"/>
         </Grid>
