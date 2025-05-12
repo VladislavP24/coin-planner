@@ -178,17 +178,20 @@ public class PanelViewModel : ObservableObject
 
     public void CreatePlanCommand()
     {
-
+        CreatePlanDialogs createPlanDialogs = new CreatePlanDialogs();
+        createPlanDialogs.ShowDialog();
     }
 
     public void DeletePlanCommand()
     {
-
+        DeletePlanDialogs deletePlanDialogs = new DeletePlanDialogs();
+        deletePlanDialogs.ShowDialog();
     }
 
     public void RenamePlanCommand()
     {
-
+        RenamePlanDialogs renamePlanDialogs = new RenamePlanDialogs();
+        renamePlanDialogs.ShowDialog();
     }
     #endregion
 }
