@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:CoinPlanner.UI.View.Dialogs"
         mc:Ignorable="d"
         d:DesignHeight="200" d:DesignWidth="300"
-        Height="180" Width="400"
-        MaxHeight="180" MaxWidth="400"
-        MinHeight="180" MinWidth="400"
+        Height="200" Width="400"
+        MaxHeight="200" MaxWidth="400"
+        MinHeight="200" MinWidth="400"
         Title="Coin Planner" 
         WindowStartupLocation="CenterScreen"
         Icon="pack://application:,,,/CoinPlanner.UI;component/Resources/icon32.ico">
@@ -25,7 +25,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
-            <RowDefinition Height="35"/>
+            <RowDefinition Height="70"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
@@ -37,19 +37,42 @@
         </Grid>
 
         <Grid Grid.Row="1">
-            <StackPanel Orientation="Horizontal">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="0">
+                <TextBlock Text="План из списка: "
+                           TextWrapping="Wrap"
+                           Margin="15,5,0,5"
+                           FontSize="15"/>
+                <ComboBox x:Name="MyComboBox"
+                          Height="25"
+                          Width="200"
+                          Margin="0"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Center"
+                          ItemsSource="{Binding DataContext.Items, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RenamePlanDialogs}}"
+                          SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RenamePlanDialogs}}"
+                          Style="{StaticResource TypeComboBoxStyle}"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Grid.Row="1">
                 <TextBlock Text="Новое имя для плана: "
                            TextWrapping="Wrap"
                            Margin="15,5,0,5"
                            FontSize="15"/>
-                <TextBox Text="{Binding DataContext.NumberRow, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DeleteDataDialogs}}"
+                <TextBox Text="{Binding DataContext.InputName, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RenamePlanDialogs}}"
                          Width="200"
                          TextWrapping="Wrap"
                          Margin="15,5,0,5"
-                         FontSize="15"/>
+                         FontSize="15"
+                         BorderBrush="Black"/>
             </StackPanel>
         </Grid>
 
+        
         <Grid Grid.Row="2" Margin="0,10,0,0">
             <Button Content="Ок" 
                     Height="30" 
@@ -59,7 +82,7 @@
                     FontSize="15"
                     BorderThickness="1"
                     BorderBrush="Gray"
-                    Command="{Binding DataContext.Ok, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DeleteDataDialogs}}"
+                    Command="{Binding DataContext.Ok, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RenamePlanDialogs}}"
                     Style="{StaticResource PanelButton}"/>
             <Button Content="Отмена" 
                     Height="30" 
@@ -69,7 +92,7 @@
                     FontSize="15"
                     BorderThickness="1"
                     BorderBrush="Gray"
-                    Command="{Binding DataContext.Cancel, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DeleteDataDialogs}}"
+                    Command="{Binding DataContext.Cancel, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:RenamePlanDialogs}}"
                     Style="{StaticResource PanelButton}"/>
         </Grid>
     </Grid>

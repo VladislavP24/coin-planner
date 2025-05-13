@@ -48,8 +48,8 @@
                           Margin="0"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Center"
-                          ItemsSource="{Binding DataContext.Items, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:TypeDialogs}}"
-                          SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:TypeDialogs}}"
+                          ItemsSource="{Binding DataContext.Items, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DeletePlanDialogs}}"
+                          SelectedItem="{Binding DataContext.SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DeletePlanDialogs}}"
                           Style="{StaticResource TypeComboBoxStyle}"/>
             </StackPanel>
         </Grid>
