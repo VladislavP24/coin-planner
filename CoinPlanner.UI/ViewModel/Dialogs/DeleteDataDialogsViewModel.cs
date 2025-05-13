@@ -49,12 +49,19 @@ public class DeleteDataDialogsViewModel
             row++;
             if (row == NumberRow)
             {
-                _dataService.OperCondition.Add(oper.Oper_Id, 3);
+                if (_dataService.OperCondition.Where(x => x.Key == oper.Oper_Id && x.Value == 1) == null)
+                {
+                    _dataService.OperCondition.Remove(oper.Oper_Id);
+                    _dataService.OperCondition.Add(oper.Oper_Id, 3);
+                }
+
+                _dataService.OperCondition.Remove(oper.Oper_Id);
                 _dataService.OperationsList.Remove(oper);
                 break;
             }
         }
 
+        _panelViewModel.UpdateDatePlan();
         _contentViewModel.UpdateOperation();
         _deleteDataDialogs.Close();
     }

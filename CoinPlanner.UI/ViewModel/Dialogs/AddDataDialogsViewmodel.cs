@@ -73,7 +73,8 @@ public class AddDataDialogsViewmodel : ObservableObject
             return;
         }
 
-        _dataService.OperCondition.Add(_dataService.OperationsList.Count + 1, 1);
+        _dataService.OperCondition.Add(_dataService.OperationsList.Count + 1, 1); // Должно быть получение первого свободного ID
+
         _dataService.OperationsList.Add(new DataBase.ModelsDB.Operations
         {
             Oper_Id = _dataService.OperationsList.Count + 1,
@@ -86,6 +87,7 @@ public class AddDataDialogsViewmodel : ObservableObject
             Oper_Plan_Id = _panelViewModel.SelectedItemPlan.PlanId,
         });
 
+        _panelViewModel.UpdateDatePlan();
         _contentViewModel.UpdateOperation();
         _addDataDialogs.Close();
     }

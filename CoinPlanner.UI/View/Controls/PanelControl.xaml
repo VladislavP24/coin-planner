@@ -45,7 +45,7 @@
                     <Button Width="130"
                             Height="32"
                             Margin="5,0,10,0"
-                            Foreground="Red"
+                            Command="{Binding DataContext.CreatePlan, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/createplan.png" 
@@ -63,7 +63,7 @@
                     <Button Width="130"
                             Height="32"
                             Margin="5,0,10,0"
-                            Foreground="Red"
+                            Command="{Binding DataContext.DeletePlan, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/deleteplan.png" 
@@ -128,7 +128,7 @@
                     <Button Width="160"
                             Height="32"
                             Margin="0,0,9,0"
-                            Foreground="Red"
+                            Command="{Binding DataContext.RenamePlan, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                             Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/renameplan.png" 

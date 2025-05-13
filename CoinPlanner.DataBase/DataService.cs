@@ -86,12 +86,14 @@ public class DataService
                     else if (condition.Value == 2)
                     {
                         var plan = PlansList.Where(x => x.Plan_Id == condition.Key).First();
-                        db.Database.ExecuteSqlRaw($"UPDATE plans SET plan_name = {plan.Plan_Name}, date_update = {plan.Date_Update} " +
+                        db.Database.ExecuteSqlRaw($"UPDATE plans SET plan_name = '{plan.Plan_Name}', date_update = '{plan.Date_Update}' " +
                                                   $"WHERE plan_id = {plan.Plan_Id}");
                     }  
                     else if (condition.Value == 3)
                         db.Database.ExecuteSqlRaw($"DELETE FROM plans WHERE plan_id = {condition.Key}");
                 }
+
+                PlanCondition.Clear();
 
                 //Сохранение Operations
                 foreach (var condition in OperCondition)
@@ -112,10 +114,9 @@ public class DataService
                     else if (condition.Value == 3)
                         db.Database.ExecuteSqlRaw($"DELETE FROM operations WHERE oper_id = {condition.Key}");
                 }
-
-                db.SaveChangesAsync();
                 OperCondition.Clear();
-                PlanCondition.Clear();
+
+                db.SaveChangesAsync(); 
             }
 
             return true;

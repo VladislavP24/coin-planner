@@ -22,6 +22,8 @@ public class RenamePlanDialogsViewModel : ObservableObject
         _dataService = dataService;
         _panelViewModel = panelViewModel;
         _renamePlanDialogs = renamePlanDialogs;
+        foreach (var plan in _dataService.PlansList.Select(x => x.Plan_Name))
+            Items.Add(plan);
 
         Ok = new RelayCommand(OkCommand);
         Cancel = new RelayCommand(CancelCommand);
@@ -33,7 +35,7 @@ public class RenamePlanDialogsViewModel : ObservableObject
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
     public string InputName { get; set; }
-    public ObservableCollection<string> Items { get; set; }
+    public ObservableCollection<string> Items { get; set; } = new();
     public string SelectedItem
     {
         get => _selectedItem;
@@ -45,11 +47,16 @@ public class RenamePlanDialogsViewModel : ObservableObject
     {
         var plan = _dataService.PlansList.Where(x => x.Plan_Name == SelectedItem).First();
 
-        if (InputName != _dataService.PlansList.Where(x => x.Plan_Name == InputName).Select(x => x.Plan_Name).First())
+        if (InputName != _dataService.PlansList.Where(x => x.Plan_Name == InputName).Select(x => x.Plan_Name).FirstOrDefault())
         {
             plan.Plan_Name = InputName;
             plan.Date_Update = DateTime.Now;
-            _dataService.PlanCondition.Add(plan.Plan_Id, 2);
+
+            if (_dataService.PlanCondition.Where(x => x.Key == plan.Plan_Id && x.Value == 1) == null)
+            {
+                _dataService.PlanCondition.Remove(plan.Plan_Id);
+                _dataService.PlanCondition.Add(plan.Plan_Id, 2);
+            }  
         }
         else
         {
@@ -57,7 +64,21 @@ public class RenamePlanDialogsViewModel : ObservableObject
             return;
         }
 
-        _panelViewModel.PlanUpdate();
+        if (SelectedItem == _panelViewModel.SelectedItemPlan.PlanName)
+        {
+            _panelViewModel.PlanUpdate();
+            _panelViewModel.SelectedItemPlan = new Model.PlanModel {PlanId = plan.Plan_Id, 
+                                                                    PlanName = plan.Plan_Name, 
+                                                                    DataCreate = plan.Date_Create, 
+                                                                    DataUpdate = plan.Date_Update};
+        }   
+        else
+        {
+            var saveSelectedPlan = _panelViewModel.SelectedItemPlan;
+            _panelViewModel.PlanUpdate();
+            _panelViewModel.SelectedItemPlan = saveSelectedPlan;
+        }
+
         _renamePlanDialogs.Close();
     }
 

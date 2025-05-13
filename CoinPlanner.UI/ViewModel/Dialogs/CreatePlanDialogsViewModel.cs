@@ -45,8 +45,13 @@ public class CreatePlanDialogsViewModel : ObservableObject
             Date_Update = DateTime.Now,
         });
 
-        _dataService.PlanCondition.Add(_dataService.PlansList.Count + 1, 1);
+        _dataService.PlanCondition.Remove(_dataService.PlansList.Count);
+        _dataService.PlanCondition.Add(_dataService.PlansList.Count, 1);
+
+        var saveSelectedPlan = _panelViewModel.SelectedItemPlan;
         _panelViewModel.PlanUpdate();
+        _panelViewModel.SelectedItemPlan = saveSelectedPlan;
+
         _createPlanDialogs.Close();
     }
 

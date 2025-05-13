@@ -14,7 +14,7 @@ namespace CoinPlanner.UI.View.Dialogs
         {
             InitializeComponent();
 
-            DataContext = new DeletePlanDialogsViewModel(panelViewModel, dataService);
+            DataContext = new DeletePlanDialogsViewModel(panelViewModel, dataService, this);
         }
     }
 }

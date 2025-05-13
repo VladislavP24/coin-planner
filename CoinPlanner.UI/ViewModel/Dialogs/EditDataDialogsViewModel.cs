@@ -115,7 +115,7 @@ public class EditDataDialogsViewModel : ObservableObject
             CategorySelected = operationModel.OperCategory;
             Sum = operationModel.OperSum;
             Completed = operationModel.OperCompleted == "Да" ? true : false;
-            Date = DateTime.ParseExact(operationModel.OperNextDate, "HH:mm:ss dd MMMM yyyy 'г.'", System.Globalization.CultureInfo.GetCultureInfo("ru-RU"));
+            Date = DateTime.ParseExact(operationModel.OperNextDate, "HH:mm  dd-MM-yyyy 'г.'", System.Globalization.CultureInfo.GetCultureInfo("ru-RU"));
         }
     }
 
@@ -128,12 +128,11 @@ public class EditDataDialogsViewModel : ObservableObject
         }   
         
         int row = 0;
-        foreach (var oper in _dataService.OperationsList.Where(x => x.Oper_Next_Date >= _contentViewModel.StartDate && x.Oper_Next_Date <= _contentViewModel.EndDate) .Where(x => x.Oper_Plan_Id == _contentViewModel.Plan.PlanId))
+        foreach (var oper in _dataService.OperationsList.Where(x => x.Oper_Next_Date >= _contentViewModel.StartDate && x.Oper_Next_Date <= _contentViewModel.EndDate).Where(x => x.Oper_Plan_Id == _contentViewModel.Plan.PlanId))
         {
             row++;
             if (row == NumberRow)
             {
-                oper.Oper_Id = _dataService.OperationsList.Count + 1;
                 oper.Oper_Name = Name;
                 oper.Type_Name = TypeSelected;
                 oper.Category_Name = CategorySelected;
@@ -142,12 +141,17 @@ public class EditDataDialogsViewModel : ObservableObject
                 oper.Oper_Next_Date = Date;
                 oper.Oper_Plan_Id = _panelViewModel.SelectedItemPlan.PlanId;
 
-                _dataService.OperCondition.Add(oper.Oper_Id, 2);
-                _dataService.OperationsList.Remove(oper);
+                if (_dataService.OperCondition.Where(x => x.Key == oper.Oper_Id && x.Value == 1) == null)
+                {
+                    _dataService.OperCondition.Remove(oper.Oper_Id);
+                    _dataService.OperCondition.Add(oper.Oper_Id, 2);
+                }
+                
                 break;
             }
         }
 
+        _panelViewModel.UpdateDatePlan();
         _contentViewModel.UpdateOperation();
         _editDataDialogs.Close();
     }

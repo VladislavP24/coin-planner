@@ -49,7 +49,6 @@ public class PanelViewModel : ObservableObject
     }
     private bool _isCheckedExpenses = false;
 
-
     public ObservableCollection<PlanModel> Items { get; set; } = new(); // Элементы комбобокс Планы
     public Dictionary<int, string> Categories { get; set; } = new();
 
@@ -68,6 +67,7 @@ public class PanelViewModel : ObservableObject
 
     public void PlanUpdate()
     {
+        Items.Clear();
         foreach (var plan in _dataService.PlansList)
         {
             Items.Add(new PlanModel()
@@ -78,6 +78,19 @@ public class PanelViewModel : ObservableObject
                 DataUpdate = plan.Date_Update
             });
         }
+    }
+
+    public void UpdateDatePlan()
+    {
+        // Обновление даты последнего изменения плана
+        var plan = _dataService.PlansList.Where(x => x.Plan_Id == SelectedItemPlan.PlanId).First();
+        plan.Date_Update = DateTime.Now;
+
+        if (_dataService.PlanCondition.Where(x => x.Key == plan.Plan_Id && x.Value == 1) == null)
+        {
+            _dataService.PlanCondition.Remove(plan.Plan_Id);
+            _dataService.PlanCondition.Add(plan.Plan_Id, 2);
+        }        
     }
 
 
