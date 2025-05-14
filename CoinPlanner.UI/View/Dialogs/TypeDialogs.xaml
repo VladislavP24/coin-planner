@@ -47,7 +47,7 @@
 
             <ComboBox x:Name="MyComboBox"
                       Height="25"
-                      Width="100"
+                      Width="130"
                       Margin="0"
                       VerticalAlignment="Center"
                       HorizontalAlignment="Center"

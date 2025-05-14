@@ -96,7 +96,8 @@
                           Margin="20,5,0,5"
                           FontSize="15"
                           ItemsSource="{Binding DataContext.TypeItems, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:EditDataDialogs}}"
-                          SelectedItem="{Binding DataContext.TypeSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:EditDataDialogs}}"/>
+                          SelectedItem="{Binding DataContext.TypeSelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:EditDataDialogs}}"
+                          Style="{StaticResource TypeComboBoxStyle}"/>
             </StackPanel>
 
 
@@ -110,7 +111,8 @@
                           Margin="48,5,0,5"
                           FontSize="15"
                           ItemsSource="{Binding DataContext.CategoryItems, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:EditDataDialogs}}"
-                          SelectedItem="{Binding DataContext.CategorySelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:EditDataDialogs}}"/>
+                          SelectedItem="{Binding DataContext.CategorySelected, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:EditDataDialogs}}"
+                          Style="{StaticResource TypeComboBoxStyle}"/>
             </StackPanel>
 
 

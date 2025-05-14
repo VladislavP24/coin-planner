@@ -7,7 +7,7 @@
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
-        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="BorderBrush" Value="DarkGray"/>
         <Setter Property="Background" Value="White"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -18,7 +18,7 @@
                                   Focusable="False"
                                   ClickMode="Press"
                                   Background="Transparent"
-                                  BorderBrush="Black"
+                                  BorderBrush="DarkGray"
                                   BorderThickness="1">
                             <Grid>
                                 <Border Name="Border"

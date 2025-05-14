@@ -67,8 +67,7 @@
                          Width="200"
                          TextWrapping="Wrap"
                          Margin="15,5,0,5"
-                         FontSize="15"
-                         BorderBrush="Black"/>
+                         FontSize="15"/>
             </StackPanel>
         </Grid>
 
