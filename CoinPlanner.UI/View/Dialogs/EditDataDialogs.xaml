@@ -151,7 +151,7 @@
                            Margin="15,5,0,5"
                            FontSize="15"/>
 
-                <TextBox Text="{Binding DataContext.Date, StringFormat='{}{0:HH:mm dd-MM-yyyy}', RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:EditDataDialogs}}"
+                <TextBox Text="{Binding DataContext.Date, StringFormat='yyyy-MM-dd HH:mm', RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:EditDataDialogs}}"
                          Width="210"
                          TextWrapping="Wrap"
                          Margin="75,5,0,5"

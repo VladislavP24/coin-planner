@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CoinPlanner.UI.View.Dialogs"
         mc:Ignorable="d"
-        d:DesignHeight="330" d:DesignWidth="300"
-        Height="330" Width="400"
+        d:DesignHeight="340" d:DesignWidth="300"
+        Height="340" Width="400"
         MaxWidth="400"
-        MinHeight="330" MinWidth="400"
+        MinHeight="340" MinWidth="400"
         Title="Coin Planner" 
         WindowStartupLocation="CenterScreen"
         Icon="pack://application:,,,/CoinPlanner.UI;component/Resources/icon32.ico">
@@ -125,7 +125,7 @@
                            Margin="15,5,0,5"
                            FontSize="15"/>
 
-                <TextBox Text="{Binding DataContext.Date, StringFormat='{}{0:HH:mm dd-MM-yyyy}', RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:AddDataDialogs}}"
+                <TextBox Text="{Binding DataContext.Date, StringFormat='yyyy-MM-dd HH:mm', RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:AddDataDialogs}}"
                          Width="210"
                          TextWrapping="Wrap"
                          Margin="75,5,0,5"
