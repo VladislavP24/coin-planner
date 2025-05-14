@@ -35,18 +35,42 @@ public class CreatePlanDialogsViewModel : ObservableObject
     public ICommand Cancel { get; set; }
     public string InputName { get; set; }
 
+
+    /// <summary>
+    /// Получение первого свободного ID из плана
+    /// </summary>
+    private int GetPlanFirstFreeID()
+    {
+        int result = 0;
+
+        for (int i = 0; i < _dataService.PlansList.Count - 1; i++)
+        {
+            result = _dataService.PlansList[i].Plan_Id + 1;
+            if (!_dataService.PlansList.Any(x => x.Plan_Id == result))
+                return result;
+        }
+
+        return result;
+    }
+
+
     private void OkCommand()
     {
+        if (_dataService.PlanCondition.Any(x => x.Key == GetPlanFirstFreeID()))
+        {
+            _dataService.PlanCondition.Remove(GetPlanFirstFreeID());
+            _dataService.PlanCondition.Add(GetPlanFirstFreeID(), 2);
+        }
+        else
+            _dataService.PlanCondition.Add(GetPlanFirstFreeID(), 1);
+
         _dataService.PlansList.Add(new Plans 
         { 
-            Plan_Id = _dataService.PlansList.Count + 1,
+            Plan_Id = GetPlanFirstFreeID(),
             Plan_Name = InputName,
             Date_Create = DateTime.Now,
             Date_Update = DateTime.Now,
         });
-
-        _dataService.PlanCondition.Remove(_dataService.PlansList.Count);
-        _dataService.PlanCondition.Add(_dataService.PlansList.Count, 1);
 
         var saveSelectedPlan = _panelViewModel.SelectedItemPlan;
         _panelViewModel.PlanUpdate();

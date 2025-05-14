@@ -47,7 +47,7 @@ public class DataService
         {
             using (AppDbContext db = new AppDbContext())
             {
-                PlansList = await db.plans.FromSqlRaw("SELECT * FROM plans").ToListAsync();
+                PlansList = await db.plans.FromSqlRaw("SELECT * FROM plans ORDER BY plan_id").ToListAsync();
                 OperationsList = await db.Database.SqlQueryRaw<Operations>("SELECT o.oper_id, t.type_name AS type_name, ct.category_name AS category_name, o.oper_name, o.oper_sum, o.oper_completed, o.oper_next_date, o.oper_plan_id " +
                                                                            "FROM operations o " +
                                                                            "JOIN plans p ON o.oper_plan_id = p.plan_id " +

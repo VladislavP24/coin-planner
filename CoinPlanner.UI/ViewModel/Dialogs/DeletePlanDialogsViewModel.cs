@@ -45,7 +45,7 @@ public class DeletePlanDialogsViewModel : ObservableObject
     {
         var plan = _dataService.PlansList.Where(x => x.Plan_Name == SelectedItem).First();
 
-        if (_dataService.PlanCondition.Where(x => x.Key == plan.Plan_Id && x.Value == 1) != null)
+        if (_dataService.PlanCondition.Any(x => x.Key == plan.Plan_Id && x.Value == 1))
             _dataService.PlanCondition.Remove(plan.Plan_Id);
         else
         {
@@ -56,7 +56,7 @@ public class DeletePlanDialogsViewModel : ObservableObject
 
         _dataService.PlansList.Remove(plan);
 
-        if (plan.Plan_Name == _panelViewModel.SelectedItemPlan.PlanName)
+        if (_panelViewModel.SelectedItemPlan != null && plan.Plan_Name == _panelViewModel.SelectedItemPlan.PlanName)
             _panelViewModel.PlanUpdate();
         else
         {

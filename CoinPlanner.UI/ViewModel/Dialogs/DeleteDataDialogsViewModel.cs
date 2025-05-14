@@ -49,7 +49,7 @@ public class DeleteDataDialogsViewModel
             row++;
             if (row == NumberRow)
             {
-                if (_dataService.OperCondition.Where(x => x.Key == oper.Oper_Id && x.Value == 1) == null)
+                if (!_dataService.OperCondition.Any(x => x.Key == oper.Oper_Id && x.Value == 1))
                 {
                     _dataService.OperCondition.Remove(oper.Oper_Id);
                     _dataService.OperCondition.Add(oper.Oper_Id, 3);

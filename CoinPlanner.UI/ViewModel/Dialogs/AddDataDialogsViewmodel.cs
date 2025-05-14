@@ -64,6 +64,23 @@ public class AddDataDialogsViewmodel : ObservableObject
     private string _categorySelected;
 
 
+    /// <summary>
+    /// Получение первого свободного ID из операций
+    /// </summary>
+    private int GetOperFirstFreeID()
+    {
+        int result = 0;
+
+        for (int i = 0; i < _dataService.OperationsList.Count - 1; i++)
+        {
+            result = _dataService.OperationsList[i].Oper_Id + 1;
+            if (!_dataService.OperationsList.Any(x => x.Oper_Id == result))
+                return result;
+        }
+
+        return result;
+    }
+
 
     private void OkCommand()
     {
@@ -73,11 +90,17 @@ public class AddDataDialogsViewmodel : ObservableObject
             return;
         }
 
-        _dataService.OperCondition.Add(_dataService.OperationsList.Count + 1, 1); // Должно быть получение первого свободного ID
+        if(_dataService.OperCondition.Any(x => x.Key == GetOperFirstFreeID()))
+        {
+            _dataService.OperCondition.Remove(GetOperFirstFreeID());
+            _dataService.OperCondition.Add(GetOperFirstFreeID(), 2);
+        }
+        else
+            _dataService.OperCondition.Add(GetOperFirstFreeID(), 1);
 
         _dataService.OperationsList.Add(new DataBase.ModelsDB.Operations
         {
-            Oper_Id = _dataService.OperationsList.Count + 1,
+            Oper_Id = GetOperFirstFreeID(),
             Oper_Name = Name,
             Type_Name = TypeSelected,
             Category_Name = CategorySelected,
