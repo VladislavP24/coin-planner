@@ -318,29 +318,31 @@
                 </Grid.RowDefinitions>
 
                 <Border Grid.Row="1" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
-                    <Button Width="150"
+                    <ToggleButton Width="150"
                             Height="32"
                             Margin="5,0,10,0"
-                            Foreground="Red"
-                            Style="{DynamicResource PanelButton}">
+                            IsChecked="{Binding DataContext.IsCheckedDiagram, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
+                            Command="{Binding DataContext.OpenDiagram, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
+                            Style="{DynamicResource PanelToggleButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/opengraph.png" 
                                    Width="30" 
                                    Height="30" 
-                                   Margin="-48,0,12,0"
+                                   Margin="-18,0,12,0"
                                    VerticalAlignment="Center"
                                    SnapsToDevicePixels="True"/>
-                            <TextBlock Text="График" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                            <TextBlock Text="Диаграмма" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
                         </StackPanel>
-                    </Button>
+                    </ToggleButton>
                 </Border>
 
                 <Border Grid.Row="2" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
-                    <Button Width="150"
+                    <ToggleButton Width="150"
                             Height="32"
                             Margin="5,0,10,0"
-                            Foreground="Red"
-                            Style="{DynamicResource PanelButton}">
+                            IsChecked="{Binding DataContext.IsCheckedTable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
+                            Command="{Binding DataContext.OpenTable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
+                            Style="{DynamicResource PanelToggleButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/opentable.png" 
                                    Width="30" 
@@ -350,7 +352,7 @@
                                    SnapsToDevicePixels="True"/>
                             <TextBlock Text="Таблица" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
                         </StackPanel>
-                    </Button>
+                    </ToggleButton>
                 </Border>
 
                 <Border Grid.Row="3" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
@@ -480,8 +482,10 @@
                         <TextBlock Text="{Binding SelectedItemPlan.PlanName, UpdateSourceTrigger=PropertyChanged}"
                                    FontSize="12"
                                    Height="14"
+                                   Margin="5,0"
                                    HorizontalAlignment="Center"
-                                   VerticalAlignment="Bottom"/>
+                                   VerticalAlignment="Bottom"
+                                   ToolTip="{Binding SelectedItemPlan.PlanName, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
                 </Border>
 

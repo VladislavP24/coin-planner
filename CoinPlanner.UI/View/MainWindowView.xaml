@@ -7,6 +7,7 @@
         xmlns:control="clr-namespace:CoinPlanner.UI.View.Controls" 
         xmlns:dialogs="clr-namespace:CoinPlanner.UI.ViewModel.Dialogs" 
         xmlns:controls="clr-namespace:CoinPlanner.UI.ViewModel.Controls" 
+        xmlns:converters="clr-namespace:CoinPlanner.UI.View.Converters"
         mc:Ignorable="d"
         Title="Coin Planner" 
         Height="1080" Width="1920"
@@ -14,7 +15,13 @@
         Background="#FFCDD0D2"
         UseLayoutRounding="True"
         Icon="pack://application:,,,/CoinPlanner.UI;component/Resources/icon32.ico">
-    
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -41,7 +48,15 @@
 
             <!-- Нижняя правая панель -->
             <Grid Grid.Column="1">
-                <control:ContentControl DataContext="{Binding ContentViewModel}" Margin="10,0,20,16"/>
+                <control:ContentControl DataContext="{Binding ContentViewModel}" 
+                                        Margin="10,0,20,16"
+                                        Visibility="{Binding IsVisibleContent, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <control:DiagramControl DataContext="{Binding DiagramViewModel}" 
+                                        Margin="10,0,20,16" 
+                                        Visibility="{Binding IsVisibleDiagram, Converter={StaticResource BooleanToVisibilityConverter}}"/>
             </Grid>
         </Grid>
     </Grid>

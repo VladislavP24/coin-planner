@@ -144,6 +144,7 @@
             </Setter.Value>
         </Setter>
 
+        
         <Style.Resources>
             <Style TargetType="{x:Type ComboBoxItem}">
                 <Setter Property="Foreground" Value="Black"/>
@@ -157,7 +158,8 @@
                                     Background="{TemplateBinding Background}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="{TemplateBinding BorderThickness}"
-                                    SnapsToDevicePixels="True">
+                                    SnapsToDevicePixels="True"
+                                    ToolTip="{Binding PlanName}">
                                 <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />

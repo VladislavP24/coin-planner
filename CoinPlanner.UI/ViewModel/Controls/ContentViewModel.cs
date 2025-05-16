@@ -20,6 +20,14 @@ public class ContentViewModel : ObservableObject
     public PlanModel? Plan { get; set; }
     public string IsType { get; set; } = "Все операции";
 
+    public bool IsVisibleContent
+    {
+        get => _isVisibleContent;
+        set => SetProperty(ref _isVisibleContent, value, nameof(IsVisibleContent));
+    }
+    private bool _isVisibleContent = true;
+
+
     /// <summary>
     /// Обноавление данных в таблице в зависимости о параметров
     /// </summary>

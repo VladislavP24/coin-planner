@@ -18,11 +18,12 @@ namespace CoinPlanner.UI.ViewModel.Controls;
 
 public class PanelViewModel : ObservableObject
 {
-    public PanelViewModel(CalendarViewModel calendarViewModel, ContentViewModel contentViewModel, DataService dataService) 
+    public PanelViewModel(CalendarViewModel calendarViewModel, ContentViewModel contentViewModel, DiagramViewModel diagramViewModel, DataService dataService) 
     {
         BindingCommandToButton();
         _calendarViewModel = calendarViewModel;
         _contentViewModel = contentViewModel;
+        _diagramViewModel = diagramViewModel;
         _dataService = dataService;
 
         foreach (var category in _dataService.CategoriesList)
@@ -33,8 +34,12 @@ public class PanelViewModel : ObservableObject
 
     private CalendarViewModel _calendarViewModel { get; set; }
     private ContentViewModel _contentViewModel { get; set; }
+    private DiagramViewModel _diagramViewModel { get; set; }
     private DataService _dataService { get; set; }
 
+    /// <summary>
+    /// Факт включения Зачисления
+    /// </summary>
     public bool IsCheckedEnroll
     {
         get => _isChekedEnroll;
@@ -42,12 +47,36 @@ public class PanelViewModel : ObservableObject
     }
     private bool _isChekedEnroll = false;
 
+    /// <summary>
+    /// Факт включения Расходов
+    /// </summary>
     public bool IsCheckedExpenses
     {
         get => _isCheckedExpenses;
         set => SetProperty(ref _isCheckedExpenses, value, nameof(IsCheckedExpenses));
     }
     private bool _isCheckedExpenses = false;
+
+    /// <summary>
+    /// Факт включения Таблицы
+    /// </summary>
+    public bool IsCheckedTable
+    {
+        get => _isCheckedTable;
+        set => SetProperty(ref _isCheckedTable, value, nameof(IsCheckedTable));
+    }
+    private bool _isCheckedTable = true;
+
+    /// <summary>
+    /// Факт включения Диаграммы
+    /// </summary>
+    public bool IsCheckedDiagram
+    {
+        get => _isCheckedDiagram;
+        set => SetProperty(ref _isCheckedDiagram, value, nameof(IsCheckedDiagram));
+    }
+    private bool _isCheckedDiagram = false;
+
 
     public ObservableCollection<PlanModel> Items { get; set; } = new(); // Элементы комбобокс Планы
     public Dictionary<int, string> Categories { get; set; } = new();
@@ -110,7 +139,7 @@ public class PanelViewModel : ObservableObject
     public ICommand ExpensesSort { get; set; }
     public ICommand Fixation { get; set; }
 
-    public ICommand OpenGraph { get; set; }
+    public ICommand OpenDiagram { get; set; }
     public ICommand OpenTable { get; set; }
     public ICommand Synchronization { get; set; }
 
@@ -131,6 +160,8 @@ public class PanelViewModel : ObservableObject
         CreatePlan = new RelayCommand(CreatePlanCommand);
         DeletePlan = new RelayCommand(DeletePlanCommand);
         RenamePlan = new RelayCommand(RenamePlanCommand);
+        OpenTable = new RelayCommand(OpenTableCommand);
+        OpenDiagram = new RelayCommand(OpenDiagramCommand);
     }
 
     public void IntervalCommand()
@@ -188,6 +219,32 @@ public class PanelViewModel : ObservableObject
             _contentViewModel.IsType = "Все операции";
 
         _contentViewModel.UpdateOperation();
+    }
+
+    public void OpenDiagramCommand()
+    {
+        if (IsCheckedDiagram)
+        {
+            IsCheckedTable = false;
+            _contentViewModel.IsVisibleContent = false;
+            _diagramViewModel.IsVisibleDiagram = true;
+        }
+        else
+            _diagramViewModel.IsVisibleDiagram = false;
+    }
+
+    public void OpenTableCommand()
+    {
+        {
+            if (IsCheckedTable)
+            {
+                IsCheckedDiagram = false;
+                _contentViewModel.IsVisibleContent = true;
+                _diagramViewModel.IsVisibleDiagram = false;
+            }
+            else
+                _contentViewModel.IsVisibleContent = false;
+        }
     }
 
     public void CreatePlanCommand()

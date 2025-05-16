@@ -43,7 +43,7 @@ public class CreatePlanDialogsViewModel : ObservableObject
     {
         int result = 0;
 
-        for (int i = 0; i < _dataService.PlansList.Count - 1; i++)
+        for (int i = 0; i < _dataService.PlansList.Count; i++)
         {
             result = _dataService.PlansList[i].Plan_Id + 1;
             if (!_dataService.PlansList.Any(x => x.Plan_Id == result))

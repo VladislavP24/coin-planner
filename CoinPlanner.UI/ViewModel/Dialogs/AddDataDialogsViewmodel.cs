@@ -71,7 +71,7 @@ public class AddDataDialogsViewmodel : ObservableObject
     {
         int result = 0;
 
-        for (int i = 0; i < _dataService.OperationsList.Count - 1; i++)
+        for (int i = 0; i < _dataService.OperationsList.Count; i++)
         {
             result = _dataService.OperationsList[i].Oper_Id + 1;
             if (!_dataService.OperationsList.Any(x => x.Oper_Id == result))
