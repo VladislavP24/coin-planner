@@ -14,10 +14,12 @@ public class DataService
     public List<Plans> PlansList { get; set; } = new();
     public List<Operations> OperationsList { get; set; } = new();
     public List<Categories> CategoriesList { get; set; } = new();
+    public List<Fixations> FixationsList { get; set; } = new();
 
     //Переменные для хранения изменений
     public Dictionary<int, int> PlanCondition = new();
     public Dictionary<int, int> OperCondition = new();
+    public Dictionary<int, int> FixCondition = new();
 
     /// <summary>
     /// Проверка подключения к БД
@@ -48,13 +50,22 @@ public class DataService
             using (AppDbContext db = new AppDbContext())
             {
                 PlansList = await db.plans.FromSqlRaw("SELECT * FROM plans ORDER BY plan_id").ToListAsync();
+                CategoriesList = await db.categories.FromSqlRaw("SELECT * FROM categories ORDER BY category_id").ToListAsync();
+
                 OperationsList = await db.Database.SqlQueryRaw<Operations>("SELECT o.oper_id, t.type_name AS type_name, ct.category_name AS category_name, o.oper_name, o.oper_sum, o.oper_completed, o.oper_next_date, o.oper_plan_id " +
                                                                            "FROM operations o " +
                                                                            "JOIN plans p ON o.oper_plan_id = p.plan_id " +
                                                                            "JOIN type_operations t ON o.oper_type_id = t.type_id " +
                                                                            "JOIN categories ct ON o.oper_category_id = ct.category_id " +
                                                                            "ORDER BY o.oper_id;").ToListAsync();
-                CategoriesList = await db.categories.FromSqlRaw("SELECT * FROM categories ORDER BY category_id").ToListAsync();
+
+                FixationsList = await db.Database.SqlQueryRaw<Fixations>("SELECT f.fix_id, t.type_name AS type_name, ct.category_name AS category_name, f.fix_name, f.fix_sum, f.fix_completed, f.fix_next_date, f.fix_plan_id " +
+                                                                         "FROM fixations f " +
+                                                                         "JOIN plans p ON f.fix_plan_id = p.plan_id " +
+                                                                         "JOIN type_operations t ON f.fix_type_id = t.type_id " +
+                                                                         "JOIN categories ct ON f.fix_category_id = ct.category_id " +
+                                                                         "ORDER BY f.fix_id;").ToListAsync();
+                
             }
             return true;
         }
@@ -92,7 +103,6 @@ public class DataService
                     else if (condition.Value == 3)
                         db.Database.ExecuteSqlRaw($"DELETE FROM plans WHERE plan_id = {condition.Key}");
                 }
-
                 PlanCondition.Clear();
 
                 //Сохранение Operations
@@ -116,6 +126,27 @@ public class DataService
                 }
                 OperCondition.Clear();
 
+                //Сохранение Fixations
+                foreach (var condition in FixCondition)
+                {
+                    if (condition.Value == 1)
+                    {
+                        var fix = FixationsList.Where(x => x.Fix_Id == condition.Key).First();
+                        db.Database.ExecuteSqlRaw($"INSERT INTO fixations (fix_id, fix_plan_id, fix_name, fix_type_id, fix_category_id, fix_sum, fix_completed, fix_next_date) " +
+                                                  $"VALUES ({fix.Fix_Id}, {fix.Fix_Plan_Id}, '{fix.Fix_Name}', {ConvertFixType(fix)}, {ConvertFixCategory(fix)}, {fix.Fix_Sum}, {fix.Fix_Completed}, '{fix.Fix_Next_Date}')");
+                    }
+                    else if (condition.Value == 2)
+                    {
+                        var fix = FixationsList.Where(x => x.Fix_Id == condition.Key).First();
+                        db.Database.ExecuteSqlRaw($"UPDATE fixations SET fix_name = '{fix.Fix_Name}', fix_type_id = {ConvertFixType(fix)}, fix_category_id = {ConvertFixCategory(fix)}, " +
+                                                  $"fix_sum = {fix.Fix_Sum}, fix_completed = {fix.Fix_Completed}, fix_next_date = '{fix.Fix_Next_Date}'" +
+                                                  $"WHERE fix_id = {fix.Fix_Id}");
+                    }
+                    else if (condition.Value == 3)
+                        db.Database.ExecuteSqlRaw($"DELETE FROM fixations WHERE fix_id = {condition.Key}");
+                }
+                FixCondition.Clear();
+
                 db.SaveChangesAsync(); 
             }
 
@@ -130,7 +161,12 @@ public class DataService
 
     public int ConvertOperType(Operations oper)
         => oper.Type_Name == "Зачисление" ? 1 : 2;
+    public int ConvertFixType(Fixations fix)
+        => fix.Type_Name == "Зачисление" ? 1 : 2;
 
     public int ConvertOperCategory(Operations oper)
         => CategoriesList.Where(x => x.Category_Name == oper.Category_Name).Select(x => x.Category_Id).First();
+
+    public int ConvertFixCategory(Fixations fix)
+        => CategoriesList.Where(x => x.Category_Name == fix.Category_Name).Select(x => x.Category_Id).First();
 }

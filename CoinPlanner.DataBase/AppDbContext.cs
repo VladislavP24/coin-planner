@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
     public DbSet<Operations> operations { get; set; } = null!;
     public DbSet<Plans> plans { get; set; } = null!;
     public DbSet<Categories> categories { get; set; } = null!;
+    public DbSet<Fixations> fixations { get; set; } = null!;
 
     public AppDbContext()
         => Database.EnsureCreated();
