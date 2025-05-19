@@ -282,12 +282,11 @@
                 </Border>
 
                 <Border Grid.Row="3" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
-                    <ToggleButton Width="135"
-                                  Height="32"
-                                  Margin="0,0,9,0"
-                                  Foreground="Red"
-                                  IsChecked="False"
-                                  Style="{DynamicResource PanelToggleButton}">
+                    <Button Width="135"
+                            Height="32"
+                            Margin="0,0,9,0"
+                            Command="{Binding DataContext.Fixation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
+                            Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/fixationtable.png" 
                                    Width="29" 
@@ -297,7 +296,7 @@
                                    SnapsToDevicePixels="True"/>
                             <TextBlock Text="Фиксация" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
                         </StackPanel>
-                    </ToggleButton>
+                    </Button>
                 </Border>
             </Grid>
 

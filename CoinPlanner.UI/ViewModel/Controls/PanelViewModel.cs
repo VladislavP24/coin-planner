@@ -162,6 +162,7 @@ public class PanelViewModel : ObservableObject
         RenamePlan = new RelayCommand(RenamePlanCommand);
         OpenTable = new RelayCommand(OpenTableCommand);
         OpenDiagram = new RelayCommand(OpenDiagramCommand);
+        Fixation = new RelayCommand(FixationCommand);
     }
 
     public void IntervalCommand()
@@ -245,6 +246,12 @@ public class PanelViewModel : ObservableObject
             else
                 _contentViewModel.IsVisibleContent = false;
         }
+    }
+
+    public void FixationCommand()
+    {
+        FixationDialogs fixationDialogs = new FixationDialogs(this, _dataService);
+        fixationDialogs.ShowDialog();
     }
 
     public void CreatePlanCommand()

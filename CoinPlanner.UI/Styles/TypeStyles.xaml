@@ -17,7 +17,7 @@
                                   IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
                                   Focusable="False"
                                   ClickMode="Press"
-                                  Background="Transparent"
+                                  Background="White"
                                   BorderBrush="DarkGray"
                                   BorderThickness="1">
                             <Grid>

@@ -62,12 +62,12 @@ public class FixationModel : ObservableObject
     /// <summary>
     /// Выполнен
     /// </summary>
-    public string? FixCompleted
+    public bool FixCompleted
     {
         get => _fixCompleted;
         set => SetProperty(ref _fixCompleted, value, nameof(FixCompleted));
     }
-    private string? _fixCompleted;
+    private bool _fixCompleted;
 
     /// <summary>
     /// Время
@@ -83,4 +83,14 @@ public class FixationModel : ObservableObject
     /// Номер плана
     /// </summary>
     public int FixPlanId { get; set; }
+
+    /// <summary>
+    /// Используется ли для плана
+    /// </summary>
+    public bool IsCheckFix
+    {
+        get => _isCheckFix;
+        set => SetProperty(ref _isCheckFix, value, nameof(IsCheckFix));
+    }
+    private bool _isCheckFix;
 }
