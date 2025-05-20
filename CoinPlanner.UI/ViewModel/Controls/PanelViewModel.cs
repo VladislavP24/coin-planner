@@ -122,6 +122,23 @@ public class PanelViewModel : ObservableObject
         }        
     }
 
+    /// <summary>
+    /// Получение первого свободного ID из операций
+    /// </summary>
+    public int GetOperFirstFreeID()
+    {
+        int result = 1;
+
+        for (int i = 0; i < _dataService.OperationsList.Count; i++)
+        {
+            result = _dataService.OperationsList[i].Oper_Id + 1;
+            if (!_dataService.OperationsList.Any(x => x.Oper_Id == result))
+                return result;
+        }
+
+        return result;
+    }
+
 
     #region Команды на панели
 
@@ -179,18 +196,27 @@ public class PanelViewModel : ObservableObject
 
     public void AddDataCommand()
     {
+        if (SelectedItemPlan == null)
+            return;
+
         AddDataDialogs addDataDialogs = new AddDataDialogs(_dataService, this, _contentViewModel);
         addDataDialogs.ShowDialog();
     }
 
     public void EditDataCommand()
     {
+        if (SelectedItemPlan == null)
+            return;
+
         EditDataDialogs editDataDialogs = new EditDataDialogs(_dataService, _contentViewModel, this);
         editDataDialogs.ShowDialog();
     }
 
     public void DeleteDataCommand()
     {
+        if (SelectedItemPlan == null)
+            return;
+
         DeleteDataDialogs deleteDataDialogs = new DeleteDataDialogs(_dataService, _contentViewModel, this);
         deleteDataDialogs.ShowDialog();
     }
@@ -250,7 +276,10 @@ public class PanelViewModel : ObservableObject
 
     public void FixationCommand()
     {
-        FixationDialogs fixationDialogs = new FixationDialogs(this, _dataService);
+        if (SelectedItemPlan == null)
+            return;
+
+        FixationDialogs fixationDialogs = new FixationDialogs(this, _dataService, _contentViewModel);
         fixationDialogs.ShowDialog();
     }
 

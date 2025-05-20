@@ -22,11 +22,11 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class FixationDialogs : Window
     {
-        public FixationDialogs(PanelViewModel panelViewModel, DataService dataService)
+        public FixationDialogs(PanelViewModel panelViewModel, DataService dataService, ContentViewModel contentViewModel)
         {
             InitializeComponent();
             
-            DataContext = new FixationDialogsViewModel(this, panelViewModel, dataService);
+            DataContext = new FixationDialogsViewModel(this, panelViewModel, dataService, contentViewModel);
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)

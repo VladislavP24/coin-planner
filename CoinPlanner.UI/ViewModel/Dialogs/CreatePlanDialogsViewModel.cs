@@ -56,17 +56,19 @@ public class CreatePlanDialogsViewModel : ObservableObject
 
     private void OkCommand()
     {
-        if (_dataService.PlanCondition.Any(x => x.Key == GetPlanFirstFreeID()))
+        int id = GetPlanFirstFreeID();
+
+        if (_dataService.PlanCondition.Any(x => x.Key == id))
         {
-            _dataService.PlanCondition.Remove(GetPlanFirstFreeID());
-            _dataService.PlanCondition.Add(GetPlanFirstFreeID(), 2);
+            _dataService.PlanCondition.Remove(id);
+            _dataService.PlanCondition.Add(id, 2);
         }
         else
-            _dataService.PlanCondition.Add(GetPlanFirstFreeID(), 1);
+            _dataService.PlanCondition.Add(id, 1);
 
         _dataService.PlansList.Add(new Plans 
         { 
-            Plan_Id = GetPlanFirstFreeID(),
+            Plan_Id = id,
             Plan_Name = InputName,
             Date_Create = DateTime.Now,
             Date_Update = DateTime.Now,

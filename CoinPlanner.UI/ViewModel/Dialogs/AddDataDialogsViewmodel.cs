@@ -41,7 +41,7 @@ public class AddDataDialogsViewmodel : ObservableObject
     public string Name { get; set; }
     public double Sum { get; set; }
     public bool Completed { get; set; }
-    public DateTime Date { get; set; } = new DateTime(2025, 1, 01, 0, 0, 0);
+    public DateTime Date { get; set; } = DateTime.Now;
 
 
     //ComboBox Items and Selected
@@ -64,43 +64,21 @@ public class AddDataDialogsViewmodel : ObservableObject
     private string _categorySelected;
 
 
-    /// <summary>
-    /// Получение первого свободного ID из операций
-    /// </summary>
-    private int GetOperFirstFreeID()
-    {
-        int result = 0;
-
-        for (int i = 0; i < _dataService.OperationsList.Count; i++)
-        {
-            result = _dataService.OperationsList[i].Oper_Id + 1;
-            if (!_dataService.OperationsList.Any(x => x.Oper_Id == result))
-                return result;
-        }
-
-        return result;
-    }
-
-
     private void OkCommand()
     {
-        if (_panelViewModel.SelectedItemPlan == null)
-        {
-            _addDataDialogs.Close();
-            return;
-        }
+        int id = _panelViewModel.GetOperFirstFreeID();
 
-        if(_dataService.OperCondition.Any(x => x.Key == GetOperFirstFreeID()))
+        if (_dataService.OperCondition.Any(x => x.Key == id))
         {
-            _dataService.OperCondition.Remove(GetOperFirstFreeID());
-            _dataService.OperCondition.Add(GetOperFirstFreeID(), 2);
+            _dataService.OperCondition.Remove(id);
+            _dataService.OperCondition.Add(id, 2);
         }
         else
-            _dataService.OperCondition.Add(GetOperFirstFreeID(), 1);
+            _dataService.OperCondition.Add(id, 1);
 
         _dataService.OperationsList.Add(new DataBase.ModelsDB.Operations
         {
-            Oper_Id = GetOperFirstFreeID(),
+            Oper_Id = id,
             Oper_Name = Name,
             Type_Name = TypeSelected,
             Category_Name = CategorySelected,

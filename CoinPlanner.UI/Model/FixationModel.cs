@@ -72,12 +72,12 @@ public class FixationModel : ObservableObject
     /// <summary>
     /// Время
     /// </summary>
-    public string? FixNextDate
+    public DateTime FixNextDate
     {
         get => _fixNextDate;
         set => SetProperty(ref _fixNextDate, value, nameof(FixNextDate));
     }
-    private string? _fixNextDate;
+    private DateTime _fixNextDate;
 
     /// <summary>
     /// Номер плана

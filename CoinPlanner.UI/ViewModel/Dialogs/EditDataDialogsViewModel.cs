@@ -120,13 +120,7 @@ public class EditDataDialogsViewModel : ObservableObject
     }
 
     private void OkCommand()
-    {
-        if (_panelViewModel.SelectedItemPlan == null)
-        {
-            _editDataDialogs.Close();
-            return;
-        }   
-        
+    {   
         int row = 0;
         foreach (var oper in _dataService.OperationsList.Where(x => x.Oper_Next_Date >= _contentViewModel.StartDate && x.Oper_Next_Date <= _contentViewModel.EndDate).Where(x => x.Oper_Plan_Id == _contentViewModel.Plan.PlanId))
         {
