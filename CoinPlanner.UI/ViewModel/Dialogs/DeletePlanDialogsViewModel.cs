@@ -57,7 +57,10 @@ public class DeletePlanDialogsViewModel : ObservableObject
         _dataService.PlansList.Remove(plan);
 
         if (_panelViewModel.SelectedItemPlan != null && plan.Plan_Name == _panelViewModel.SelectedItemPlan.PlanName)
+        {
+            _panelViewModel.SelectedItemPlan = null;
             _panelViewModel.PlanUpdate();
+        }       
         else
         {
             var saveSelectedPlan = _panelViewModel.SelectedItemPlan;
