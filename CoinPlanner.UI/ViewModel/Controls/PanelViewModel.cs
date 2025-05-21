@@ -180,6 +180,7 @@ public class PanelViewModel : ObservableObject
         OpenTable = new RelayCommand(OpenTableCommand);
         OpenDiagram = new RelayCommand(OpenDiagramCommand);
         Fixation = new RelayCommand(FixationCommand);
+        Mark = new RelayCommand(MarkCommand);
     }
 
     public void IntervalCommand()
@@ -299,6 +300,12 @@ public class PanelViewModel : ObservableObject
     {
         RenamePlanDialogs renamePlanDialogs = new RenamePlanDialogs(this, _dataService);
         renamePlanDialogs.ShowDialog();
+    }
+
+    public void MarkCommand()
+    {
+        MarkDialogs markDialogs = new MarkDialogs();
+        markDialogs.ShowDialog();
     }
     #endregion
 }
