@@ -21,7 +21,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="150"/>
+                <RowDefinition Height="200"/>
             </Grid.RowDefinitions>
 
             <!-- Верхняя панель -->
@@ -212,35 +212,101 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <Grid Grid.Column="0">
+                    <Border BorderBrush="Black" BorderThickness="0,0,1,0">
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                       Text="За вcё время план:" FontSize="22" Margin="0,0,10,0"
+                                       FontWeight="Medium"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"/>
+
+                            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="15,0,0,0" HorizontalAlignment="Left">
+                                <TextBlock Text="Накопительные счета:" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding SavingsAccountAllTime, UpdateSourceTrigger=PropertyChanged}"
+                                           FontSize="20" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="15,0,0,0" HorizontalAlignment="Left">
+                                <TextBlock Text="Кредиты:" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding LoansAllTime, UpdateSourceTrigger=PropertyChanged}"
+                                           FontSize="20" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="15,0,0,0" HorizontalAlignment="Left">
+                                <TextBlock Text="Зачисления:" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding EnrollmentsAllTime, UpdateSourceTrigger=PropertyChanged}"
+                                           FontSize="20" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="15,0,0,0" HorizontalAlignment="Left">
+                                <TextBlock Text="Оплаты:" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding PaymentsAllTime, UpdateSourceTrigger=PropertyChanged}"
+                                           FontSize="20" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="15,0,0,0" HorizontalAlignment="Left">
+                                <TextBlock Text="Остаток:" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding RemaindersAllTime, UpdateSourceTrigger=PropertyChanged}"
+                                           FontSize="20" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Grid Grid.Column="1">
                         <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="50,15,0,0">
-                            <TextBlock Text="Накопления:" FontSize="20" Margin="0,0,10,0"
-                                   VerticalAlignment="Center"/>
-                            <TextBlock Text="300.000" FontSize="20"
-                                   VerticalAlignment="Center"/>
+                        <TextBlock Grid.Row="0"
+                                   Text="За выбранный интервал времени:" FontSize="22" Margin="0,0,10,0"
+                                   FontWeight="Medium"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"/>
+
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="15,0,0,0" HorizontalAlignment="Left">
+                            <TextBlock Text="Накопительные счета:" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding SavingsAccountSelectTime, UpdateSourceTrigger=PropertyChanged}"
+                                       FontSize="20" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="50,0,0,0">
-                            <TextBlock Text="Кредит:" FontSize="20" Margin="0,0,10,0"
-                                   VerticalAlignment="Center"/>
-                            <TextBlock Text="10.000" FontSize="20"
-                                   VerticalAlignment="Center"/>
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="15,0,0,0" HorizontalAlignment="Left">
+                            <TextBlock Text="Кредиты:" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LoansSelectTime, UpdateSourceTrigger=PropertyChanged}"
+                                       FontSize="20" VerticalAlignment="Center"/>
                         </StackPanel>
 
-                        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="50,0,0,15">
-                            <TextBlock Text="Остаток:" FontSize="20" Margin="0,0,10,0"
-                                   VerticalAlignment="Center"/>
-                            <TextBlock Text="10.000" FontSize="20"
-                                   VerticalAlignment="Center"/>
+                        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="15,0,0,0" HorizontalAlignment="Left">
+                            <TextBlock Text="Зачисления:" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding EnrollmentsSelectTime, UpdateSourceTrigger=PropertyChanged}"
+                                       FontSize="20" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="15,0,0,0" HorizontalAlignment="Left">
+                            <TextBlock Text="Оплаты:" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding PaymentsSelectTime, UpdateSourceTrigger=PropertyChanged}"
+                                       FontSize="20" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="15,0,0,0" HorizontalAlignment="Left">
+                            <TextBlock Text="Остаток:" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding RemaindersSelectTime, UpdateSourceTrigger=PropertyChanged}"
+                                       FontSize="20" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Grid>
-
                 </Grid>
             </Border>
         </Grid>

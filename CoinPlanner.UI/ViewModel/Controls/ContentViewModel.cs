@@ -57,11 +57,13 @@ public class ContentViewModel : ObservableObject
 
             i++;
         }
+
+        CalculationOfParameters();
     }
 
 
     /// <summary>
-    /// Коллекция записной книжки
+    /// Коллекция операций
     /// </summary>
     public ObservableCollection<OperationModel> DynamicOperationCollection
     {
@@ -72,7 +74,7 @@ public class ContentViewModel : ObservableObject
 
 
     /// <summary>
-    /// Выбранная строчка в записной книжке
+    /// Выбранная строчка в плане
     /// </summary>
     public OperationModel? CurSelectedOperation
     {
@@ -80,4 +82,102 @@ public class ContentViewModel : ObservableObject
         set => SetProperty(ref _curSelectedOperation, value, nameof(CurSelectedOperation));
     }
     private OperationModel? _curSelectedOperation;
+
+
+    #region Нижняя панель контента
+
+    /// <summary>
+    /// Расчёт всех параметроы
+    /// </summary>
+    public void CalculationOfParameters()
+    {
+        SavingsAccountAllTime = _dataService.OperationsList.Where(x => x.Oper_Plan_Id == Plan.PlanId && x.Category_Name == "Накопления").Sum(x => x.Oper_Sum);
+        LoansAllTime = _dataService.OperationsList.Where(x => x.Oper_Plan_Id == Plan.PlanId && x.Category_Name == "Кредит").Sum(x => x.Oper_Sum);
+        EnrollmentsAllTime = _dataService.OperationsList.Where(x => x.Oper_Plan_Id == Plan.PlanId && x.Type_Name == "Зачисление").Sum(x => x.Oper_Sum);
+        PaymentsAllTime = _dataService.OperationsList.Where(x => x.Oper_Plan_Id == Plan.PlanId && x.Type_Name == "Оплата").Sum(x => x.Oper_Sum);
+        RemaindersAllTime = EnrollmentsAllTime - PaymentsAllTime;
+
+        SavingsAccountSelectTime = DynamicOperationCollection.Where(x => x.OperCategory == "Накопления").Sum(x => x.OperSum);
+        LoansSelectTime = DynamicOperationCollection.Where(x => x.OperCategory == "Кредит").Sum(x => x.OperSum);
+        EnrollmentsSelectTime = DynamicOperationCollection.Where(x => x.OperType == "Зачисление").Sum(x => x.OperSum);
+        PaymentsSelectTime = DynamicOperationCollection.Where(x => x.OperType == "Оплата").Sum(x => x.OperSum);
+        RemaindersSelectTime = EnrollmentsSelectTime - PaymentsSelectTime;
+    }
+
+
+    // Накопительные счета
+    public double SavingsAccountAllTime
+    {
+        get => _savingsAccountAllTime;
+        set => SetProperty(ref _savingsAccountAllTime, value, nameof(SavingsAccountAllTime));
+    }
+    private double _savingsAccountAllTime = 0;
+
+    public double SavingsAccountSelectTime
+    {
+        get => _savingsAccountSelectTime;
+        set => SetProperty(ref _savingsAccountSelectTime, value, nameof(SavingsAccountSelectTime));
+    }
+    private double _savingsAccountSelectTime = 0;
+
+    // Кредиты
+    public double LoansAllTime
+    {
+        get => _loansAllTime;
+        set => SetProperty(ref _loansAllTime, value, nameof(LoansAllTime));
+    }
+    private double _loansAllTime = 0;
+
+    public double LoansSelectTime
+    {
+        get => _loansSelectTime;
+        set => SetProperty(ref _loansSelectTime, value, nameof(LoansSelectTime));
+    }
+    private double _loansSelectTime = 0;
+
+    // Зачисления
+    public double EnrollmentsAllTime
+    {
+        get => _enrollmentsAllTime;
+        set => SetProperty(ref _enrollmentsAllTime, value, nameof(EnrollmentsAllTime));
+    }
+    private double _enrollmentsAllTime = 0;
+
+    public double EnrollmentsSelectTime
+    {
+        get => _enrollmentsSelectTime;
+        set => SetProperty(ref _enrollmentsSelectTime, value, nameof(EnrollmentsSelectTime));
+    }
+    private double _enrollmentsSelectTime = 0;
+
+    // Оплата
+    public double PaymentsAllTime
+    {
+        get => _paymentsAllTime;
+        set => SetProperty(ref _paymentsAllTime, value, nameof(PaymentsAllTime));
+    }
+    private double _paymentsAllTime = 0;
+
+    public double PaymentsSelectTime
+    {
+        get => _paymentsSelectTime;
+        set => SetProperty(ref _paymentsSelectTime, value, nameof(PaymentsSelectTime));
+    }
+    private double _paymentsSelectTime = 0;
+
+    // Остаток
+    public double RemaindersAllTime
+    {
+        get => _remaindersAllTime;
+        set => SetProperty(ref _remaindersAllTime, value, nameof(RemaindersAllTime));
+    }
+    private double _remaindersAllTime = 0;
+
+    public double RemaindersSelectTime
+    {
+        get => _remaindersSelectTime;
+        set => SetProperty(ref _remaindersSelectTime, value, nameof(RemaindersSelectTime));
+    }
+    private double _remaindersSelectTime = 0;
+    #endregion
 }
