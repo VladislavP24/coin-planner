@@ -64,15 +64,15 @@ public class FixationDialogsViewModel : ObservableObject
     public ObservableCollection<FixationModel> Items { get; set; } = new();
     public ObservableCollection<string> TypeItems { get; set; } = new ObservableCollection<string> { "Зачисление", "Оплата" };
     public ObservableCollection<string> CategoryItems { get; set; } = new();
-    private IList<int> localUsedId = new List<int>();
+    private IList<int> usedIdList = new List<int>();
 
     public void AddItemCommand()
     {
-        int id = GetFixFirstFreeID();
-        if (localUsedId.Contains(id))
-            ++id;
+        int id = GetFixFirstFreeID(usedIdList);
+        usedIdList.Add(id);
 
-        localUsedId.Add(id);
+        if (_dataService.FixCondition.Any(x => x.Key == id && x.Value == 3))
+            _dataService.FixCondition.Remove(id);
 
         _dataService.FixCondition.Add(id, 1);
         Items.Add(new FixationModel()
@@ -95,6 +95,7 @@ public class FixationDialogsViewModel : ObservableObject
         if (_dataService.FixCondition.Any(x => x.Key == fixation.FixId && x.Value == 1))
         {
             _dataService.FixCondition.Remove(fixation.FixId);
+            _dataService.FixationsList.RemoveAll(x => x.Fix_Id == fixation.FixId);
             Items.Remove(fixation);
         }            
         else
@@ -121,7 +122,12 @@ public class FixationDialogsViewModel : ObservableObject
     }
 
     private void CancelCommand()
-        => _fixationDialogs.Close();
+    {
+        foreach (FixationModel fixation in Items)
+            SaveFixations(fixation);
+
+        _fixationDialogs.Close();
+    }
 
 
     /// <summary>
@@ -141,7 +147,7 @@ public class FixationDialogsViewModel : ObservableObject
             Fix_Plan_Id = fixation.FixPlanId
         };
 
-        if (_dataService.FixCondition.Any(x => x.Key == fixation.FixId))
+        if (!_dataService.FixationsList.Any(x => x.Fix_Id == fixation.FixId))
             _dataService.FixationsList.Add(newFixation);
         else if (_dataService.FixationsList.Where(x => x.Fix_Id == fixation.FixId)
                                            .Where(x => x.Fix_Name == fixation.FixName)
@@ -161,16 +167,19 @@ public class FixationDialogsViewModel : ObservableObject
     /// <summary>
     /// Получение первого свободного ID из фиксаций
     /// </summary>
-    private int GetFixFirstFreeID()
+    private int GetFixFirstFreeID(in IList<int> usedIdList)
     {
         int result = 1;
 
         for (int i = 0; i < _dataService.FixationsList.Count; i++)
         {
             result = _dataService.FixationsList[i].Fix_Id + 1;
-            if (!_dataService.FixationsList.Any(x => x.Fix_Id == result))
+            if (!_dataService.FixationsList.Any(x => x.Fix_Id == result) && !usedIdList.Contains(result))
                 return result;
         }
+
+        while (usedIdList.Contains(result))
+            ++ result;
 
         return result;
     }
