@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using CoinPlanner.DataBase;
+using CoinPlanner.DataBase.ModelsDb;
 using CoinPlanner.UI.ViewModel.Items;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -16,14 +18,16 @@ namespace CoinPlanner.UI.ViewModel.Controls;
 
 public class CalendarViewModel : ObservableObject
 {
-    public CalendarViewModel(ContentViewModel contentViewModel)
+    public CalendarViewModel(ContentViewModel contentViewModel, DataService dataService)
     {
         _contentViewModel = contentViewModel;
+        _dataService = dataService;
         SendInterval = new RelayCommand(SendIntervalCommand);
         UpdateButtons();
     }
 
     private ContentViewModel _contentViewModel;
+    private DataService _dataService;
     public ICommand SendInterval { get; set; }
 
     /// <summary>
@@ -150,8 +154,32 @@ public class CalendarViewModel : ObservableObject
                 break;
 
             case "Интервал":
-                Buttons.Add(new ButtonItemsViewModel { Content = $"{Start:dd MMMM} - {End:dd MMMM yyyy 'г.'}", StartTime = Start, EndTime = End.AddDays(1) });
+                Buttons.Add(new ButtonItemsViewModel { Content = $"{Start:dd MMMM yyyy 'г.'} - {End:dd MMMM yyyy 'г.'}", StartTime = Start, EndTime = End.AddDays(1) });
                 break;
+        }
+
+        AddMarkToButton();
+    }
+
+
+    public void AddMarkToButton()
+    {
+        Marks? mark = new Marks();
+
+        foreach (var button in Buttons)
+        {
+            if (button.EndTime == null)
+            {
+                mark  = _dataService.MarksList.Where(x => x.Mark_Date == button.StartTime).FirstOrDefault();
+                if (mark != null)
+                    button.Mark = mark.Mark_Name;
+            }
+            else
+            {
+                mark = _dataService.MarksList.Where(x => x.Mark_Date >= button.StartTime && x.Mark_Date <= button.EndTime).FirstOrDefault();
+                if (mark != null)
+                    button.Mark = mark.Mark_Name;
+            }                
         }
     }
 }

@@ -15,11 +15,13 @@ public class DataService
     public List<Operations> OperationsList { get; set; } = new();
     public List<Categories> CategoriesList { get; set; } = new();
     public List<Fixations> FixationsList { get; set; } = new();
+    public List<Marks> MarksList { get; set; } = new();
 
     //Переменные для хранения изменений
     public Dictionary<int, int> PlanCondition = new();
     public Dictionary<int, int> OperCondition = new();
     public Dictionary<int, int> FixCondition = new();
+    public Dictionary<int, int> MarkCondition = new();
 
     /// <summary>
     /// Проверка подключения к БД
@@ -50,6 +52,7 @@ public class DataService
             using (AppDbContext db = new AppDbContext())
             {
                 PlansList = await db.plans.FromSqlRaw("SELECT * FROM plans ORDER BY plan_id").ToListAsync();
+                MarksList = await db.marks.FromSqlRaw("SELECT * FROM marks ORDER BY mark_id").ToListAsync();
                 CategoriesList = await db.categories.FromSqlRaw("SELECT * FROM categories ORDER BY category_id").ToListAsync();
 
                 OperationsList = await db.Database.SqlQueryRaw<Operations>("SELECT o.oper_id, t.type_name AS type_name, ct.category_name AS category_name, o.oper_name, o.oper_sum, o.oper_completed, o.oper_next_date, o.oper_plan_id " +
@@ -146,6 +149,24 @@ public class DataService
                         db.Database.ExecuteSqlRaw($"DELETE FROM fixations WHERE fix_id = {condition.Key}");
                 }
                 FixCondition.Clear();
+
+                //Сохранение Fixations
+                foreach (var condition in MarkCondition)
+                {
+                    if (condition.Value == 1)
+                    {
+                        var mark = MarksList.Where(x => x.Mark_Id == condition.Key).First();
+                        db.Database.ExecuteSqlRaw($"INSERT INTO marks (mark_id, mark_name, mark_date) VALUES ({mark.Mark_Id} '{mark.Mark_Name}', '{mark.Mark_Date}')");
+                    }
+                    else if (condition.Value == 2)
+                    {
+                        var mark = MarksList.Where(x => x.Mark_Id == condition.Key).First();
+                        db.Database.ExecuteSqlRaw($"UPDATE marks SET mark_name = '{mark.Mark_Name}', mark_date = '{mark.Mark_Date}' WHERE mark_id = {mark.Mark_Id}");
+                    }
+                    else if (condition.Value == 3)
+                        db.Database.ExecuteSqlRaw($"DELETE FROM marks WHERE mark_id = {condition.Key}");
+                }
+                MarkCondition.Clear();
 
                 db.SaveChangesAsync(); 
             }

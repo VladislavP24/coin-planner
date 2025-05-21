@@ -19,8 +19,7 @@ public class ButtonItemsViewModel : ObservableObject
         _endTime = endTime;
         _isChecked = isChecked;
     }
-
-    private bool _isChecked;
+   
     /// <summary>
     /// Факт выбора
     /// </summary>
@@ -29,9 +28,9 @@ public class ButtonItemsViewModel : ObservableObject
         get => _isChecked;
         set => SetProperty(ref _isChecked, value, nameof(IsChecked));
     }
+    private bool _isChecked;
 
 
-    private string _content;
     /// <summary>
     /// Элемент, который подлежит выбору
     /// </summary>
@@ -40,8 +39,9 @@ public class ButtonItemsViewModel : ObservableObject
         get => _content;
         set => SetProperty(ref _content, value, nameof(Content));
     }
+    private string _content;
 
-    private DateTime _startTime;
+    
     /// <summary>
     /// Начальная дата в формате DateTime
     /// </summary>
@@ -50,8 +50,9 @@ public class ButtonItemsViewModel : ObservableObject
         get => _startTime;
         set => SetProperty(ref _startTime, value, nameof(StartTime));
     }
+    private DateTime _startTime;
 
-    private DateTime? _endTime;
+    
     /// <summary>
     /// Начальная дата в формате DateTime
     /// </summary>
@@ -60,4 +61,16 @@ public class ButtonItemsViewModel : ObservableObject
         get => _endTime;
         set => SetProperty(ref _endTime, value, nameof(EndTime));
     }
+    private DateTime? _endTime;
+
+
+    /// <summary>
+    /// Элемент, который подлежит выбору
+    /// </summary>
+    public string? Mark
+    {
+        get => _mark;
+        set => SetProperty(ref _mark, value, nameof(Mark));
+    }
+    private string? _mark;
 }
