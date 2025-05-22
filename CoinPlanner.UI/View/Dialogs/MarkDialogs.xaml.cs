@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using CoinPlanner.DataBase;
+using CoinPlanner.UI.ViewModel.Controls;
 using CoinPlanner.UI.ViewModel.Dialogs;
 
 namespace CoinPlanner.UI.View.Dialogs
@@ -20,11 +22,11 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class MarkDialogs : Window
     {
-        public MarkDialogs()
+        public MarkDialogs(DataService dataService, CalendarViewModel calendarViewModel)
         {
             InitializeComponent();
 
-            DataContext = new MarkDialogsViewModel();
+            DataContext = new MarkDialogsViewModel(this, dataService, calendarViewModel);
         }
     }
 }

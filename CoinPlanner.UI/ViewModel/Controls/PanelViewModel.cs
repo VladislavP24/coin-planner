@@ -200,7 +200,7 @@ public class PanelViewModel : ObservableObject
         if (SelectedItemPlan == null)
             return;
 
-        AddDataDialogs addDataDialogs = new AddDataDialogs(_dataService, this, _contentViewModel);
+        AddDataDialogs addDataDialogs = new AddDataDialogs(this, _dataService,  _contentViewModel);
         addDataDialogs.ShowDialog();
     }
 
@@ -209,7 +209,7 @@ public class PanelViewModel : ObservableObject
         if (SelectedItemPlan == null)
             return;
 
-        EditDataDialogs editDataDialogs = new EditDataDialogs(_dataService, _contentViewModel, this);
+        EditDataDialogs editDataDialogs = new EditDataDialogs(this, _dataService, _contentViewModel);
         editDataDialogs.ShowDialog();
     }
 
@@ -218,7 +218,7 @@ public class PanelViewModel : ObservableObject
         if (SelectedItemPlan == null)
             return;
 
-        DeleteDataDialogs deleteDataDialogs = new DeleteDataDialogs(_dataService, _contentViewModel, this);
+        DeleteDataDialogs deleteDataDialogs = new DeleteDataDialogs(this, _dataService, _contentViewModel);
         deleteDataDialogs.ShowDialog();
     }
 
@@ -304,7 +304,7 @@ public class PanelViewModel : ObservableObject
 
     public void MarkCommand()
     {
-        MarkDialogs markDialogs = new MarkDialogs();
+        MarkDialogs markDialogs = new MarkDialogs(_dataService, _calendarViewModel);
         markDialogs.ShowDialog();
     }
     #endregion

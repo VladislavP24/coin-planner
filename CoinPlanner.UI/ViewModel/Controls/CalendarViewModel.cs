@@ -170,13 +170,13 @@ public class CalendarViewModel : ObservableObject
         {
             if (button.EndTime == null)
             {
-                mark  = _dataService.MarksList.Where(x => x.Mark_Date == button.StartTime).FirstOrDefault();
+                mark  = _dataService.MarksList.Where(x => x.Mark_Date.Date == button.StartTime.Date).FirstOrDefault();
                 if (mark != null)
                     button.Mark = mark.Mark_Name;
             }
             else
             {
-                mark = _dataService.MarksList.Where(x => x.Mark_Date >= button.StartTime && x.Mark_Date <= button.EndTime).FirstOrDefault();
+                mark = _dataService.MarksList.Where(x => x.Mark_Date.Date >= button.StartTime.Date && x.Mark_Date.Date <= button.EndTime?.Date).FirstOrDefault();
                 if (mark != null)
                     button.Mark = mark.Mark_Name;
             }                

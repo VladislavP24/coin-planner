@@ -13,7 +13,7 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class AddDataDialogs : Window
     {
-        public AddDataDialogs(DataService dataService, PanelViewModel panelViewModel, ContentViewModel contentViewModel)
+        public AddDataDialogs(PanelViewModel panelViewModel, DataService dataService, ContentViewModel contentViewModel)
         {
             InitializeComponent();
 

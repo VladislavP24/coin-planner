@@ -22,7 +22,7 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class DeleteDataDialogs : Window
     {
-        public DeleteDataDialogs(DataService dataService, ContentViewModel contentViewModel, PanelViewModel panelViewModel)
+        public DeleteDataDialogs(PanelViewModel panelViewModel, DataService dataService, ContentViewModel contentViewModel)
         {
             InitializeComponent();
 

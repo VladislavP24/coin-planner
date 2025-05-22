@@ -51,10 +51,9 @@
                             <DataTemplate>
                                 <StackPanel Margin="5" Background="#ECEFF1">
                                     <StackPanel Orientation="Horizontal">
-                                        <CheckBox IsChecked="{Binding IsCheckFix}" 
-                                                  Content="{Binding FixName}"
-                                                  FontSize="12"
-                                                  Margin="5,5,10,0"/>
+                                        <TextBlock Text="{Binding MarkDate, StringFormat='yyyy-MM-dd HH:mm'}"
+                                                   FontSize="12"
+                                                   Margin="5,5,10,0"/>
                                         <Button Content="Удалить"
                                                 VerticalAlignment="Top"
                                                 Margin="10,2,0,0"
@@ -66,9 +65,42 @@
                                     </StackPanel>
 
                                     <Expander Margin="20,2,0,0">
-                                        <StackPanel>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="auto"/>
+                                            </Grid.RowDefinitions>
                                             
-                                        </StackPanel>
+                                            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                                <TextBlock Text="Дата: "
+                                                           TextWrapping="Wrap"
+                                                           Margin="15,5,0,5"
+                                                           FontSize="15"/>
+
+                                                <TextBox Text="{Binding MarkDate, StringFormat='yyyy-MM-dd HH:mm', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         Width="420"
+                                                         TextWrapping="Wrap"
+                                                         Margin="52,5,0,5"
+                                                         FontSize="15"
+                                                         ToolTip="Введите дату и время в формате YYYY-MM-DD HH:mm:ss"/>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                                <TextBlock Text="Описание: "
+                                                           TextWrapping="Wrap"
+                                                           Margin="15,5,0,5"
+                                                           FontSize="15"/>
+                                                
+                                                <TextBox x:Name="DateTextBox"
+                                                         Text="{Binding MarkName}"
+                                                         TextWrapping="Wrap"
+                                                         Margin="15,5,5,5"
+                                                         Height="Auto"
+                                                         Width="420"
+                                                         FontSize="15"
+                                                         BorderThickness="1"/>
+                                            </StackPanel>
+                                        </Grid>
                                     </Expander>
                                 </StackPanel>
                             </DataTemplate>
@@ -97,7 +129,7 @@
                     FontSize="15"
                     BorderThickness="1"
                     BorderBrush="Gray"
-                    Command="{Binding DataContext.Ok, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:FixationDialogs}}"
+                    Command="{Binding DataContext.Ok, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:MarkDialogs}}"
                     Style="{StaticResource PanelButton}"/>
             <Button Content="Отмена" 
                     Height="30" 
@@ -108,7 +140,7 @@
                     FontSize="15"
                     BorderThickness="1"
                     BorderBrush="Gray"
-                    Command="{Binding DataContext.Cancel, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:FixationDialogs}}"
+                    Command="{Binding DataContext.Cancel, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:MarkDialogs}}"
                     Style="{StaticResource PanelButton}"/>
         </Grid>
     </Grid>

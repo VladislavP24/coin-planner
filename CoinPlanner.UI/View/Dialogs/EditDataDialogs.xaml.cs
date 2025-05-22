@@ -22,7 +22,7 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class EditDataDialogs : Window
     {
-        public EditDataDialogs(DataService dataService, ContentViewModel contentViewModel, PanelViewModel panelViewModel)
+        public EditDataDialogs(PanelViewModel panelViewModel, DataService dataService, ContentViewModel contentViewModel)
         {
             InitializeComponent();
 

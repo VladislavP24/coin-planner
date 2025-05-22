@@ -1,0 +1,41 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace CoinPlanner.UI.Model;
+
+public class MarkModel : ObservableObject
+{
+    /// <summary>
+    /// Id отметок
+    /// </summary>
+    public int MarkId
+    {
+        get => _markId;
+        set => SetProperty(ref _markId, value, nameof(MarkId));
+    }
+    private int _markId;
+
+    /// <summary>
+    /// Текст отметки
+    /// </summary>
+    public string? MarkName
+    {
+        get => _markName;
+        set => SetProperty(ref _markName, value, nameof(MarkName));
+    }
+    private string? _markName;
+
+    /// <summary>
+    /// Дата отметки
+    /// </summary>
+    public DateTime MarkDate
+    {
+        get => _markDate;
+        set => SetProperty(ref _markDate, value, nameof(MarkDate));
+    }
+    private DateTime _markDate;
+}
