@@ -304,7 +304,10 @@ public class PanelViewModel : ObservableObject
 
     public void MarkCommand()
     {
-        MarkDialogs markDialogs = new MarkDialogs(_dataService, _calendarViewModel);
+        if(SelectedItemPlan == null)
+            return;
+
+        MarkDialogs markDialogs = new MarkDialogs(this, _dataService, _calendarViewModel);
         markDialogs.ShowDialog();
     }
     #endregion

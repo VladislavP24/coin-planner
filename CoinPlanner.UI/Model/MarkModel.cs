@@ -38,4 +38,14 @@ public class MarkModel : ObservableObject
         set => SetProperty(ref _markDate, value, nameof(MarkDate));
     }
     private DateTime _markDate;
+
+    /// <summary>
+    /// План Id отметки
+    /// </summary>
+    public int MarkPlanId
+    {
+        get => _markPlanId;
+        set => SetProperty(ref _markPlanId, value, nameof(MarkPlanId));
+    }
+    private int _markPlanId;
 }

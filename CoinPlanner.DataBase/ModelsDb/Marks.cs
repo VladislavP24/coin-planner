@@ -15,4 +15,5 @@ public class Marks
     public int Mark_Id { get; set; }
     public string? Mark_Name { get; set; }
     public DateTime Mark_Date { get; set;}
+    public int Mark_Plan_Id { get; set; }
 }

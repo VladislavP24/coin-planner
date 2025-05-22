@@ -156,7 +156,7 @@ public class DataService
                     if (condition.Value == 1)
                     {
                         var mark = MarksList.Where(x => x.Mark_Id == condition.Key).First();
-                        db.Database.ExecuteSqlRaw($"INSERT INTO marks (mark_id, mark_name, mark_date) VALUES ({mark.Mark_Id} '{mark.Mark_Name}', '{mark.Mark_Date}')");
+                        db.Database.ExecuteSqlRaw($"INSERT INTO marks (mark_id, mark_name, mark_date, mark_plan_id) VALUES ({mark.Mark_Id} '{mark.Mark_Name}', '{mark.Mark_Date}', {mark.Mark_Plan_Id})");
                     }
                     else if (condition.Value == 2)
                     {

@@ -17,18 +17,20 @@ namespace CoinPlanner.UI.ViewModel.Dialogs;
 
 public class MarkDialogsViewModel : ObservableObject
 {
-    public MarkDialogsViewModel(MarkDialogs markDialogs, DataService dataService, CalendarViewModel calendarViewModel)
+    public MarkDialogsViewModel(MarkDialogs markDialogs, DataService dataService, CalendarViewModel calendarViewModel, PanelViewModel panelViewModel)
     {
         _calendarViewModel = calendarViewModel;
         _markDialogs = markDialogs;
         _dataService = dataService;
+        _panelViewModel = panelViewModel;
 
-        foreach (var item in _dataService.MarksList)
+        foreach (var item in _dataService.MarksList.Where(x => x.Mark_Plan_Id == _panelViewModel.SelectedItemPlan.PlanId))
             Items.Add(new MarkModel()
             {
                 MarkId = item.Mark_Id,
                 MarkName = item.Mark_Name,
-                MarkDate = item.Mark_Date
+                MarkDate = item.Mark_Date,
+                MarkPlanId = item.Mark_Plan_Id,
             });
 
         Ok = new RelayCommand(OkCommand);
@@ -40,6 +42,7 @@ public class MarkDialogsViewModel : ObservableObject
     private MarkDialogs _markDialogs { get; }
     private DataService _dataService { get; }
     private CalendarViewModel _calendarViewModel { get; }
+    private PanelViewModel _panelViewModel { get; }
 
 
     public ICommand Ok { get; set; }
@@ -64,6 +67,7 @@ public class MarkDialogsViewModel : ObservableObject
             MarkId = id,
             MarkName = " ",
             MarkDate = DateTime.Now,
+            MarkPlanId = _panelViewModel.SelectedItemPlan.PlanId
         });
     }
 
@@ -87,8 +91,9 @@ public class MarkDialogsViewModel : ObservableObject
     private void OkCommand()
     {
         foreach (MarkModel mark in Items)
-            SaveFixations(mark);
-        
+            SaveMarks(mark);
+
+        _panelViewModel.UpdateDatePlan();
         _calendarViewModel.UpdateButtons();
         _markDialogs.Close();
     }
@@ -96,7 +101,7 @@ public class MarkDialogsViewModel : ObservableObject
     private void CancelCommand()
     {
         foreach (MarkModel mark in Items)
-            SaveFixations(mark);
+            SaveMarks(mark);
 
         _markDialogs.Close();
     }
@@ -126,13 +131,14 @@ public class MarkDialogsViewModel : ObservableObject
     /// <summary>
     /// Сохранение и проверка фиксаций на состояние
     /// </summary>
-    private void SaveFixations(MarkModel markModel)
+    private void SaveMarks(MarkModel markModel)
     {
         var newMark = new DataBase.ModelsDb.Marks
         {
             Mark_Id = markModel.MarkId,
             Mark_Name = markModel.MarkName,
             Mark_Date = markModel.MarkDate,
+            Mark_Plan_Id = markModel.MarkPlanId
         };
 
         if (!_dataService.MarksList.Any(x => x.Mark_Id == markModel.MarkId))

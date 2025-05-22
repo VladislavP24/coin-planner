@@ -22,11 +22,11 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class MarkDialogs : Window
     {
-        public MarkDialogs(DataService dataService, CalendarViewModel calendarViewModel)
+        public MarkDialogs(PanelViewModel panelViewModel, DataService dataService, CalendarViewModel calendarViewModel)
         {
             InitializeComponent();
 
-            DataContext = new MarkDialogsViewModel(this, dataService, calendarViewModel);
+            DataContext = new MarkDialogsViewModel(this, dataService, calendarViewModel, panelViewModel);
         }
     }
 }
