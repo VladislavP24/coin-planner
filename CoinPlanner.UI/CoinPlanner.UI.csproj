@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CoinPlanner.DataBase\CoinPlanner.DataBase.csproj" />
+    <ProjectReference Include="..\CoinPlanner.FileService\CoinPlanner.FileService.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,10 +9,13 @@ using System.Windows.Input;
 using System.Xml;
 using CoinPlanner.DataBase;
 using CoinPlanner.DataBase.ModelsDB;
+using CoinPlanner.FileService;
+using CoinPlanner.FileService.DTO;
 using CoinPlanner.UI.Model;
 using CoinPlanner.UI.View.Dialogs;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
 
 namespace CoinPlanner.UI.ViewModel.Controls;
 
@@ -147,7 +150,7 @@ public class PanelViewModel : ObservableObject
     public ICommand SavePlan { get; set; }
     public ICommand OpenPlan { get; set; }
     public ICommand RenamePlan { get; set; }
-    public ICommand ConvertPlan { get; set; }
+    public ICommand ExportPlan { get; set; }
 
     public ICommand AddData { get; set; }
     public ICommand EditData { get; set; }
@@ -181,6 +184,9 @@ public class PanelViewModel : ObservableObject
         OpenDiagram = new RelayCommand(OpenDiagramCommand);
         Fixation = new RelayCommand(FixationCommand);
         Mark = new RelayCommand(MarkCommand);
+        SavePlan = new RelayCommand(SavePlanCommand);
+        OpenPlan = new RelayCommand(OpenPlanCommand);
+        ExportPlan = new RelayCommand(ExportPlanCommand);
     }
 
     public void IntervalCommand()
@@ -310,5 +316,100 @@ public class PanelViewModel : ObservableObject
         MarkDialogs markDialogs = new MarkDialogs(this, _dataService, _calendarViewModel);
         markDialogs.ShowDialog();
     }
+
+    public void SavePlanCommand()
+    {
+        if (SelectedItemPlan == null)
+            return;
+
+        var saveFileDialog = new SaveFileDialog
+        {
+            Filter = "XML Files (*.xml)|*.xml"
+        };
+
+        if (saveFileDialog.ShowDialog() == true)
+            XmlSerializationHelper.SerializeToXml(data, saveFileDialog.FileName);
+    }
+
+    public void OpenPlanCommand()
+    {
+        if (SelectedItemPlan == null)
+            return;
+
+        var openFileDialog = new OpenFileDialog
+        {
+            Filter = "XML Files (*.xml)|*.xml"
+        };
+
+        if (openFileDialog.ShowDialog() == true)
+            data = XmlSerializationHelper.DeserializeFromXml(openFileDialog.FileName);
+    }
+
+    public void ExportPlanCommand()
+    {
+        if (SelectedItemPlan == null)
+            return;
+
+        var saveFileDialog = new SaveFileDialog();
+
+        if (saveFileDialog.ShowDialog() == true)
+            PdfExportHepler.ExportToPdf(data, saveFileDialog.FileName);
+    }
     #endregion
+
+    private void ConvertModelToDTO()
+    {
+        DataCollection dataCollection = new();
+
+        // Данные об операциях
+        foreach (var oper in _dataService.OperationsList.Where(x => x.Oper_Plan_Id == SelectedItemPlan.PlanId))
+            dataCollection.Operations.Add(new OperationDTO
+            {
+                OperId = oper.Oper_Id,
+                OperPlanId = oper.Oper_Plan_Id,
+                OperName = oper.Oper_Name,
+                OperType = oper.Type_Name,
+                OperCategory = oper.Category_Name,
+                OperSum = oper.Oper_Sum,
+                OperCompleted = oper.Oper_Completed,
+                OperNextDate = oper.Oper_Next_Date
+            });
+
+        // Данные о фиксациях
+        foreach (var fix in _dataService.FixationsList.Where(x => x.Fix_Plan_Id == SelectedItemPlan.PlanId))
+            dataCollection.Fixations.Add(new FixationDTO
+            {
+                FixId = fix.Fix_Id,
+                FixPlanId = fix.Fix_Plan_Id,
+                FixName = fix.Fix_Name,
+                FixType = fix.Type_Name,
+                FixCategory = fix.Category_Name,
+                FixSum = fix.Fix_Sum,
+                FixCompleted = fix.Fix_Completed,
+                FixNextDate = fix.Fix_Next_Date
+            });
+
+        // Данные об отметках
+        foreach (var mark in _dataService.MarksList.Where(x => x.Mark_Plan_Id == SelectedItemPlan.PlanId))
+            dataCollection.Marks.Add(new MarkDTO
+            {
+                MarkId = mark.Mark_Id,
+                MarkName = mark.Mark_Name,
+                MarkDate = mark.Mark_Date,
+                MarkPlanId = mark.Mark_Plan_Id
+            });
+
+        // Далее будет конвертация данных о состояниях, т.к. мы можем работать в offline-режиме и в дальнейшем эти данные будут нужны для синхронизации, как будет сеть
+        // Данные о состоянии плана
+        dataCollection.PlanConditionPairs = new KeyValuePairDTO {Key = SelectedItemPlan.PlanId, 
+                                                                 Value = _dataService.PlanCondition.Where(x => x.Key == SelectedItemPlan.PlanId)
+                                                                                                   .Select(x => x.Value)
+                                                                                                   .FirstOrDefault() };
+
+        // Данные о состоянии операций
+        foreach (var cond in _dataService.OperCondition)
+        {
+            if(_dataService.OperationsList.Where(x => x.Oper_Id == cond.Key && x.Oper_Plan_Id == SelectedItemPlan.PlanId).Any())
+        }
+    }
 }
