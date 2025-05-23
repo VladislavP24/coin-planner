@@ -66,12 +66,13 @@ public class CreatePlanDialogsViewModel : ObservableObject
         else
             _dataService.PlanCondition.Add(id, 1);
 
-        _dataService.PlansList.Add(new Plans 
-        { 
+        _dataService.PlansList.Add(new Plans
+        {
             Plan_Id = id,
             Plan_Name = InputName,
             Date_Create = DateTime.Now,
             Date_Update = DateTime.Now,
+            Is_Synchro = false
         });
 
         var saveSelectedPlan = _panelViewModel.SelectedItemPlan;

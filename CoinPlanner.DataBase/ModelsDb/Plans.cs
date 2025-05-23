@@ -16,4 +16,5 @@ public class Plans
     public string? Plan_Name { get; set; }
     public DateTime Date_Create { get; set; }
     public DateTime Date_Update { get; set; }
+    public bool Is_Synchro { get; set; }
 }

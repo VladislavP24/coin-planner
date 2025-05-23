@@ -51,7 +51,7 @@ public class DataService
         {
             using (AppDbContext db = new AppDbContext())
             {
-                PlansList = await db.plans.FromSqlRaw("SELECT * FROM plans ORDER BY plan_id").ToListAsync();
+                PlansList = await db.plans.FromSqlRaw("SELECT plan_id, plan_name, date_create, date_update, TRUE AS is_synchro FROM plans ORDER BY plan_id").ToListAsync();
                 MarksList = await db.marks.FromSqlRaw("SELECT * FROM marks ORDER BY mark_id").ToListAsync();
                 CategoriesList = await db.categories.FromSqlRaw("SELECT * FROM categories ORDER BY category_id").ToListAsync();
 
