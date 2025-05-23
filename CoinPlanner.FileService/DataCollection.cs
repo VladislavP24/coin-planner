@@ -6,33 +6,36 @@ namespace CoinPlanner.FileService;
 [XmlRoot("DataCollection")]
 public class DataCollection
 {
+    [XmlElement("Plan")]
+    public PlanDTO Plan { get; set; }
+
+
     [XmlArray("Operations")]
     [XmlArrayItem("Operation")]
-    public IList<OperationDTO> Operations { get; set; } = new List<OperationDTO>();
+    public List<OperationDTO> Operations { get; set; } = new();
 
     [XmlArray("Marks")]
     [XmlArrayItem("Mark")]
-    public IList<MarkDTO> Marks { get; set; } = new List<MarkDTO>();
+    public List<MarkDTO> Marks { get; set; } = new();
 
     [XmlArray("Fixations")]
     [XmlArrayItem("Fixation")]
-    public IList<FixationDTO> Fixations { get; set; } = new List<FixationDTO>();
+    public List<FixationDTO> Fixations { get; set; } = new();
 
 
 
-    [XmlArray("PlanConditions")]
-    [XmlArrayItem("Pair")]
+    [XmlElement("PlanConditionPairs")]
     public KeyValuePairDTO PlanConditionPairs { get; set; } = new KeyValuePairDTO();
 
     [XmlArray("OperConditions")]
     [XmlArrayItem("Pair")]
-    public List<KeyValuePairDTO> OperConditionPairs { get; set; } = new List<KeyValuePairDTO>();
+    public List<KeyValuePairDTO> OperConditionPairs { get; set; } = new();
 
     [XmlArray("FixConditions")]
     [XmlArrayItem("Pair")]
-    public IList<KeyValuePairDTO> FixConditionPairs { get; set; } = new List<KeyValuePairDTO>();
+    public List<KeyValuePairDTO> FixConditionPairs { get; set; } = new();
 
     [XmlArray("MarkConditions")]
     [XmlArrayItem("Pair")]
-    public IList<KeyValuePairDTO> MarkConditionPairs { get; set; } = new List<KeyValuePairDTO>();
+    public List<KeyValuePairDTO> MarkConditionPairs { get; set; } = new();
 }

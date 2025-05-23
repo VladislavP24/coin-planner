@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -322,27 +323,30 @@ public class PanelViewModel : ObservableObject
         if (SelectedItemPlan == null)
             return;
 
-        var saveFileDialog = new SaveFileDialog
+        var openFolderDialog = new OpenFolderDialog
         {
-            Filter = "XML Files (*.xml)|*.xml"
+            Title = "Выберите папку для сохранения файла"
         };
 
-        if (saveFileDialog.ShowDialog() == true)
-            XmlSerializationHelper.SerializeToXml(data, saveFileDialog.FileName);
+        if (openFolderDialog.ShowDialog() == true)
+        {
+            string selectedPath = openFolderDialog.FolderName;
+            string fileName = $"{SelectedItemPlan.PlanName}.xml";
+            string fullPath = Path.Combine(selectedPath, fileName);
+            XmlSerializationHelper.SerializeToXml(ConvertModelToDTO(), fullPath);
+        }
+            
     }
 
     public void OpenPlanCommand()
     {
-        if (SelectedItemPlan == null)
-            return;
-
         var openFileDialog = new OpenFileDialog
         {
             Filter = "XML Files (*.xml)|*.xml"
         };
 
         if (openFileDialog.ShowDialog() == true)
-            data = XmlSerializationHelper.DeserializeFromXml(openFileDialog.FileName);
+            ConvertDTOToModel(XmlSerializationHelper.DeserializeFromXml(openFileDialog.FileName));
     }
 
     public void ExportPlanCommand()
@@ -350,16 +354,38 @@ public class PanelViewModel : ObservableObject
         if (SelectedItemPlan == null)
             return;
 
-        var saveFileDialog = new SaveFileDialog();
+        var openFolderDialog = new OpenFolderDialog
+        {
+            Title = "Выберите папку для сохранения экспорта"
+        };
 
-        if (saveFileDialog.ShowDialog() == true)
-            PdfExportHepler.ExportToPdf(data, saveFileDialog.FileName);
+        if (openFolderDialog.ShowDialog() == true)
+        {
+            string selectedPath = openFolderDialog.FolderName;
+            string fileName = $"{SelectedItemPlan.PlanName}.xml";
+            string fullPath = Path.Combine(selectedPath, fileName);
+            PdfExportHepler.ExportToPdf(ConvertModelToDTO(), fullPath);
+        }
     }
     #endregion
 
-    private void ConvertModelToDTO()
+    /// <summary>
+    /// Подготовка данных для хранения файлов
+    /// </summary>
+    private DataCollection ConvertModelToDTO()
     {
         DataCollection dataCollection = new();
+
+        //Данные о плане
+        Plans plan = _dataService.PlansList.First(x => x.Plan_Id == SelectedItemPlan.PlanId);
+        dataCollection.Plan = new PlanDTO
+        {
+            PlanId = plan.Plan_Id,
+            PlanName = plan.Plan_Name,
+            DataCreate = plan.Date_Create,
+            DataUpdate = plan.Date_Update,
+            IsSynchro = plan.Is_Synchro
+        };
 
         // Данные об операциях
         foreach (var oper in _dataService.OperationsList.Where(x => x.Oper_Plan_Id == SelectedItemPlan.PlanId))
@@ -410,6 +436,31 @@ public class PanelViewModel : ObservableObject
         foreach (var cond in _dataService.OperCondition)
         {
             if(_dataService.OperationsList.Where(x => x.Oper_Id == cond.Key && x.Oper_Plan_Id == SelectedItemPlan.PlanId).Any())
+                dataCollection.OperConditionPairs.Add(new KeyValuePairDTO {Key = cond.Key, Value = cond.Value});
         }
+
+        // Данные о состоянии фиксаций
+        foreach (var cond in _dataService.FixCondition)
+        {
+            if (_dataService.FixationsList.Where(x => x.Fix_Id == cond.Key && x.Fix_Plan_Id == SelectedItemPlan.PlanId).Any())
+                dataCollection.FixConditionPairs.Add(new KeyValuePairDTO { Key = cond.Key, Value = cond.Value });
+        }
+
+        // Данные о состоянии отметок
+        foreach (var cond in _dataService.MarkCondition)
+        {
+            if (_dataService.MarksList.Where(x => x.Mark_Id == cond.Key && x.Mark_Plan_Id == SelectedItemPlan.PlanId).Any())
+                dataCollection.MarkConditionPairs.Add(new KeyValuePairDTO { Key = cond.Key, Value = cond.Value });
+        }
+
+        return dataCollection;
+    }
+
+    /// <summary>
+    /// Обработка данных из файла
+    /// </summary>
+    private void ConvertDTOToModel(DataCollection dataCollection)
+    {
+
     }
 }

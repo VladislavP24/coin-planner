@@ -26,6 +26,4 @@ public static class XmlSerializationHelper
             return (DataCollection)serializer.Deserialize(reader);
         }
     }
-
-
 }

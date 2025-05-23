@@ -1,15 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace CoinPlanner.FileService.DTO;
 
+[XmlRoot("Mark")]
 public class MarkDTO
 {
+    [XmlElement("MarkId")]
     public int MarkId { get; set; }
+
+    [XmlElement("MarkName")]
     public string? MarkName { get; set; }
+
+    [XmlElement("MarkDate")]
     public DateTime MarkDate { get; set; }
+
+    [XmlElement("MarkPlanId")]
     public int MarkPlanId { get; set; }
 }
+
+
