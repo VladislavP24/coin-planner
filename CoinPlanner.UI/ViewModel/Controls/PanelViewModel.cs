@@ -362,9 +362,9 @@ public class PanelViewModel : ObservableObject
         if (openFolderDialog.ShowDialog() == true)
         {
             string selectedPath = openFolderDialog.FolderName;
-            string fileName = $"{SelectedItemPlan.PlanName}.xml";
+            string fileName = $"{SelectedItemPlan.PlanName}.txt";
             string fullPath = Path.Combine(selectedPath, fileName);
-            PdfExportHepler.ExportToPdf(ConvertModelToDTO(), fullPath);
+            TxtExportHelper.ExportToTxt(ConvertModelToDTO(), fullPath);
         }
     }
     #endregion
