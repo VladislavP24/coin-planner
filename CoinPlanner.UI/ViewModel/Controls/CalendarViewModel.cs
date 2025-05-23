@@ -29,6 +29,7 @@ public class CalendarViewModel : ObservableObject
     private ContentViewModel _contentViewModel;
     private DataService _dataService;
     public ICommand SendInterval { get; set; }
+    public int PlanId { get; set; }
 
     /// <summary>
     /// Начальная дата
@@ -170,13 +171,13 @@ public class CalendarViewModel : ObservableObject
         {
             if (button.EndTime == null)
             {
-                mark  = _dataService.MarksList.Where(x => x.Mark_Date.Date == button.StartTime.Date).FirstOrDefault();
+                mark  = _dataService.MarksList.Where(x => x.Mark_Date.Date == button.StartTime.Date && x.Mark_Plan_Id == PlanId).FirstOrDefault();
                 if (mark != null)
                     button.Mark = mark.Mark_Name;
             }
             else
             {
-                mark = _dataService.MarksList.Where(x => x.Mark_Date.Date >= button.StartTime.Date && x.Mark_Date.Date <= button.EndTime?.Date).FirstOrDefault();
+                mark = _dataService.MarksList.Where(x => x.Mark_Date.Date >= button.StartTime.Date && x.Mark_Date.Date <= button.EndTime?.Date && x.Mark_Plan_Id == PlanId).FirstOrDefault();
                 if (mark != null)
                     button.Mark = mark.Mark_Name;
             }                

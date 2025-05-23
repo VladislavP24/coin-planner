@@ -92,6 +92,8 @@ public class PanelViewModel : ObservableObject
         {
             SetProperty(ref _selectedItemPlan, value, nameof(SelectedItemPlan));
             _contentViewModel.Plan = value;
+            _calendarViewModel.PlanId = value.PlanId;
+            _diagramViewModel.CreatDiagram(SelectedItemPlan.PlanId);
             _contentViewModel.UpdateOperation();
         }
     }
@@ -137,6 +139,24 @@ public class PanelViewModel : ObservableObject
         {
             result = _dataService.OperationsList[i].Oper_Id + 1;
             if (!_dataService.OperationsList.Any(x => x.Oper_Id == result))
+                return result;
+        }
+
+        return result;
+    }
+
+
+    /// <summary>
+    /// Получение первого свободного ID из плана
+    /// </summary>
+    public int GetPlanFirstFreeID()
+    {
+        int result = 0;
+
+        for (int i = 0; i < _dataService.PlansList.Count; i++)
+        {
+            result = _dataService.PlansList[i].Plan_Id + 1;
+            if (!_dataService.PlansList.Any(x => x.Plan_Id == result))
                 return result;
         }
 
@@ -459,8 +479,8 @@ public class PanelViewModel : ObservableObject
     /// <summary>
     /// Обработка данных из файла
     /// </summary>
-    private void ConvertDTOToModel(DataCollection dataCollection)
+    private void ConvertDTOToModel(DataCollection data)
     {
-
+        
     }
 }

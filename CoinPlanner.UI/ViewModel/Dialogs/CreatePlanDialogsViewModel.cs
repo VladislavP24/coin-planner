@@ -35,28 +35,9 @@ public class CreatePlanDialogsViewModel : ObservableObject
     public ICommand Cancel { get; set; }
     public string InputName { get; set; }
 
-
-    /// <summary>
-    /// Получение первого свободного ID из плана
-    /// </summary>
-    private int GetPlanFirstFreeID()
-    {
-        int result = 0;
-
-        for (int i = 0; i < _dataService.PlansList.Count; i++)
-        {
-            result = _dataService.PlansList[i].Plan_Id + 1;
-            if (!_dataService.PlansList.Any(x => x.Plan_Id == result))
-                return result;
-        }
-
-        return result;
-    }
-
-
     private void OkCommand()
     {
-        int id = GetPlanFirstFreeID();
+        int id = _panelViewModel.GetPlanFirstFreeID();
 
         if (_dataService.PlanCondition.Any(x => x.Key == id))
         {

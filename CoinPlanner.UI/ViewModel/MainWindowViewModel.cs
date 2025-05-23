@@ -15,9 +15,9 @@ public class MainWindowViewModel
 {
     public MainWindowViewModel(DataService dataService)
     {
-        // Определение ViewModel`ей
-        DiagramViewModel = new DiagramViewModel();
+        // Определение ViewModel`ей     
         ContentViewModel = new ContentViewModel(dataService);
+        DiagramViewModel = new DiagramViewModel(dataService);
         CalendarViewModel = new CalendarViewModel(ContentViewModel, dataService);
         PanelViewModel = new PanelViewModel(CalendarViewModel, ContentViewModel, DiagramViewModel, dataService);
     }

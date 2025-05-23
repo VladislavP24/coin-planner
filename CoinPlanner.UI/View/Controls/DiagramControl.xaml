@@ -4,16 +4,34 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CoinPlanner.UI.View.Controls"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1920">
-    
-    
+
     <Border Background="White" BorderBrush="Black" BorderThickness="1">
         <Grid>
-            <TextBlock Text="Здесь будет диаграмма"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               FontSize="50"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0"
+                       Text="Диаграмма затрат"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       FontSize="30"/>
+            <lvc:PieChart Grid.Column="0"
+                          Series="{Binding PieSeriesExpenses}"                       
+                          Margin="40,0,40,40"/>
+
+            <TextBlock Grid.Column="1"
+                       Text="Диаграмма зачислений"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Top"
+                       FontSize="30"/>
+            <lvc:PieChart Grid.Column="1"
+                          Series="{Binding PieSeriesEnrollment}"                       
+                          Margin="40,0,40,40"/>
         </Grid>
     </Border>
 </UserControl>
