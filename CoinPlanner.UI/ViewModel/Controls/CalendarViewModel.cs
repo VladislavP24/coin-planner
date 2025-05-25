@@ -18,16 +18,18 @@ namespace CoinPlanner.UI.ViewModel.Controls;
 
 public class CalendarViewModel : ObservableObject
 {
-    public CalendarViewModel(ContentViewModel contentViewModel, DataService dataService)
+    public CalendarViewModel(DiagramViewModel diagranViewModel, ContentViewModel contentViewModel, DataService dataService)
     {
         _contentViewModel = contentViewModel;
         _dataService = dataService;
+        _diagranViewModel = diagranViewModel;
         SendInterval = new RelayCommand(SendIntervalCommand);
         UpdateButtons();
     }
 
     private ContentViewModel _contentViewModel;
     private DataService _dataService;
+    private DiagramViewModel _diagranViewModel;
     public ICommand SendInterval { get; set; }
     public int PlanId { get; set; }
 
@@ -83,6 +85,9 @@ public class CalendarViewModel : ObservableObject
         _contentViewModel.StartDate = Buttons.Where(x => x.IsChecked == true).Select(x => x.StartTime).FirstOrDefault();
         _contentViewModel.EndDate = Buttons.Where(x => x.IsChecked == true).Select(x => x.EndTime).FirstOrDefault();
         _contentViewModel.UpdateOperation();
+        _diagranViewModel.Start = Buttons.Where(x => x.IsChecked == true).Select(x => x.StartTime).FirstOrDefault();
+        _diagranViewModel.End = Buttons.Where(x => x.IsChecked == true).Select(x => x.EndTime).FirstOrDefault();
+        _diagranViewModel.CreatDiagram(PlanId);
 
         // Сброc IsCheked
         foreach (var button in Buttons.Where(x => x.IsChecked == true))

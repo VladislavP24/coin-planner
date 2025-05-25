@@ -9,12 +9,14 @@ namespace CoinPlanner.UI.ViewModel.Controls;
 
 public class ContentViewModel : ObservableObject
 {
-    public ContentViewModel(DataService dataService) 
+    public ContentViewModel(DataService dataService, DiagramViewModel diagramViewModel) 
     {
         _dataService = dataService;
+        _diagramViewModel = diagramViewModel;
     }
 
     private DataService _dataService;
+    private DiagramViewModel _diagramViewModel;
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
     public PlanModel? Plan { get; set; }
@@ -68,7 +70,11 @@ public class ContentViewModel : ObservableObject
     public ObservableCollection<OperationModel> DynamicOperationCollection
     {
         get => _dynamicOperationCollection;
-        set => SetProperty(ref _dynamicOperationCollection, value, nameof(DynamicOperationCollection));
+        set
+        {
+            SetProperty(ref _dynamicOperationCollection, value, nameof(DynamicOperationCollection));
+            _diagramViewModel.CreatDiagram(Plan.PlanId);
+        }
     }
     private ObservableCollection<OperationModel> _dynamicOperationCollection = new();
 

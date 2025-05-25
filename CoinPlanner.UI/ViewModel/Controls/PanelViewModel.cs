@@ -290,16 +290,15 @@ public class PanelViewModel : ObservableObject
 
     public void OpenTableCommand()
     {
+
+        if (IsCheckedTable)
         {
-            if (IsCheckedTable)
-            {
-                IsCheckedDiagram = false;
-                _contentViewModel.IsVisibleContent = true;
-                _diagramViewModel.IsVisibleDiagram = false;
-            }
-            else
-                _contentViewModel.IsVisibleContent = false;
+            IsCheckedDiagram = false;
+            _contentViewModel.IsVisibleContent = true;
+            _diagramViewModel.IsVisibleDiagram = false;
         }
+        else
+            _contentViewModel.IsVisibleContent = false;
     }
 
     public void FixationCommand()

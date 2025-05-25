@@ -15,10 +15,10 @@ public class MainWindowViewModel
 {
     public MainWindowViewModel(DataService dataService)
     {
-        // Определение ViewModel`ей     
-        ContentViewModel = new ContentViewModel(dataService);
+        // Определение ViewModel`ей
         DiagramViewModel = new DiagramViewModel(dataService);
-        CalendarViewModel = new CalendarViewModel(ContentViewModel, dataService);
+        ContentViewModel = new ContentViewModel(dataService, DiagramViewModel);   
+        CalendarViewModel = new CalendarViewModel(DiagramViewModel, ContentViewModel, dataService);
         PanelViewModel = new PanelViewModel(CalendarViewModel, ContentViewModel, DiagramViewModel, dataService);
     }
 

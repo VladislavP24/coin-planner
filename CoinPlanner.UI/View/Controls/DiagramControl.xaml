@@ -5,9 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CoinPlanner.UI.View.Controls"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:controls="clr-namespace:CoinPlanner.UI.View.Controls" 
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1920">
 
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/CoinPlanner.UI;component/Styles/PanelStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
     <Border Background="White" BorderBrush="Black" BorderThickness="1">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -24,6 +33,20 @@
                           Series="{Binding PieSeriesExpenses}"                       
                           Margin="40,0,40,40"/>
 
+            <ToggleButton Grid.Column="0"
+                          VerticalAlignment="Bottom"
+                          HorizontalAlignment="Center"
+                          Content="За всё время плана"
+                          Width="150"
+                          Height="30"
+                          BorderBrush="Black"
+                          BorderThickness="1"
+                          FontSize="12"
+                          Margin="0,0,0,20"
+                          IsChecked="{Binding DataContext.IsAllTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DiagramControl}}"
+                          Command="{Binding DataContext.AllTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DiagramControl}}"
+                          Style="{DynamicResource PanelToggleButton}"/>
+
             <TextBlock Grid.Column="1"
                        Text="Диаграмма зачислений"
                        HorizontalAlignment="Center"
@@ -32,6 +55,20 @@
             <lvc:PieChart Grid.Column="1"
                           Series="{Binding PieSeriesEnrollment}"                       
                           Margin="40,0,40,40"/>
+
+            <ToggleButton Grid.Column="1"
+                          VerticalAlignment="Bottom"
+                          HorizontalAlignment="Center"
+                          Content="За выбранное время"
+                          Width="150"
+                          Height="30"
+                          BorderBrush="Black"
+                          BorderThickness="1"
+                          FontSize="12"
+                          Margin="0,0,0,20"
+                          IsChecked="{Binding DataContext.IsSelectTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DiagramControl}}"
+                          Command="{Binding DataContext.SelectTime, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:DiagramControl}}"
+                          Style="{DynamicResource PanelToggleButton}"/>
         </Grid>
     </Border>
 </UserControl>
