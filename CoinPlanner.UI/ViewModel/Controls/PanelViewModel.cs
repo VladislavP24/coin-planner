@@ -109,7 +109,7 @@ public class PanelViewModel : ObservableObject
             {
                 PlanId = plan.Plan_Id,
                 PlanName = plan.Plan_Name,
-                DataCreate = plan.Date_Create,
+                DateCreate = plan.Date_Create,
                 DataUpdate = plan.Date_Update
             });
         }
@@ -188,6 +188,8 @@ public class PanelViewModel : ObservableObject
     public ICommand Type { get; set; }
     public ICommand Mark { get; set; }
 
+    public ICommand Info { get; set; }
+
     public void BindingCommandToButton()
     {
         Interval = new RelayCommand(IntervalCommand);
@@ -208,6 +210,7 @@ public class PanelViewModel : ObservableObject
         SavePlan = new RelayCommand(SavePlanCommand);
         OpenPlan = new RelayCommand(OpenPlanCommand);
         ExportPlan = new RelayCommand(ExportPlanCommand);
+        Info = new RelayCommand(InfoCommand);
     }
 
     public void IntervalCommand()
@@ -386,6 +389,15 @@ public class PanelViewModel : ObservableObject
             TxtExportHelper.ExportToTxt(ConvertModelToDTO(), fullPath);
         }
     }
+
+    public void InfoCommand()
+    {
+        if (SelectedItemPlan == null)
+            return;
+
+        MessageBox.Show($"ID: {SelectedItemPlan.PlanId}\nИмя плана: {SelectedItemPlan.PlanName}\nДата создания: {SelectedItemPlan.DateCreate}\nДата последнего изменения: {SelectedItemPlan.DataUpdate}",
+                        "Информация о плане", MessageBoxButton.OK, MessageBoxImage.Information);
+    }
     #endregion
 
     /// <summary>
@@ -480,6 +492,5 @@ public class PanelViewModel : ObservableObject
     /// </summary>
     private void ConvertDTOToModel(DataCollection data)
     {
-        
     }
 }

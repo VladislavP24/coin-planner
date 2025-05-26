@@ -10,7 +10,7 @@ public class PlanModel
 {
     public int PlanId { get; set; }
     public string? PlanName { get; set; }
-    public DateTime DataCreate { get; set; }
+    public DateTime DateCreate { get; set; }
     public DateTime DataUpdate { get; set; }
     public bool IsSynchro { get; set; }
 }

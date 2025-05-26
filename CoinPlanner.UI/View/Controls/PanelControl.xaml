@@ -472,20 +472,36 @@
                         Margin="20,0,20,20 "
                         BorderBrush="Black"
                         BorderThickness="1">
-                    <StackPanel>
-                        <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/plan.png" 
-                               Width="45" 
-                               Height="45"
-                               Margin="0,5,0,0"
-                               SnapsToDevicePixels="True"/>
-                        <TextBlock Text="{Binding SelectedItemPlan.PlanName, UpdateSourceTrigger=PropertyChanged}"
-                                   FontSize="12"
-                                   Height="14"
-                                   Margin="5,0"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Bottom"
-                                   ToolTip="{Binding SelectedItemPlan.PlanName, UpdateSourceTrigger=PropertyChanged}"/>
-                    </StackPanel>
+                    <Button Style="{DynamicResource PanelButton}"
+                            ToolTip="{Binding SelectedItemPlan.PlanName, UpdateSourceTrigger=PropertyChanged}"
+                            Command="{Binding DataContext.Info, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                                        BorderBrush="Black"
+                                        BorderThickness="0"
+                                        CornerRadius="0"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                        
+                        <StackPanel>
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/plan.png" 
+                                   Width="45" 
+                                   Height="45"
+                                   Margin="0,5,0,0"
+                                   SnapsToDevicePixels="True"/>
+                            <TextBlock Text="{Binding SelectedItemPlan.PlanName, UpdateSourceTrigger=PropertyChanged}"
+                                       FontSize="12"
+                                       Height="14"
+                                       Margin="5,0"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Bottom"/>
+                        </StackPanel>
+                    </Button>
                 </Border>
 
                 <ComboBox x:Name="MyComboBox"

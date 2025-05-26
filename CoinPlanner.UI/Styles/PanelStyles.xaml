@@ -80,9 +80,6 @@
         </Style.Triggers>
     </Style>
 
-
-
-
     <!-- Стиль ComboBox на панели -->
     <Style x:Key="CustomComboBoxStyle" TargetType="{x:Type ComboBox}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
