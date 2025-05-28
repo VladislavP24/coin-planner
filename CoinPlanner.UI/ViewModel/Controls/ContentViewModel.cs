@@ -47,7 +47,8 @@ public class ContentViewModel : ObservableObject
         {       
             DynamicOperationCollection.Add(new OperationModel
             {
-                OperId = i,
+                OperIdTable = i,
+                OperId = oper.Oper_Id,
                 OperName = oper.Oper_Name,
                 OperType = oper.Type_Name,
                 OperCategory = oper.Category_Name,

@@ -24,7 +24,7 @@ public class DiagramViewModel : ObservableObject
     private DataService _dataService { get; set; }
     public ICommand AllTime { get; set; }
     public ICommand SelectTime { get; set; }
-    private int selectedPlanId;
+    private Guid selectedPlanId;
     public DateTime? Start { get; set; }
     public DateTime? End { get; set; }
 
@@ -71,7 +71,7 @@ public class DiagramViewModel : ObservableObject
     /// <summary>
     /// Создание диаграммы
     /// </summary>
-    public void CreatDiagram(int planId)
+    public void CreatDiagram(Guid planId)
     {
         List<Operations> operations = new();
         selectedPlanId = planId;

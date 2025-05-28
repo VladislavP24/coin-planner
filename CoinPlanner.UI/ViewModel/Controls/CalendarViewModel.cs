@@ -31,7 +31,7 @@ public class CalendarViewModel : ObservableObject
     private DataService _dataService;
     private DiagramViewModel _diagranViewModel;
     public ICommand SendInterval { get; set; }
-    public int PlanId { get; set; }
+    public Guid PlanId { get; set; }
 
     /// <summary>
     /// Начальная дата

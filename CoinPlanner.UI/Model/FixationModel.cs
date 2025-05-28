@@ -12,12 +12,12 @@ public class FixationModel : ObservableObject
     /// <summary>
     /// Номер операции
     /// </summary>
-    public int FixId
+    public Guid FixId
     {
         get => _fixId;
         set => SetProperty(ref _fixId, value, nameof(FixId));
     }
-    private int _fixId;
+    private Guid _fixId;
 
     /// <summary>
     /// Наименование
@@ -82,7 +82,7 @@ public class FixationModel : ObservableObject
     /// <summary>
     /// Номер плана
     /// </summary>
-    public int FixPlanId { get; set; }
+    public Guid FixPlanId { get; set; }
 
     /// <summary>
     /// Используется ли для плана

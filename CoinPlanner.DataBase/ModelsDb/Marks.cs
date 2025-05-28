@@ -12,8 +12,8 @@ public class Marks
 {
     [Key]
     [Column("mark_id")]
-    public int Mark_Id { get; set; }
+    public Guid Mark_Id { get; set; }
     public string? Mark_Name { get; set; }
     public DateTime Mark_Date { get; set;}
-    public int Mark_Plan_Id { get; set; }
+    public Guid Mark_Plan_Id { get; set; }
 }

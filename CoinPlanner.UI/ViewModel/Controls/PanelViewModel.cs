@@ -91,10 +91,14 @@ public class PanelViewModel : ObservableObject
         set
         {
             SetProperty(ref _selectedItemPlan, value, nameof(SelectedItemPlan));
-            _contentViewModel.Plan = value;
-            _calendarViewModel.PlanId = value.PlanId;
-            _diagramViewModel.CreatDiagram(SelectedItemPlan.PlanId);
-            _contentViewModel.UpdateOperation();
+            if (value != null)
+            {
+                _contentViewModel.Plan = value;
+                _calendarViewModel.PlanId = value.PlanId;
+                _diagramViewModel.CreatDiagram(SelectedItemPlan.PlanId);
+                _contentViewModel.UpdateOperation();
+
+            } 
         }
     }
     private PlanModel _selectedItemPlan;
@@ -126,41 +130,6 @@ public class PanelViewModel : ObservableObject
             _dataService.PlanCondition.Remove(plan.Plan_Id);
             _dataService.PlanCondition.Add(plan.Plan_Id, 2);
         }        
-    }
-
-    /// <summary>
-    /// Получение первого свободного ID из операций
-    /// </summary>
-    public int GetOperFirstFreeID()
-    {
-        int result = 1;
-
-        for (int i = 0; i < _dataService.OperationsList.Count; i++)
-        {
-            result = _dataService.OperationsList[i].Oper_Id + 1;
-            if (!_dataService.OperationsList.Any(x => x.Oper_Id == result))
-                return result;
-        }
-
-        return result;
-    }
-
-
-    /// <summary>
-    /// Получение первого свободного ID из плана
-    /// </summary>
-    public int GetPlanFirstFreeID()
-    {
-        int result = 0;
-
-        for (int i = 0; i < _dataService.PlansList.Count; i++)
-        {
-            result = _dataService.PlansList[i].Plan_Id + 1;
-            if (!_dataService.PlansList.Any(x => x.Plan_Id == result))
-                return result;
-        }
-
-        return result;
     }
 
 
@@ -489,5 +458,43 @@ public class PanelViewModel : ObservableObject
     /// </summary>
     private void ConvertDTOToModel(DataCollection data)
     {
+        /*// Проверяем, есть ли план с таким же ID
+        bool planExists = _dataService.PlansList.Any(x => x.Plan_Id == data.Plan.PlanId);
+
+        if (planExists)
+        {
+            // Спрашиваем пользователя, нужно ли перезаписать план
+            MessageBoxResult result = MessageBox.Show("Данный план с таким же ID уже есть. Перезаписать план?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                // Находим и удаляем существующий план
+                var existingPlan = _dataService.PlansList.First(x => x.Plan_Id == data.Plan.PlanId);
+                _dataService.PlansList.Remove(existingPlan);
+
+                // Добавляем обновлённый план
+                _dataService.PlansList.Add(new Plans
+                {
+                    Plan_Id = data.Plan.PlanId,
+                    Plan_Name = data.Plan.PlanName,
+                    Date_Create = data.Plan.DataCreate,
+                    Date_Update = data.Plan.DataUpdate,
+                    Is_Synchro = data.Plan.IsSynchro
+                });
+            }
+        }
+        else
+        {
+            // Если план не существует — добавляем новый
+            _dataService.PlansList.Add(new Plans
+            {
+                // Если план не синхронизирован, ID ставим как (Count + 1), иначе используем data.Plan.PlanId
+                Plan_Id = data.Plan.IsSynchro ? data.Plan.PlanId : _dataService.PlansList.Count + 1,
+                Plan_Name = data.Plan.PlanName,
+                Date_Create = data.Plan.DataCreate,
+                Date_Update = data.Plan.DataUpdate,
+                Is_Synchro = data.Plan.IsSynchro
+            });
+        }*/
     }
 }

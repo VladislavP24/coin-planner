@@ -105,7 +105,7 @@ public class EditDataDialogsViewModel : ObservableObject
     {
         if (NumberRow != 0 && NumberRow != null && _panelViewModel.SelectedItemPlan != null)
         {
-            OperationModel? operationModel =  _contentViewModel.DynamicOperationCollection.Where(x => x.OperId == NumberRow).FirstOrDefault();
+            OperationModel? operationModel =  _contentViewModel.DynamicOperationCollection.Where(x => x.OperIdTable == NumberRow).FirstOrDefault();
 
             if (operationModel == null)
                 return;

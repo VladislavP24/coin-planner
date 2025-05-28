@@ -7,7 +7,7 @@ namespace CoinPlanner.FileService.DTO;
 public class FixationDTO
 {
     [XmlElement("FixId")]
-    public int FixId { get; set; }
+    public Guid FixId { get; set; }
 
     [XmlElement("FixName")]
     public string FixName { get; set; }
@@ -28,6 +28,6 @@ public class FixationDTO
     public DateTime FixNextDate { get; set; }
 
     [XmlElement("FixPlanId")]
-    public int FixPlanId { get; set; }
+    public Guid FixPlanId { get; set; }
 }
 

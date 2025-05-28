@@ -8,6 +8,6 @@ namespace CoinPlanner.FileService.DTO;
 
 public class KeyValuePairDTO
 {
-    public int Key { get; set; }
+    public Guid Key { get; set; }
     public int Value { get; set; }
 }

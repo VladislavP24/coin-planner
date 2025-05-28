@@ -7,7 +7,7 @@ namespace CoinPlanner.FileService.DTO;
 public class OperationDTO
 {
     [XmlElement("OperId")]
-    public int OperId { get; set; }
+    public Guid OperId { get; set; }
 
     [XmlElement("OperName")]
     public string OperName { get; set; }
@@ -28,7 +28,7 @@ public class OperationDTO
     public DateTime OperNextDate { get; set; }
 
     [XmlElement("OperPlanId")]
-    public int OperPlanId { get; set; }
+    public Guid OperPlanId { get; set; }
 }
 
 

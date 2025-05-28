@@ -66,19 +66,12 @@ public class AddDataDialogsViewmodel : ObservableObject
 
     private void OkCommand()
     {
-        int id = _panelViewModel.GetOperFirstFreeID();
-
-        if (_dataService.OperCondition.Any(x => x.Key == id))
-        {
-            _dataService.OperCondition.Remove(id);
-            _dataService.OperCondition.Add(id, 2);
-        }
-        else
-            _dataService.OperCondition.Add(id, 1);
+        Guid newGuid = Guid.NewGuid();
+        _dataService.OperCondition.Add(newGuid, 1);
 
         _dataService.OperationsList.Add(new DataBase.ModelsDB.Operations
         {
-            Oper_Id = id,
+            Oper_Id = newGuid,
             Oper_Name = Name,
             Type_Name = TypeSelected,
             Category_Name = CategorySelected,

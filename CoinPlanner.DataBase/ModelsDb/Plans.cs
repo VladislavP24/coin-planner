@@ -12,7 +12,7 @@ public class Plans
 {
     [Key]
     [Column("plan_id")]
-    public int Plan_Id { get; set; }
+    public Guid Plan_Id { get; set; }
     public string? Plan_Name { get; set; }
     public DateTime Date_Create { get; set; }
     public DateTime Date_Update { get; set; }

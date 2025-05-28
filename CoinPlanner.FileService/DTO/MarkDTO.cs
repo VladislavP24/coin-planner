@@ -7,7 +7,7 @@ namespace CoinPlanner.FileService.DTO;
 public class MarkDTO
 {
     [XmlElement("MarkId")]
-    public int MarkId { get; set; }
+    public Guid MarkId { get; set; }
 
     [XmlElement("MarkName")]
     public string? MarkName { get; set; }
@@ -16,7 +16,7 @@ public class MarkDTO
     public DateTime MarkDate { get; set; }
 
     [XmlElement("MarkPlanId")]
-    public int MarkPlanId { get; set; }
+    public Guid MarkPlanId { get; set; }
 }
 
 

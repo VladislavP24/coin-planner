@@ -68,16 +68,12 @@ public class FixationDialogsViewModel : ObservableObject
 
     public void AddItemCommand()
     {
-        int id = GetFixFirstFreeID(usedIdList);
-        usedIdList.Add(id);
+        Guid newGuid = Guid.NewGuid();
 
-        if (_dataService.FixCondition.Any(x => x.Key == id && x.Value == 3))
-            _dataService.FixCondition.Remove(id);
-
-        _dataService.FixCondition.Add(id, 1);
+        _dataService.FixCondition.Add(newGuid, 1);
         Items.Add(new FixationModel()
         {
-            FixId = id,
+            FixId = newGuid,
             FixName = "Новый",
             FixType = "-",
             FixCategory = "-",
@@ -165,37 +161,17 @@ public class FixationDialogsViewModel : ObservableObject
     }
 
     /// <summary>
-    /// Получение первого свободного ID из фиксаций
-    /// </summary>
-    private int GetFixFirstFreeID(in IList<int> usedIdList)
-    {
-        int result = 1;
-
-        for (int i = 0; i < _dataService.FixationsList.Count; i++)
-        {
-            result = _dataService.FixationsList[i].Fix_Id + 1;
-            if (!_dataService.FixationsList.Any(x => x.Fix_Id == result) && !usedIdList.Contains(result))
-                return result;
-        }
-
-        while (usedIdList.Contains(result))
-            ++ result;
-
-        return result;
-    }
-
-    /// <summary>
     /// Добавление операций из фиксаций, выбранные из окна
     /// </summary>
     private void AddDataOperations(FixationModel fixation)
     {
-        int id = _panelViewModel.GetOperFirstFreeID();
+        Guid guid = Guid.NewGuid();
 
-        _dataService.OperCondition.Add(id, 1);
+        _dataService.OperCondition.Add(guid, 1);
 
         _dataService.OperationsList.Add(new DataBase.ModelsDB.Operations
         {
-            Oper_Id = id,
+            Oper_Id = guid,
             Oper_Name = fixation.FixName,
             Type_Name = fixation.FixType,
             Category_Name = fixation.FixCategory,

@@ -11,7 +11,7 @@ namespace CoinPlanner.FileService.DTO;
 public class PlanDTO
 {
     [XmlElement("PlanId")]
-    public int PlanId { get; set; }
+    public Guid PlanId { get; set; }
 
     [XmlElement("PlanName")]
     public string? PlanName { get; set; }

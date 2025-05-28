@@ -51,20 +51,15 @@ public class MarkDialogsViewModel : ObservableObject
     public ICommand DeleteItem { get; set; }
 
     public ObservableCollection<MarkModel> Items { get; set; } = new();
-    private IList<int> usedIdList = new List<int>();
 
     private void AddItemCommand()
     {
-        int id = GetMarkFirstFreeID(usedIdList);
-        usedIdList.Add(id);
+        Guid guid = Guid.NewGuid();
 
-        if (_dataService.MarkCondition.Any(x => x.Key == id && x.Value == 3))
-            _dataService.MarkCondition.Remove(id);
-
-        _dataService.MarkCondition.Add(id, 1);
+        _dataService.MarkCondition.Add(guid, 1);
         Items.Add(new MarkModel()
         {
-            MarkId = id,
+            MarkId = guid,
             MarkName = " ",
             MarkDate = DateTime.Now,
             MarkPlanId = _panelViewModel.SelectedItemPlan.PlanId
@@ -105,28 +100,6 @@ public class MarkDialogsViewModel : ObservableObject
 
         _markDialogs.Close();
     }
-
-
-    /// <summary>
-    /// Получение первого свободного ID из отметок
-    /// </summary>
-    private int GetMarkFirstFreeID(in IList<int> usedIdList)
-    {
-        int result = 1;
-
-        for (int i = 0; i < _dataService.MarksList.Count; i++)
-        {
-            result = _dataService.MarksList[i].Mark_Id + 1;
-            if (!_dataService.MarksList.Any(x => x.Mark_Id == result) && !usedIdList.Contains(result))
-                return result;
-        }
-
-        while (usedIdList.Contains(result))
-            ++result;
-
-        return result;
-    }
-
 
     /// <summary>
     /// Сохранение и проверка фиксаций на состояние

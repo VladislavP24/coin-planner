@@ -12,8 +12,8 @@ public class Fixations
 {
     [Key]
     [Column("fix_id")]
-    public int Fix_Id { get; set; }
-    public int Fix_Plan_Id { get; set; }
+    public Guid Fix_Id { get; set; }
+    public Guid Fix_Plan_Id { get; set; }
     public string? Fix_Name { get; set; }
     public string? Type_Name { get; set; }
     public string? Category_Name { get; set; }

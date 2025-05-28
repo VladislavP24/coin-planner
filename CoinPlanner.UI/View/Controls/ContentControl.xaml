@@ -75,12 +75,12 @@
                         <DataGrid.Columns>
 
                             <!-- Столбец номер строки -->
-                            <DataGridTemplateColumn Header="№" Width="0.2*" IsReadOnly="True" SortMemberPath="OperId"
+                            <DataGridTemplateColumn Header="№" Width="0.2*" IsReadOnly="True" SortMemberPath="OperIdTable"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid HorizontalAlignment="Stretch">
-                                            <TextBlock Text="{Binding OperId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            <TextBlock Text="{Binding OperIdTable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        Margin="3,0,0,0"
                                                        TextAlignment="Center"
                                                        Foreground="Black"

@@ -12,12 +12,12 @@ public class OperationModel : ObservableObject
     /// <summary>
     /// Номер операции
     /// </summary>
-    public int OperId
+    public Guid OperId
     {
         get => _operId;
         set => SetProperty(ref _operId, value, nameof(OperId));
     }
-    private int _operId;
+    private Guid _operId;
 
     /// <summary>
     /// Наименование
@@ -82,5 +82,10 @@ public class OperationModel : ObservableObject
     /// <summary>
     /// Номер плана
     /// </summary>
-    public int OperPlanId { get; set; }
+    public Guid OperPlanId { get; set; }
+
+    /// <summary>
+    /// Id в таблице 
+    /// </summary>
+    public int OperIdTable { get; set; }
 }

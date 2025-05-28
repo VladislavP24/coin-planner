@@ -12,8 +12,8 @@ public class Operations
 {
     [Key]
     [Column("oper_id")]
-    public int Oper_Id { get; set; }
-    public int Oper_Plan_Id { get; set; }
+    public Guid Oper_Id { get; set; }
+    public Guid Oper_Plan_Id { get; set; }
     public string? Oper_Name { get; set; }
     public string? Type_Name { get; set; }
     public string? Category_Name { get; set; }

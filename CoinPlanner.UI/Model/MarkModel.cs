@@ -12,12 +12,12 @@ public class MarkModel : ObservableObject
     /// <summary>
     /// Id отметок
     /// </summary>
-    public int MarkId
+    public Guid MarkId
     {
         get => _markId;
         set => SetProperty(ref _markId, value, nameof(MarkId));
     }
-    private int _markId;
+    private Guid _markId;
 
     /// <summary>
     /// Текст отметки
@@ -42,10 +42,10 @@ public class MarkModel : ObservableObject
     /// <summary>
     /// План Id отметки
     /// </summary>
-    public int MarkPlanId
+    public Guid MarkPlanId
     {
         get => _markPlanId;
         set => SetProperty(ref _markPlanId, value, nameof(MarkPlanId));
     }
-    private int _markPlanId;
+    private Guid _markPlanId;
 }
