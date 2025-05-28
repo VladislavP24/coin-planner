@@ -82,27 +82,23 @@ public class DataService
     /// <summary>
     /// Обновление изменений в БД (синхронизация)
     /// </summary>
-    public bool SaveDataToDatabaseAsync()
+    public bool SaveDataToDatabaseAsync(int planId)
     {
         try
         {
             using (AppDbContext db = new AppDbContext())
             {
                 //Сохранение Plans
-                foreach (var condition in PlanCondition)
+                foreach (var condition in PlanCondition.Where(x => x.Key == planId))
                 {
-                    if (condition.Value == 1)
-                    {
-                        var plan = PlansList.Where(x => x.Plan_Id == condition.Key).First();
+                    var plan = PlansList.Where(x => x.Plan_Id == condition.Key).First();
+
+                    if (condition.Value == 1)                   
                         db.Database.ExecuteSqlRaw($"INSERT INTO plans (plan_id, plan_name, date_create, date_update) " +
                                                   $"VALUES ({plan.Plan_Id}, '{plan.Plan_Name}', '{plan.Date_Create}', '{plan.Date_Update}')");
-                    } 
                     else if (condition.Value == 2)
-                    {
-                        var plan = PlansList.Where(x => x.Plan_Id == condition.Key).First();
                         db.Database.ExecuteSqlRaw($"UPDATE plans SET plan_name = '{plan.Plan_Name}', date_update = '{plan.Date_Update}' " +
                                                   $"WHERE plan_id = {plan.Plan_Id}");
-                    }  
                     else if (condition.Value == 3)
                         db.Database.ExecuteSqlRaw($"DELETE FROM plans WHERE plan_id = {condition.Key}");
                 }
@@ -111,19 +107,16 @@ public class DataService
                 //Сохранение Operations
                 foreach (var condition in OperCondition)
                 {
+                    var oper = OperationsList.Where(x => x.Oper_Id == condition.Key && x.Oper_Plan_Id == planId).FirstOrDefault();
+                    if (oper == null) continue;
+
                     if (condition.Value == 1)
-                    {
-                        var oper = OperationsList.Where(x => x.Oper_Id == condition.Key).First();
                         db.Database.ExecuteSqlRaw($"INSERT INTO operations (oper_id, oper_plan_id, oper_name, oper_type_id, oper_category_id, oper_sum, oper_completed, oper_next_date) " +
-                                                  $"VALUES ({oper.Oper_Id}, {oper.Oper_Plan_Id}, '{oper.Oper_Name}', {ConvertOperType(oper)}, {ConvertOperCategory(oper)}, {oper.Oper_Sum}, {oper.Oper_Completed}, '{oper.Oper_Next_Date}')");
-                    } 
+                                                    $"VALUES ({oper.Oper_Id}, {oper.Oper_Plan_Id}, '{oper.Oper_Name}', {ConvertOperType(oper)}, {ConvertOperCategory(oper)}, {oper.Oper_Sum}, {oper.Oper_Completed}, '{oper.Oper_Next_Date}')");
                     else if (condition.Value == 2)
-                    {
-                        var oper = OperationsList.Where(x => x.Oper_Id == condition.Key).First();
                         db.Database.ExecuteSqlRaw($"UPDATE operations SET oper_name = '{oper.Oper_Name}', oper_type_id = {ConvertOperType(oper)}, oper_category_id = {ConvertOperCategory(oper)}, " +
-                                                  $"oper_sum = {oper.Oper_Sum}, oper_completed = {oper.Oper_Completed}, oper_next_date = '{oper.Oper_Next_Date}'" +
-                                                  $"WHERE oper_id = {oper.Oper_Id}");
-                    }
+                                                    $"oper_sum = {oper.Oper_Sum}, oper_completed = {oper.Oper_Completed}, oper_next_date = '{oper.Oper_Next_Date}'" +
+                                                    $"WHERE oper_id = {oper.Oper_Id}");
                     else if (condition.Value == 3)
                         db.Database.ExecuteSqlRaw($"DELETE FROM operations WHERE oper_id = {condition.Key}");
                 }
@@ -132,19 +125,16 @@ public class DataService
                 //Сохранение Fixations
                 foreach (var condition in FixCondition)
                 {
+                    var fix = FixationsList.Where(x => x.Fix_Id == condition.Key && x.Fix_Plan_Id == planId).FirstOrDefault();
+                    if (fix == null) continue;
+
                     if (condition.Value == 1)
-                    {
-                        var fix = FixationsList.Where(x => x.Fix_Id == condition.Key).First();
                         db.Database.ExecuteSqlRaw($"INSERT INTO fixations (fix_id, fix_plan_id, fix_name, fix_type_id, fix_category_id, fix_sum, fix_completed, fix_next_date) " +
                                                   $"VALUES ({fix.Fix_Id}, {fix.Fix_Plan_Id}, '{fix.Fix_Name}', {ConvertFixType(fix)}, {ConvertFixCategory(fix)}, {fix.Fix_Sum}, {fix.Fix_Completed}, '{fix.Fix_Next_Date}')");
-                    }
                     else if (condition.Value == 2)
-                    {
-                        var fix = FixationsList.Where(x => x.Fix_Id == condition.Key).First();
                         db.Database.ExecuteSqlRaw($"UPDATE fixations SET fix_name = '{fix.Fix_Name}', fix_type_id = {ConvertFixType(fix)}, fix_category_id = {ConvertFixCategory(fix)}, " +
                                                   $"fix_sum = {fix.Fix_Sum}, fix_completed = {fix.Fix_Completed}, fix_next_date = '{fix.Fix_Next_Date}'" +
                                                   $"WHERE fix_id = {fix.Fix_Id}");
-                    }
                     else if (condition.Value == 3)
                         db.Database.ExecuteSqlRaw($"DELETE FROM fixations WHERE fix_id = {condition.Key}");
                 }
@@ -153,16 +143,13 @@ public class DataService
                 //Сохранение Fixations
                 foreach (var condition in MarkCondition)
                 {
+                    var mark = MarksList.Where(x => x.Mark_Id == condition.Key && x.Mark_Plan_Id == planId).FirstOrDefault();
+                    if (mark == null) continue;
+
                     if (condition.Value == 1)
-                    {
-                        var mark = MarksList.Where(x => x.Mark_Id == condition.Key).First();
                         db.Database.ExecuteSqlRaw($"INSERT INTO marks (mark_id, mark_name, mark_date, mark_plan_id) VALUES ({mark.Mark_Id} '{mark.Mark_Name}', '{mark.Mark_Date}', {mark.Mark_Plan_Id})");
-                    }
                     else if (condition.Value == 2)
-                    {
-                        var mark = MarksList.Where(x => x.Mark_Id == condition.Key).First();
                         db.Database.ExecuteSqlRaw($"UPDATE marks SET mark_name = '{mark.Mark_Name}', mark_date = '{mark.Mark_Date}' WHERE mark_id = {mark.Mark_Id}");
-                    }
                     else if (condition.Value == 3)
                         db.Database.ExecuteSqlRaw($"DELETE FROM marks WHERE mark_id = {condition.Key}");
                 }

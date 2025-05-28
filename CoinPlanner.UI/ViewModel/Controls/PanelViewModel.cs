@@ -255,16 +255,13 @@ public class PanelViewModel : ObservableObject
 
     public void SynchronizationCommand()
     {
-        if (_dataService.SaveDataToDatabaseAsync())
-        {
-            MessageBox.Show("Синхронизация данных прошла успешно!",
-                            "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+        if (SelectedItemPlan == null)
+            return;
+
+        if (_dataService.SaveDataToDatabaseAsync(SelectedItemPlan.PlanId))
+            MessageBox.Show("Синхронизация данных прошла успешно!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
         else
-        {
-            MessageBox.Show("Не удалось провести синхронизацию данных. Проверьте подключение к БД.",
-                             "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+            MessageBox.Show("Не удалось провести синхронизацию данных. Проверьте подключение к БД.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     public void SortCommand()
