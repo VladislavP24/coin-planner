@@ -41,7 +41,7 @@ public class CalendarViewModel : ObservableObject
         get => _start;
         set => SetProperty(ref _start, value, nameof(Start));
     }
-    private DateTime _start = DateTime.Now;
+    private DateTime _start = DateTime.Now.Date;
 
 
     /// <summary>
@@ -52,7 +52,7 @@ public class CalendarViewModel : ObservableObject
         get => _end;
         set => SetProperty(ref _end, value, nameof(End));
     }
-    private DateTime _end = DateTime.Now;
+    private DateTime _end = DateTime.Now.Date;
 
 
     /// <summary>
@@ -109,7 +109,7 @@ public class CalendarViewModel : ObservableObject
                 for (int i = 0; i < totalDays; i++)
                 {
                     var date = Start.AddDays(i);
-                    Buttons.Add(new ButtonItemsViewModel() { Content = date.ToString("dd MMMM yyyy 'г.'"), StartTime = date, EndTime = null });
+                    Buttons.Add(new ButtonItemsViewModel() { Content = date.ToString("dd MMMM yyyy 'г.'"), StartTime = date, EndTime = date.AddDays(1) });
                 }
                 break;
 

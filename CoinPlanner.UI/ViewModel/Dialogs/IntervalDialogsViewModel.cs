@@ -40,6 +40,10 @@ public class IntervalDialogsViewModel : ObservableObject
 
     private void OkCommand() 
     {
+
+        StartDate = StartDate.Date;
+        EndDate = EndDate.Date;
+
         if (StartDate > EndDate)
         {
             MessageBox.Show("Начальная дата больше конечной даты. Измените интервал снова!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
