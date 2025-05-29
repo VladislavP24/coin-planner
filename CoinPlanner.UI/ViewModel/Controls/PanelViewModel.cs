@@ -227,6 +227,32 @@ public class PanelViewModel : ObservableObject
         if (SelectedItemPlan == null)
             return;
 
+        if(_dataService.ExistsById(SelectedItemPlan.PlanId))
+        {
+            MessageBoxResult result = MessageBox.Show("Данный план с таким же ID уже есть в базе данных. Перезаписать план?\nЕсли нет, то синхронизируется, как новый!", 
+                                                      "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.No)
+            {
+                Guid newGuid = Guid.NewGuid();
+
+                _dataService.PlansList.First(x => x.Plan_Id == SelectedItemPlan.PlanId).Plan_Id = newGuid;
+
+                foreach(var oper in _dataService.OperationsList.Where(x => x.Oper_Plan_Id == SelectedItemPlan.PlanId))
+                    oper.Oper_Plan_Id = newGuid;
+
+                foreach (var mark in _dataService.MarksList.Where(x => x.Mark_Plan_Id == SelectedItemPlan.PlanId))
+                    mark.Mark_Plan_Id = newGuid;
+
+                foreach (var fix in _dataService.FixationsList.Where(x => x.Fix_Plan_Id == SelectedItemPlan.PlanId))
+                    fix.Fix_Plan_Id = newGuid;
+
+                UpdateKeyInDictionary(_dataService.PlanCondition, SelectedItemPlan.PlanId, newGuid);
+                UpdateKeyInDictionary(_dataService.OperCondition, SelectedItemPlan.PlanId, newGuid);
+                UpdateKeyInDictionary(_dataService.MarkCondition, SelectedItemPlan.PlanId, newGuid);
+                UpdateKeyInDictionary(_dataService.FixCondition, SelectedItemPlan.PlanId, newGuid);
+            }
+        }            
+
         if (_dataService.SaveDataToDatabaseAsync(SelectedItemPlan.PlanId))
             MessageBox.Show("Синхронизация данных прошла успешно!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
         else
@@ -366,6 +392,15 @@ public class PanelViewModel : ObservableObject
     }
     #endregion
 
+    private static void UpdateKeyInDictionary<TKey, TValue>(Dictionary<TKey, TValue> dict, TKey oldKey, TKey newKey)
+    {
+        if (dict.TryGetValue(oldKey, out var value))
+        {
+            dict.Remove(oldKey);
+            dict[newKey] = value;
+        }
+    }
+
     /// <summary>
     /// Подготовка данных для хранения файлов
     /// </summary>
@@ -458,7 +493,7 @@ public class PanelViewModel : ObservableObject
     /// </summary>
     private void ConvertDTOToModel(DataCollection data)
     {
-        /*// Проверяем, есть ли план с таким же ID
+        // Проверяем, загружен ли такой же план
         bool planExists = _dataService.PlansList.Any(x => x.Plan_Id == data.Plan.PlanId);
 
         if (planExists)
@@ -468,33 +503,92 @@ public class PanelViewModel : ObservableObject
 
             if (result == MessageBoxResult.Yes)
             {
-                // Находим и удаляем существующий план
-                var existingPlan = _dataService.PlansList.First(x => x.Plan_Id == data.Plan.PlanId);
-                _dataService.PlansList.Remove(existingPlan);
+                // Находим и удаляем все элементы плана
+                var delPlan = _dataService.PlansList.First(x => x.Plan_Id == data.Plan.PlanId);      
+                if (_dataService.PlanCondition.Any(x => x.Key == delPlan.Plan_Id && x.Value == 1))
+                    _dataService.PlanCondition.Remove(delPlan.Plan_Id);
+                else
+                {
+                    _dataService.PlanCondition.Remove(delPlan.Plan_Id);
+                    _dataService.PlanCondition.Add(delPlan.Plan_Id, 2);
+                }
+                _dataService.PlansList.Remove(delPlan);
 
-                // Добавляем обновлённый план
+
+                foreach (var plan in _dataService.OperationsList.Where(x => x.Oper_Plan_Id == delPlan.Plan_Id))
+                    _dataService.OperationsList.Remove(plan);
+
+                foreach (var mark in _dataService.MarksList.Where(x => x.Mark_Plan_Id == delPlan.Plan_Id))
+                    _dataService.MarksList.Remove(mark);
+
+                foreach (var fix in _dataService.FixationsList.Where(x => x.Fix_Plan_Id == delPlan.Plan_Id))
+                    _dataService.FixationsList.Remove(fix);
+            }
+            else
+                _dataService.PlanCondition.Add(data.Plan.PlanId, 1);
+        }
+        else
+            _dataService.PlanCondition.Add(data.Plan.PlanId, 1);
+
+
+        // Добавляем в приложение данные из файла
+        // Данные о плане
                 _dataService.PlansList.Add(new Plans
                 {
                     Plan_Id = data.Plan.PlanId,
                     Plan_Name = data.Plan.PlanName,
                     Date_Create = data.Plan.DataCreate,
-                    Date_Update = data.Plan.DataUpdate,
-                    Is_Synchro = data.Plan.IsSynchro
+            Date_Update = data.Plan.DataUpdate
                 });
-            }
-        }
-        else
+
+        // Данные об операциях
+        foreach (var oper in data.Operations)
+            _dataService.OperationsList.Add(new Operations
         {
-            // Если план не существует — добавляем новый
-            _dataService.PlansList.Add(new Plans
-            {
-                // Если план не синхронизирован, ID ставим как (Count + 1), иначе используем data.Plan.PlanId
-                Plan_Id = data.Plan.IsSynchro ? data.Plan.PlanId : _dataService.PlansList.Count + 1,
-                Plan_Name = data.Plan.PlanName,
-                Date_Create = data.Plan.DataCreate,
-                Date_Update = data.Plan.DataUpdate,
-                Is_Synchro = data.Plan.IsSynchro
+                Oper_Id = oper.OperId,
+                Oper_Plan_Id = oper.OperPlanId,
+                Oper_Name = oper.OperName,
+                Type_Name = oper.OperType,
+                Category_Name = oper.OperCategory,
+                Oper_Sum = oper.OperSum,
+                Oper_Completed = oper.OperCompleted,
+                Oper_Next_Date = oper.OperNextDate
             });
-        }*/
+
+        // Данные об отметках
+        foreach(var mark in data.Marks)
+            _dataService.MarksList.Add(new Marks
+            {
+                Mark_Id = mark.MarkId,
+                Mark_Plan_Id = mark.MarkPlanId,
+                Mark_Name = mark.MarkName,
+                Mark_Date = mark.MarkDate  
+            });
+
+
+        // Данные о фкисациях
+        foreach(var fix in data.Fixations)
+            _dataService.FixationsList.Add(new Fixations
+            {
+                Fix_Id = fix.FixId,
+                Fix_Plan_Id = fix.FixPlanId,
+                Fix_Name = fix.FixName,
+                Type_Name = fix.FixType,
+                Category_Name = fix.FixCategory,
+                Fix_Sum = fix.FixSum,
+                Fix_Completed = fix.FixCompleted,
+                Fix_Next_Date = fix.FixNextDate              
+            });
+
+        foreach(var cond in data.OperConditionPairs)
+            _dataService.OperCondition.Add(cond.Key, cond.Value);
+
+        foreach(var cond in data.MarkConditionPairs)
+            _dataService.MarkCondition.Add(cond.Key, cond.Value);
+
+        foreach(var cond in data.FixConditionPairs)
+            _dataService.FixCondition.Add(cond.Key, cond.Value);
+
+        PlanUpdate();
     }
 }

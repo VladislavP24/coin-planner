@@ -78,6 +78,17 @@ public class DataService
         }
     }
 
+    /// <summary>
+    /// Поиск плана по Guid
+    /// </summary>
+    public bool ExistsById(Guid id)
+    {
+        using (AppDbContext db = new AppDbContext())
+        {
+            return db.plans.Any(p => p.Plan_Id == id);
+        }
+    }
+
 
     /// <summary>
     /// Обновление изменений в БД (синхронизация)
