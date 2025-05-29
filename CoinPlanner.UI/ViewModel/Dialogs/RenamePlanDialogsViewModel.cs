@@ -52,7 +52,7 @@ public class RenamePlanDialogsViewModel : ObservableObject
             plan.Plan_Name = InputName;
             plan.Date_Update = DateTime.Now;
 
-            if (_dataService.PlanCondition.Where(x => x.Key == plan.Plan_Id && x.Value == 1) == null)
+            if (!_dataService.PlanCondition.Any(x => x.Key == plan.Plan_Id && x.Value == 1))
             {
                 _dataService.PlanCondition.Remove(plan.Plan_Id);
                 _dataService.PlanCondition.Add(plan.Plan_Id, 2);

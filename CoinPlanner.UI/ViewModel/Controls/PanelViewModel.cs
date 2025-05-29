@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Input;
 using System.Xml;
 using CoinPlanner.DataBase;
+using CoinPlanner.DataBase.ModelsDb;
 using CoinPlanner.DataBase.ModelsDB;
 using CoinPlanner.FileService;
 using CoinPlanner.FileService.DTO;
@@ -226,7 +227,7 @@ public class PanelViewModel : ObservableObject
     {
         if (SelectedItemPlan == null)
             return;
-
+        
         if(_dataService.ExistsById(SelectedItemPlan.PlanId))
         {
             MessageBoxResult result = MessageBox.Show("Данный план с таким же ID уже есть в базе данных. Перезаписать план?\nЕсли нет, то синхронизируется, как новый!", 
@@ -313,12 +314,18 @@ public class PanelViewModel : ObservableObject
 
     public void DeletePlanCommand()
     {
+        if (SelectedItemPlan == null)
+            return;
+
         DeletePlanDialogs deletePlanDialogs = new DeletePlanDialogs(this, _dataService);
         deletePlanDialogs.ShowDialog();
     }
 
     public void RenamePlanCommand()
     {
+        if (SelectedItemPlan == null)
+            return;
+
         RenamePlanDialogs renamePlanDialogs = new RenamePlanDialogs(this, _dataService);
         renamePlanDialogs.ShowDialog();
     }
@@ -497,8 +504,7 @@ public class PanelViewModel : ObservableObject
 
         if (planExists)
         {
-            // Спрашиваем пользователя, нужно ли перезаписать план
-            MessageBoxResult result = MessageBox.Show("Данный план с таким же ID уже есть. Перезаписать план?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+            MessageBoxResult result = MessageBox.Show("Данный план с таким же ID уже есть. Перезаписать план?\nЕсли нет, то откроется, как новый!", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
             {
@@ -532,18 +538,18 @@ public class PanelViewModel : ObservableObject
 
         // Добавляем в приложение данные из файла
         // Данные о плане
-                _dataService.PlansList.Add(new Plans
-                {
-                    Plan_Id = data.Plan.PlanId,
-                    Plan_Name = data.Plan.PlanName,
-                    Date_Create = data.Plan.DataCreate,
+        _dataService.PlansList.Add(new Plans
+        {
+            Plan_Id = data.Plan.PlanId,
+            Plan_Name = data.Plan.PlanName,
+            Date_Create = data.Plan.DataCreate,
             Date_Update = data.Plan.DataUpdate
-                });
+        });
 
         // Данные об операциях
         foreach (var oper in data.Operations)
             _dataService.OperationsList.Add(new Operations
-        {
+            {
                 Oper_Id = oper.OperId,
                 Oper_Plan_Id = oper.OperPlanId,
                 Oper_Name = oper.OperName,
