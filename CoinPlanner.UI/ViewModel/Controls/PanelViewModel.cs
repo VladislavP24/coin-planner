@@ -415,8 +415,7 @@ public class PanelViewModel : ObservableObject
             PlanId = plan.Plan_Id,
             PlanName = plan.Plan_Name,
             DataCreate = plan.Date_Create,
-            DataUpdate = plan.Date_Update,
-            IsSynchro = plan.Is_Synchro
+            DataUpdate = plan.Date_Update
         };
 
         // Данные об операциях

@@ -70,8 +70,7 @@ public class RenamePlanDialogsViewModel : ObservableObject
             _panelViewModel.SelectedItemPlan = new Model.PlanModel {PlanId = plan.Plan_Id, 
                                                                     PlanName = plan.Plan_Name, 
                                                                     DateCreate = plan.Date_Create, 
-                                                                    DataUpdate = plan.Date_Update,
-                                                                    IsSynchro = plan.Is_Synchro};
+                                                                    DataUpdate = plan.Date_Update};
         }   
         else
         {

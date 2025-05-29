@@ -68,7 +68,7 @@ public class DeletePlanDialogsViewModel : ObservableObject
             _panelViewModel.SelectedItemPlan = saveSelectedPlan;
         }
 
-            _deletePlanDialogs.Close();
+        _deletePlanDialogs.Close();
     }
 
     private void CancelCommand()

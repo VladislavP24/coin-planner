@@ -12,5 +12,4 @@ public class PlanModel
     public string? PlanName { get; set; }
     public DateTime DateCreate { get; set; }
     public DateTime DataUpdate { get; set; }
-    public bool IsSynchro { get; set; }
 }

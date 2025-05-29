@@ -45,8 +45,7 @@ public class CreatePlanDialogsViewModel : ObservableObject
             Plan_Id = guid,
             Plan_Name = InputName,
             Date_Create = DateTime.Now,
-            Date_Update = DateTime.Now,
-            Is_Synchro = false
+            Date_Update = DateTime.Now
         });
 
         var saveSelectedPlan = _panelViewModel.SelectedItemPlan;

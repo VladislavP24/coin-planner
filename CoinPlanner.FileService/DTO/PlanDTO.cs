@@ -21,7 +21,4 @@ public class PlanDTO
 
     [XmlElement("DataUpdate")]
     public DateTime DataUpdate { get; set; }
-
-    [XmlElement("IsSynchro")]
-    public bool IsSynchro { get; set; }
 }
