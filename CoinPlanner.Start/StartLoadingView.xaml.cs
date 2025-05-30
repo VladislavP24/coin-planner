@@ -43,6 +43,7 @@ namespace CoinPlanner.Start
         /// </summary>
         private async void MainWindow_DBLoaded(object sender, RoutedEventArgs e)
         {
+            DatabaseHelper.EnsureDatabaseCreated();
             bool isConnected = await _dbProcessing.CheckDatabaseConnectionAsync();
 
             if (isConnected)
