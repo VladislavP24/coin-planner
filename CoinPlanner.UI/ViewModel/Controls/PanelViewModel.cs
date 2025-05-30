@@ -417,7 +417,7 @@ public class PanelViewModel : ObservableObject
 
         //Данные о плане
         Plans plan = _dataService.PlansList.First(x => x.Plan_Id == SelectedItemPlan.PlanId);
-        dataCollection.Plan = new PlanDTO
+        dataCollection.Plan = new PlanXML
         {
             PlanId = plan.Plan_Id,
             PlanName = plan.Plan_Name,
@@ -427,7 +427,7 @@ public class PanelViewModel : ObservableObject
 
         // Данные об операциях
         foreach (var oper in _dataService.OperationsList.Where(x => x.Oper_Plan_Id == SelectedItemPlan.PlanId))
-            dataCollection.Operations.Add(new OperationDTO
+            dataCollection.Operations.Add(new OperationXML
             {
                 OperId = oper.Oper_Id,
                 OperPlanId = oper.Oper_Plan_Id,
@@ -441,7 +441,7 @@ public class PanelViewModel : ObservableObject
 
         // Данные о фиксациях
         foreach (var fix in _dataService.FixationsList.Where(x => x.Fix_Plan_Id == SelectedItemPlan.PlanId))
-            dataCollection.Fixations.Add(new FixationDTO
+            dataCollection.Fixations.Add(new FixationXML
             {
                 FixId = fix.Fix_Id,
                 FixPlanId = fix.Fix_Plan_Id,
@@ -455,7 +455,7 @@ public class PanelViewModel : ObservableObject
 
         // Данные об отметках
         foreach (var mark in _dataService.MarksList.Where(x => x.Mark_Plan_Id == SelectedItemPlan.PlanId))
-            dataCollection.Marks.Add(new MarkDTO
+            dataCollection.Marks.Add(new MarkXML
             {
                 MarkId = mark.Mark_Id,
                 MarkName = mark.Mark_Name,
@@ -465,7 +465,7 @@ public class PanelViewModel : ObservableObject
 
         // Далее будет конвертация данных о состояниях, т.к. мы можем работать в offline-режиме и в дальнейшем эти данные будут нужны для синхронизации, как будет сеть
         // Данные о состоянии плана
-        dataCollection.PlanConditionPairs = new KeyValuePairDTO {Key = SelectedItemPlan.PlanId, 
+        dataCollection.PlanConditionPairs = new KeyValuePairXML {Key = SelectedItemPlan.PlanId, 
                                                                  Value = _dataService.PlanCondition.Where(x => x.Key == SelectedItemPlan.PlanId)
                                                                                                    .Select(x => x.Value)
                                                                                                    .FirstOrDefault() };
@@ -474,21 +474,21 @@ public class PanelViewModel : ObservableObject
         foreach (var cond in _dataService.OperCondition)
         {
             if(_dataService.OperationsList.Where(x => x.Oper_Id == cond.Key && x.Oper_Plan_Id == SelectedItemPlan.PlanId).Any())
-                dataCollection.OperConditionPairs.Add(new KeyValuePairDTO {Key = cond.Key, Value = cond.Value});
+                dataCollection.OperConditionPairs.Add(new KeyValuePairXML {Key = cond.Key, Value = cond.Value});
         }
 
         // Данные о состоянии фиксаций
         foreach (var cond in _dataService.FixCondition)
         {
             if (_dataService.FixationsList.Where(x => x.Fix_Id == cond.Key && x.Fix_Plan_Id == SelectedItemPlan.PlanId).Any())
-                dataCollection.FixConditionPairs.Add(new KeyValuePairDTO { Key = cond.Key, Value = cond.Value });
+                dataCollection.FixConditionPairs.Add(new KeyValuePairXML { Key = cond.Key, Value = cond.Value });
         }
 
         // Данные о состоянии отметок
         foreach (var cond in _dataService.MarkCondition)
         {
             if (_dataService.MarksList.Where(x => x.Mark_Id == cond.Key && x.Mark_Plan_Id == SelectedItemPlan.PlanId).Any())
-                dataCollection.MarkConditionPairs.Add(new KeyValuePairDTO { Key = cond.Key, Value = cond.Value });
+                dataCollection.MarkConditionPairs.Add(new KeyValuePairXML { Key = cond.Key, Value = cond.Value });
         }
 
         return dataCollection;
