@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace CoinPlanner.FileService.DTO;
 
 [XmlRoot("Operation")]
-public class OperationDTO
+public class OperationXML
 {
     [XmlElement("OperId")]
     public Guid OperId { get; set; }

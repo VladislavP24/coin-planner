@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace CoinPlanner.FileService.DTO;
 
 [XmlRoot("Mark")]
-public class MarkDTO
+public class MarkXML
 {
     [XmlElement("MarkId")]
     public Guid MarkId { get; set; }

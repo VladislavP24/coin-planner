@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CoinPlanner.FileService.DTO;
 
-public class KeyValuePairDTO
+public class KeyValuePairXML
 {
     public Guid Key { get; set; }
     public int Value { get; set; }

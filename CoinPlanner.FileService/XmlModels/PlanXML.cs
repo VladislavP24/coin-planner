@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 namespace CoinPlanner.FileService.DTO;
 
 [XmlRoot("Plan")]
-public class PlanDTO
+public class PlanXML
 {
     [XmlElement("PlanId")]
     public Guid PlanId { get; set; }

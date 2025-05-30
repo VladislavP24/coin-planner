@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 namespace CoinPlanner.FileService.DTO;
 
 [XmlRoot("Fixation")]
-public class FixationDTO
+public class FixationXML
 {
     [XmlElement("FixId")]
     public Guid FixId { get; set; }
