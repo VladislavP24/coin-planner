@@ -54,20 +54,8 @@ public class DataService
                 PlansList = await db.plans.FromSqlRaw("SELECT * FROM plans ORDER BY plan_id").ToListAsync();
                 MarksList = await db.marks.FromSqlRaw("SELECT * FROM marks ORDER BY mark_id").ToListAsync();
                 CategoriesList = await db.categories.FromSqlRaw("SELECT * FROM categories ORDER BY category_id").ToListAsync();
-
-                OperationsList = await db.Database.SqlQueryRaw<Operations>("SELECT o.oper_id, t.type_name AS type_name, ct.category_name AS category_name, o.oper_name, o.oper_sum, o.oper_completed, o.oper_next_date, o.oper_plan_id " +
-                                                                           "FROM operations o " +
-                                                                           "JOIN plans p ON o.oper_plan_id = p.plan_id " +
-                                                                           "JOIN type_operations t ON o.oper_type_id = t.type_id " +
-                                                                           "JOIN categories ct ON o.oper_category_id = ct.category_id " +
-                                                                           "ORDER BY o.oper_id;").ToListAsync();
-
-                FixationsList = await db.Database.SqlQueryRaw<Fixations>("SELECT f.fix_id, t.type_name AS type_name, ct.category_name AS category_name, f.fix_name, f.fix_sum, f.fix_completed, f.fix_next_date, f.fix_plan_id " +
-                                                                         "FROM fixations f " +
-                                                                         "JOIN plans p ON f.fix_plan_id = p.plan_id " +
-                                                                         "JOIN type_operations t ON f.fix_type_id = t.type_id " +
-                                                                         "JOIN categories ct ON f.fix_category_id = ct.category_id " +
-                                                                         "ORDER BY f.fix_id;").ToListAsync();
+                OperationsList = await db.operations.FromSqlRaw("SELECT * FROM operations ORDER BY oper_id").ToListAsync();
+                FixationsList = await db.fixations.FromSqlRaw("SELECT * FROM fixations ORDER BY fix_id").ToListAsync();
                 
             }
             return true;
@@ -122,9 +110,9 @@ public class DataService
 
                     if (condition.Value == 1)
                         db.Database.ExecuteSqlRaw($"INSERT INTO operations (oper_id, oper_plan_id, oper_name, oper_type_id, oper_category_id, oper_sum, oper_completed, oper_next_date) " +
-                                                    $"VALUES ('{oper.Oper_Id}', '{oper.Oper_Plan_Id}', '{oper.Oper_Name}', {ConvertOperType(oper)}, {ConvertOperCategory(oper)}, {oper.Oper_Sum}, {oper.Oper_Completed}, '{oper.Oper_Next_Date}')");
+                                                    $"VALUES ('{oper.Oper_Id}', '{oper.Oper_Plan_Id}', '{oper.Oper_Name}', {oper.Oper_Type_Id}, {oper.Oper_Category_Id}, {oper.Oper_Sum}, {oper.Oper_Completed}, '{oper.Oper_Next_Date}')");
                     else if (condition.Value == 2)
-                        db.Database.ExecuteSqlRaw($"UPDATE operations SET oper_name = '{oper.Oper_Name}', oper_type_id = {ConvertOperType(oper)}, oper_category_id = {ConvertOperCategory(oper)}, " +
+                        db.Database.ExecuteSqlRaw($"UPDATE operations SET oper_name = '{oper.Oper_Name}', oper_type_id = {oper.Oper_Type_Id}, oper_category_id = {oper.Oper_Category_Id}, " +
                                                     $"oper_sum = {oper.Oper_Sum}, oper_completed = {oper.Oper_Completed}, oper_next_date = '{oper.Oper_Next_Date}'" +
                                                     $"WHERE oper_id = '{oper.Oper_Id}'");
                     else if (condition.Value == 3)
@@ -140,9 +128,9 @@ public class DataService
 
                     if (condition.Value == 1)
                         db.Database.ExecuteSqlRaw($"INSERT INTO fixations (fix_id, fix_plan_id, fix_name, fix_type_id, fix_category_id, fix_sum, fix_completed, fix_next_date) " +
-                                                  $"VALUES ('{fix.Fix_Id}', '{fix.Fix_Plan_Id}', '{fix.Fix_Name}', {ConvertFixType(fix)}, {ConvertFixCategory(fix)}, {fix.Fix_Sum}, {fix.Fix_Completed}, '{fix.Fix_Next_Date}')");
+                                                  $"VALUES ('{fix.Fix_Id}', '{fix.Fix_Plan_Id}', '{fix.Fix_Name}', {fix.Fix_Type_Id}, {fix.Fix_Category_Id}, {fix.Fix_Sum}, {fix.Fix_Completed}, '{fix.Fix_Next_Date}')");
                     else if (condition.Value == 2)
-                        db.Database.ExecuteSqlRaw($"UPDATE fixations SET fix_name = '{fix.Fix_Name}', fix_type_id = {ConvertFixType(fix)}, fix_category_id = {ConvertFixCategory(fix)}, " +
+                        db.Database.ExecuteSqlRaw($"UPDATE fixations SET fix_name = '{fix.Fix_Name}', fix_type_id = {fix.Fix_Type_Id}, fix_category_id = {fix.Fix_Category_Id}, " +
                                                   $"fix_sum = {fix.Fix_Sum}, fix_completed = {fix.Fix_Completed}, fix_next_date = '{fix.Fix_Next_Date}'" +
                                                   $"WHERE fix_id = '{fix.Fix_Id}'");
                     else if (condition.Value == 3)
@@ -175,16 +163,4 @@ public class DataService
             return false;
         }
     }
-
-
-    public int ConvertOperType(Operations oper)
-        => oper.Type_Name == "Зачисление" ? 1 : 2;
-    public int ConvertFixType(Fixations fix)
-        => fix.Type_Name == "Зачисление" ? 1 : 2;
-
-    public int ConvertOperCategory(Operations oper)
-        => CategoriesList.Where(x => x.Category_Name == oper.Category_Name).Select(x => x.Category_Id).First();
-
-    public int ConvertFixCategory(Fixations fix)
-        => CategoriesList.Where(x => x.Category_Name == fix.Category_Name).Select(x => x.Category_Id).First();
 }
