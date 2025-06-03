@@ -48,7 +48,8 @@
                             Height="32"
                             Margin="5,0,10,0"
                             Command="{Binding DataContext.CreatePlan, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelButton}">
+                            Style="{DynamicResource PanelButton}"
+                            ToolTip="Создание нового плана с указанием имени плана.">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/createplan.png" 
                                    Width="30" 
@@ -66,7 +67,8 @@
                             Height="32"
                             Margin="5,0,10,0"
                             Command="{Binding DataContext.DeletePlan, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelButton}">
+                            Style="{DynamicResource PanelButton}"
+                            ToolTip="Удаление плана с указанием имени плана.">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/deleteplan.png" 
                                    Width="30" 
@@ -84,7 +86,8 @@
                             Height="32"
                             Margin="5,0,10,0"
                             Command="{Binding DataContext.SavePlan, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelButton}">
+                            Style="{DynamicResource PanelButton}"
+                            ToolTip="Сохранение плана в файл в формате .xml.">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/saveplan.png" 
                                    Width="30" 
@@ -113,7 +116,8 @@
                             Height="32"
                             Margin="0,0,9,0"
                             Command="{Binding DataContext.OpenPlan, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelButton}">
+                            Style="{DynamicResource PanelButton}"
+                            ToolTip="Открытие выбранного xml-файла из обзора. Файл, не относящийся к Coin Planne, открыт не будет.">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/openplan.png" 
                                    Width="29" 
@@ -131,7 +135,8 @@
                             Height="32"
                             Margin="0,0,9,0"
                             Command="{Binding DataContext.RenamePlan, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelButton}">
+                            Style="{DynamicResource PanelButton}"
+                            ToolTip="Переименование плана с выбором из списка планов.">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/renameplan.png" 
                                    Width="30" 
@@ -149,7 +154,8 @@
                             Height="32"
                             Margin="0,0,9,0"
                             Command="{Binding DataContext.ExportPlan, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelButton}">
+                            Style="{DynamicResource PanelButton}"
+                            ToolTip="Конвертирование плана в файл TXT для более удобно чтения.">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/convertplan.png" 
                                    Width="30" 
@@ -185,7 +191,8 @@
                         Margin="5,0,10,0"
                         HorizontalAlignment="Left"
                         Command="{Binding DataContext.AddData, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                        Style="{DynamicResource PanelButton}">
+                        Style="{DynamicResource PanelButton}"
+                        ToolTip="Добавление новой операции в план.">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/addtable.png" 
                                Width="30" 
@@ -203,7 +210,8 @@
                         Margin="5,0,10,0"
                         HorizontalAlignment="Left"
                         Command="{Binding DataContext.EditData, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                        Style="{DynamicResource PanelButton}">
+                        Style="{DynamicResource PanelButton}"
+                        ToolTip="Редактирование операции из плана.">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/edittable.png" 
                                Width="30" 
@@ -221,7 +229,8 @@
                         Margin="5,0,10,0"
                         HorizontalAlignment="Left"
                         Command="{Binding DataContext.DeleteData, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                        Style="{DynamicResource PanelButton}">
+                        Style="{DynamicResource PanelButton}"
+                        ToolTip="Удаление операции из плана.">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/deletefile.png" 
                                Width="30" 
@@ -251,7 +260,8 @@
                                   Margin="0,0,9,0"
                                   IsChecked="{Binding DataContext.IsCheckedEnroll, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                                   Command="{Binding DataContext.EnrollmentsSort, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                                  Style="{DynamicResource PanelToggleButton}">
+                                  Style="{DynamicResource PanelToggleButton}"
+                                  ToolTip="Оставляет операции, относящиеся к виду операций 'Зачисление'.">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/enrolltable.png" 
                                    Width="30" 
@@ -270,7 +280,8 @@
                                   Margin="0,0,9,0"
                                   IsChecked="{Binding DataContext.IsCheckedExpenses, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                                   Command="{Binding DataContext.ExpensesSort, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                                  Style="{DynamicResource PanelToggleButton}">
+                                  Style="{DynamicResource PanelToggleButton}"
+                                  ToolTip="Оставляет операции, относящиеся к виду операций 'Расходы'.">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/costtable.png" 
                                    Width="30" 
@@ -288,7 +299,8 @@
                             Height="32"
                             Margin="0,0,9,0"
                             Command="{Binding DataContext.Fixation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelButton}">
+                            Style="{DynamicResource PanelButton}"
+                            ToolTip="Открывает окно с фиксациями. Фиксации - операции, которые можно добавить в план. Удобство в создании такой фиксации один раз.">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/fixationtable.png" 
                                    Width="29" 
@@ -324,7 +336,8 @@
                             Height="32"
                             Margin="5,0,10,0"                    
                             Command="{Binding DataContext.OpenDiagram, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelButton}">
+                            Style="{DynamicResource PanelButton}"
+                            ToolTip="Открывает окно с диаграммами по категориям.">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/opengraph.png" 
                                    Width="30" 
@@ -343,7 +356,8 @@
                             Height="32"
                             Margin="5,0,10,0" 
                             Command="{Binding DataContext.OpenTable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelButton}">
+                            Style="{DynamicResource PanelButton}"
+                            ToolTip="Открывает окно с операциями. При запуске приложения открыта по умолчанию.">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/opentable.png" 
                                    Width="30" 
@@ -361,7 +375,8 @@
                             Height="32"
                             Margin="5,0,10,0" 
                             Command="{Binding DataContext.DownloadPlansDB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelButton}">
+                            Style="{DynamicResource PanelButton}"
+                            ToolTip="Загрузка планов с базы данных (с сети).">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/downloadplans.png" 
                                    Width="30" 
@@ -379,7 +394,8 @@
                             Height="32"
                             Margin="5,0,10,0"
                             Command="{Binding DataContext.Synchronization, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelButton}">
+                            Style="{DynamicResource PanelButton}"
+                            ToolTip="Синхронизация данных в базу данных (в сеть), т.е. сохранение в сеть и актуализация информации.">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/synchro.png" 
                                    Width="30" 
@@ -413,7 +429,8 @@
                             Height="32"
                             Margin="3,0,10,0"
                             Command="{Binding DataContext.Type, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelButton}">
+                            Style="{DynamicResource PanelButton}"
+                            ToolTip="Выбор вида для просмотра плана (день/неделя/месяц/год/интервал).">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/viewcalendar.png" 
                                    Width="29" 
@@ -431,7 +448,8 @@
                             Height="32"
                             Margin="3,0,10,0"
                             Command="{Binding DataContext.Interval, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelButton}">
+                            Style="{DynamicResource PanelButton}"
+                            ToolTip="Выбор интервала для просмотра плана.">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/intervalcalendar.png" 
                                    Width="30" 
@@ -449,7 +467,8 @@
                             Height="32"
                             Margin="3,0,10,0"
                             Command="{Binding DataContext.Mark, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelButton}">
+                            Style="{DynamicResource PanelButton}"
+                            ToolTip="Возможность установить отметку на дне в календаре, но также будет отображена на входящих в неё интервалы.">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/markcalendar.png" 
                                    Width="30" 
@@ -493,7 +512,7 @@
                         BorderBrush="Black"
                         BorderThickness="1">
                     <Button Style="{DynamicResource PanelButton}"
-                            ToolTip="{Binding SelectedItemPlan.PlanName, UpdateSourceTrigger=PropertyChanged}"
+                            ToolTip="Информация о выбранном плане."
                             Command="{Binding DataContext.Info, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
