@@ -30,6 +30,7 @@ public class PanelViewModel : ObservableObject
         _contentViewModel = contentViewModel;
         _diagramViewModel = diagramViewModel;
         _dataService = dataService;
+        _dataService.OnWarning += Choice_OnWarning;
 
         foreach (var category in _dataService.CategoriesList)
             Categories.Add(category.Category_Id, category.Category_Name);
@@ -152,6 +153,7 @@ public class PanelViewModel : ObservableObject
 
     public ICommand OpenDiagram { get; set; }
     public ICommand OpenTable { get; set; }
+    public ICommand DownloadPlansDB { get; set; }
     public ICommand Synchronization { get; set; }
 
     public ICommand Interval { get; set; }
@@ -175,6 +177,7 @@ public class PanelViewModel : ObservableObject
         RenamePlan = new RelayCommand(RenamePlanCommand);
         OpenTable = new RelayCommand(OpenTableCommand);
         OpenDiagram = new RelayCommand(OpenDiagramCommand);
+        DownloadPlansDB = new AsyncRelayCommand(DownloadPlansDBCommandAsync);
         Fixation = new RelayCommand(FixationCommand);
         Mark = new RelayCommand(MarkCommand);
         SavePlan = new RelayCommand(SavePlanCommand);
@@ -221,7 +224,6 @@ public class PanelViewModel : ObservableObject
         DeleteDataDialogs deleteDataDialogs = new DeleteDataDialogs(this, _dataService, _contentViewModel);
         deleteDataDialogs.ShowDialog();
     }
-
 
     public void SynchronizationCommand()
     {
@@ -276,9 +278,10 @@ public class PanelViewModel : ObservableObject
     {
         if (IsCheckedDiagram)
         {
-            IsCheckedTable = false;
-            _contentViewModel.IsVisibleContent = false;
-            _diagramViewModel.IsVisibleDiagram = true;
+            IsCheckedDiagram = false;
+            IsCheckedTable = true;
+            _contentViewModel.IsVisibleContent = true;
+            _diagramViewModel.IsVisibleDiagram = false;
         }
         else
             _diagramViewModel.IsVisibleDiagram = false;
@@ -289,12 +292,36 @@ public class PanelViewModel : ObservableObject
 
         if (IsCheckedTable)
         {
-            IsCheckedDiagram = false;
-            _contentViewModel.IsVisibleContent = true;
-            _diagramViewModel.IsVisibleDiagram = false;
+            IsCheckedTable = false;
+            IsCheckedDiagram = true;
+            _contentViewModel.IsVisibleContent = false;
+            _diagramViewModel.IsVisibleDiagram = true;
         }
         else
             _contentViewModel.IsVisibleContent = false;
+    }
+
+    public async Task DownloadPlansDBCommandAsync()
+    {
+        bool isConnected = await _dataService.CheckDatabaseConnectionAsync();
+
+        if (isConnected)
+        {
+            bool isLoaded = await _dataService.LoadDataFromDatabaseAsync();
+            if (!isLoaded)
+                MessageBox.Show("Не удалось загрузить данные из базы данных", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            else
+            {
+                MessageBox.Show("Данные успешно выгружены из базы данных!", "Информации", MessageBoxButton.OK, MessageBoxImage.Information);
+                PlanUpdate();
+                SelectedItemPlan = null;
+            }
+        }
+        else
+        {
+            MessageBox.Show("Не удалось подключиться к базе данных. Проверьте соединение.",
+                            "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
     }
 
     public void FixationCommand()
@@ -406,6 +433,18 @@ public class PanelViewModel : ObservableObject
             dict.Remove(oldKey);
             dict[newKey] = value;
         }
+    }
+
+    private void Choice_OnWarning(object sender, string message)
+    {
+        MessageBoxResult result = MessageBox.Show("Данный план, выгруженный из сети, уже имеется в приложении, но их дата изменения разная. " +
+                                                  "Для загрузки плана из сети синхронизируйте план из приложения как новый. Затем выгрузите снова. " +
+                                                  "Если выберите перезаписать план, то план, находящийся в приложении, перезапишется! Перезаписать план?\n\n" +
+                                                  $"{message}", 
+                                                  "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+        if (result == MessageBoxResult.Yes)
+            _dataService.IsDownLoad = true;
     }
 
     /// <summary>

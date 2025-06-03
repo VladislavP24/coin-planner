@@ -5,12 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CoinPlanner.UI.View.Controls" 
              xmlns:system="clr-namespace:System;assembly=netstandard"
+             xmlns:converters="clr-namespace:CoinPlanner.UI.View.Converters"
              mc:Ignorable="d"
              UseLayoutRounding="True"
              d:DesignHeight="170" d:DesignWidth="1820">
 
     <UserControl.Resources>
         <ResourceDictionary>
+            <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/CoinPlanner.UI;component/Styles/PanelStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -316,13 +318,13 @@
                     <RowDefinition Height="20"/>
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="1" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
-                    <ToggleButton Width="150"
+                <Border Grid.Row="1" Style="{StaticResource RightBorder}" HorizontalAlignment="Left"
+                        Visibility="{Binding DataContext.IsCheckedDiagram, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}">
+                    <Button Width="150"
                             Height="32"
-                            Margin="5,0,10,0"
-                            IsChecked="{Binding DataContext.IsCheckedDiagram, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
+                            Margin="5,0,10,0"                    
                             Command="{Binding DataContext.OpenDiagram, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelToggleButton}">
+                            Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/opengraph.png" 
                                    Width="30" 
@@ -332,16 +334,16 @@
                                    SnapsToDevicePixels="True"/>
                             <TextBlock Text="Диаграмма" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
                         </StackPanel>
-                    </ToggleButton>
+                    </Button>
                 </Border>
 
-                <Border Grid.Row="2" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
-                    <ToggleButton Width="150"
+                <Border Grid.Row="1" Style="{StaticResource RightBorder}" HorizontalAlignment="Left"
+                        Visibility="{Binding DataContext.IsCheckedTable, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}">
+                    <Button Width="150"
                             Height="32"
-                            Margin="5,0,10,0"
-                            IsChecked="{Binding DataContext.IsCheckedTable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
+                            Margin="5,0,10,0" 
                             Command="{Binding DataContext.OpenTable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                            Style="{DynamicResource PanelToggleButton}">
+                            Style="{DynamicResource PanelButton}">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/opentable.png" 
                                    Width="30" 
@@ -351,7 +353,25 @@
                                    SnapsToDevicePixels="True"/>
                             <TextBlock Text="Таблица" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
                         </StackPanel>
-                    </ToggleButton>
+                    </Button>
+                </Border>
+
+                <Border Grid.Row="2" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
+                    <Button Width="150"
+                            Height="32"
+                            Margin="5,0,10,0" 
+                            Command="{Binding DataContext.DownloadPlansDB, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
+                            Style="{DynamicResource PanelButton}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/downloadplans.png" 
+                                   Width="30" 
+                                   Height="30" 
+                                   Margin="-35,0,12,0"
+                                   VerticalAlignment="Center"
+                                   SnapsToDevicePixels="True"/>
+                            <TextBlock Text="Загрузка" FontSize="15" VerticalAlignment="Center" FontWeight="Normal"/>
+                        </StackPanel>
+                    </Button>
                 </Border>
 
                 <Border Grid.Row="3" Style="{StaticResource RightBorder}" HorizontalAlignment="Left">
@@ -457,7 +477,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="20"/>
                 </Grid.RowDefinitions>
-                
+
                 <Border Grid.Row="1" Style="{StaticResource RightBorder}"/>
                 <Border Grid.Row="2" Style="{StaticResource RightBorder}"/>
                 <Border Grid.Row="3" Style="{StaticResource RightBorder}"/>

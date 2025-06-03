@@ -11,6 +11,10 @@ public class DataService
 {
     public DataService() {}
 
+    public delegate void WarningEventHandler(object sender, string message);
+    public event WarningEventHandler OnWarning;
+    public bool IsDownLoad { get; set; }
+
     public List<Plans> PlansList { get; set; } = new();
     public List<Operations> OperationsList { get; set; } = new();
     public List<Categories> CategoriesList { get; set; } = new();
@@ -49,27 +53,57 @@ public class DataService
     {
         try
         {
+            List<Plans> planDBList = new();
+            List<Marks> markDBList = new();
+            List<Operations> operDBList = new();
+            List<Fixations> fixDBList = new();
+
             using (AppDbContext db = new AppDbContext())
             {
-                PlansList = await db.plans.FromSqlRaw("SELECT * FROM plans ORDER BY plan_id").ToListAsync();
-                MarksList = await db.marks.FromSqlRaw("SELECT * FROM marks ORDER BY mark_id").ToListAsync();
                 CategoriesList = await db.categories.FromSqlRaw("SELECT * FROM categories ORDER BY category_id").ToListAsync();
+                planDBList = await db.plans.FromSqlRaw("SELECT * FROM plans ORDER BY plan_id").ToListAsync();
+                markDBList = await db.marks.FromSqlRaw("SELECT * FROM marks ORDER BY mark_id").ToListAsync();               
+                operDBList = await db.Database.SqlQueryRaw<Operations>("SELECT o.oper_id, t.type_name AS type_name, ct.category_name AS category_name, o.oper_name, o.oper_sum, o.oper_completed, o.oper_next_date, o.oper_plan_id " +
+                                                                       "FROM operations o " +
+                                                                       "JOIN plans p ON o.oper_plan_id = p.plan_id " +
+                                                                       "JOIN type_operations t ON o.oper_type_id = t.type_id " +
+                                                                       "JOIN categories ct ON o.oper_category_id = ct.category_id " +
+                                                                       "ORDER BY o.oper_id;").ToListAsync();
 
-                OperationsList = await db.Database.SqlQueryRaw<Operations>("SELECT o.oper_id, t.type_name AS type_name, ct.category_name AS category_name, o.oper_name, o.oper_sum, o.oper_completed, o.oper_next_date, o.oper_plan_id " +
-                                                                           "FROM operations o " +
-                                                                           "JOIN plans p ON o.oper_plan_id = p.plan_id " +
-                                                                           "JOIN type_operations t ON o.oper_type_id = t.type_id " +
-                                                                           "JOIN categories ct ON o.oper_category_id = ct.category_id " +
-                                                                           "ORDER BY o.oper_id;").ToListAsync();
-
-                FixationsList = await db.Database.SqlQueryRaw<Fixations>("SELECT f.fix_id, t.type_name AS type_name, ct.category_name AS category_name, f.fix_name, f.fix_sum, f.fix_completed, f.fix_next_date, f.fix_plan_id " +
-                                                                         "FROM fixations f " +
-                                                                         "JOIN plans p ON f.fix_plan_id = p.plan_id " +
-                                                                         "JOIN type_operations t ON f.fix_type_id = t.type_id " +
-                                                                         "JOIN categories ct ON f.fix_category_id = ct.category_id " +
-                                                                         "ORDER BY f.fix_id;").ToListAsync();
-                
+                fixDBList = await db.Database.SqlQueryRaw<Fixations>("SELECT f.fix_id, t.type_name AS type_name, ct.category_name AS category_name, f.fix_name, f.fix_sum, f.fix_completed, f.fix_next_date, f.fix_plan_id " +
+                                                                     "FROM fixations f " +
+                                                                     "JOIN plans p ON f.fix_plan_id = p.plan_id " +
+                                                                     "JOIN type_operations t ON f.fix_type_id = t.type_id " +
+                                                                     "JOIN categories ct ON f.fix_category_id = ct.category_id " +
+                                                                     "ORDER BY f.fix_id;").ToListAsync();
             }
+
+            foreach (var plan in planDBList)
+            {
+                if (PlansList.Any(x => x.Plan_Id == plan.Plan_Id && x.Date_Update == plan.Date_Update))
+                    continue;
+                else if (!PlansList.Any(x => x.Plan_Id == plan.Plan_Id))
+                    PlansList.Add(plan);
+                else
+                {
+                    OnWarning?.Invoke(this, $"Информация о загружаемом плане:\nID: {plan.Plan_Id}\nИмя: {plan.Plan_Name}\nДата создания: {plan.Date_Create}\nДата изменения: {plan.Date_Update}");
+                    if(IsDownLoad)
+                    {
+                        PlansList.RemoveAll(x => x.Plan_Id == plan.Plan_Id);
+                        PlansList.Add(plan);
+
+                        MarksList.RemoveAll(x => x.Mark_Plan_Id == plan.Plan_Id);
+                        MarksList.AddRange(markDBList.Where(x => x.Mark_Plan_Id == plan.Plan_Id));
+
+                        OperationsList.RemoveAll(x => x.Oper_Plan_Id == plan.Plan_Id);
+                        OperationsList.AddRange(operDBList.Where(x => x.Oper_Plan_Id == plan.Plan_Id));
+
+                        FixationsList.RemoveAll(x => x.Fix_Plan_Id == plan.Plan_Id);
+                        FixationsList.AddRange(fixDBList.Where(x => x.Fix_Plan_Id == plan.Plan_Id));
+                    }
+                }
+            }
+
             return true;
         }
         catch (Exception)

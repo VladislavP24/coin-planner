@@ -16,11 +16,11 @@ namespace CoinPlanner.Start
             InitializeComponent();
             Loaded += StartLoadingView_Loaded;
             Loaded += MainWindow_DBLoaded;
-            _dbProcessing = new DataService();
+            _dataService = new DataService();
 
         }
 
-        private DataService _dbProcessing;
+        private DataService _dataService;
         private bool isEnd = false;
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace CoinPlanner.Start
 
             Dispatcher.Invoke(() =>
             {
-                MainWindowView mainWindowView = new MainWindowView(_dbProcessing);
+                MainWindowView mainWindowView = new MainWindowView(_dataService);
                 mainWindowView.Show();
                 this.Close();
             });
@@ -43,11 +43,11 @@ namespace CoinPlanner.Start
         /// </summary>
         private async void MainWindow_DBLoaded(object sender, RoutedEventArgs e)
         {
-            bool isConnected = await _dbProcessing.CheckDatabaseConnectionAsync();
+            bool isConnected = await _dataService.CheckDatabaseConnectionAsync();
 
             if (isConnected)
             {
-                bool isLoaded = await _dbProcessing.LoadDataFromDatabaseAsync();
+                bool isLoaded = await _dataService.LoadDataFromDatabaseAsync();
                 if (!isLoaded)
                     MessageBox.Show("Не удалось загрузить данные из базы данных", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }

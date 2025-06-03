@@ -15,6 +15,7 @@
     <None Remove="Resources\costtable.png" />
     <None Remove="Resources\deletefile.png" />
     <None Remove="Resources\deleteplan.png" />
+    <None Remove="Resources\downloadplans.png" />
     <None Remove="Resources\edittable.png" />
     <None Remove="Resources\enrolltable.png" />
     <None Remove="Resources\fixationtable.png" />
@@ -48,6 +49,7 @@
     <Resource Include="Resources\createplan.png" />
     <Resource Include="Resources\deletefile.png" />
     <Resource Include="Resources\deleteplan.png" />
+    <Resource Include="Resources\downloadplans.png" />
     <Resource Include="Resources\edittable.png" />
     <Resource Include="Resources\enrolltable.png" />
     <Resource Include="Resources\fixationtable.png" />
