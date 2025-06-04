@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinPlanner.Start", "CoinPl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinPlanner.FileService", "CoinPlanner.FileService\CoinPlanner.FileService.csproj", "{C4CDE4E8-E83D-49CF-A4BB-3971AE0378E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoinPlanner.LogService", "CoinPlanner.LogService\CoinPlanner.LogService.csproj", "{190851DB-D36E-4072-9CA1-A26598E88AA4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{C4CDE4E8-E83D-49CF-A4BB-3971AE0378E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4CDE4E8-E83D-49CF-A4BB-3971AE0378E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4CDE4E8-E83D-49CF-A4BB-3971AE0378E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{190851DB-D36E-4072-9CA1-A26598E88AA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{190851DB-D36E-4072-9CA1-A26598E88AA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{190851DB-D36E-4072-9CA1-A26598E88AA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{190851DB-D36E-4072-9CA1-A26598E88AA4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
