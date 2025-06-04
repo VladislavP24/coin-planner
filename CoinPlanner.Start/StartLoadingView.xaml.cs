@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using CoinPlanner.DataBase;
 using CoinPlanner.LogService;
 using CoinPlanner.UI.View;
@@ -28,10 +29,11 @@ namespace CoinPlanner.Start
         /// Событие запуска основного окна и имитация загрузки
         /// </summary>
         private async void StartLoadingView_Loaded(object sender, RoutedEventArgs e)
-        {
+        {       
+            InitLogging();
             Log.Send(EventLevel.Info, logSender, "Начало загрузки окна");
             await SomeLongRunningTask();
-
+            
             Log.Send(EventLevel.Info, logSender, "Открытие главного окна");
             Dispatcher.Invoke(() =>
             {
@@ -83,5 +85,23 @@ namespace CoinPlanner.Start
             }
         }
 
+
+        // <summary>
+        /// Инициализация логирования
+        /// </summary>
+        public void InitLogging()
+        {
+            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string logPath = Path.Combine(baseDirectory, "LOG");
+
+            Log.LogPatch = logPath;
+            Log.LifeTimeLogDays = 30;
+            Log.maxsize = 90;
+            Log.DebugMessage = true;
+            Log.CurUser = "User";
+            Log.InitialLog();
+            Log.Send(EventLevel.Info, logSender, "Старт " + logSender);
+            Log.Send(EventLevel.Info, logSender, "Инициализация логирования");
+        }
     }
 }
