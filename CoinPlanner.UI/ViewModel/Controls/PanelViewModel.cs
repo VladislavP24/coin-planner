@@ -74,7 +74,7 @@ public class PanelViewModel : ObservableObject
         get => _isCheckedTable;
         set => SetProperty(ref _isCheckedTable, value, nameof(IsCheckedTable));
     }
-    private bool _isCheckedTable = true;
+    private bool _isCheckedTable = false;
 
     /// <summary>
     /// Факт включения Диаграммы
@@ -84,7 +84,7 @@ public class PanelViewModel : ObservableObject
         get => _isCheckedDiagram;
         set => SetProperty(ref _isCheckedDiagram, value, nameof(IsCheckedDiagram));
     }
-    private bool _isCheckedDiagram = false;
+    private bool _isCheckedDiagram = true;
 
     public ObservableCollection<PlanModel> Items { get; set; } = new(); // Элементы комбобокс Планы
     public Dictionary<int, string> Categories { get; set; } = new();

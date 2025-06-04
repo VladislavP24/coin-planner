@@ -331,11 +331,11 @@
                 </Grid.RowDefinitions>
 
                 <Border Grid.Row="1" Style="{StaticResource RightBorder}" HorizontalAlignment="Left"
-                        Visibility="{Binding DataContext.IsCheckedDiagram, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}">
+                        Visibility="{Binding DataContext.IsCheckedTable, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}">
                     <Button Width="150"
                             Height="32"
                             Margin="5,0,10,0"                    
-                            Command="{Binding DataContext.OpenDiagram, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
+                            Command="{Binding DataContext.OpenTable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                             Style="{DynamicResource PanelButton}"
                             ToolTip="Открывает окно с диаграммами по категориям.">
                         <StackPanel Orientation="Horizontal">
@@ -351,13 +351,13 @@
                 </Border>
 
                 <Border Grid.Row="1" Style="{StaticResource RightBorder}" HorizontalAlignment="Left"
-                        Visibility="{Binding DataContext.IsCheckedTable, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}">
+                        Visibility="{Binding DataContext.IsCheckedDiagram, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}">
                     <Button Width="150"
                             Height="32"
                             Margin="5,0,10,0" 
-                            Command="{Binding DataContext.OpenTable, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
+                            Command="{Binding DataContext.OpenDiagram, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                             Style="{DynamicResource PanelButton}"
-                            ToolTip="Открывает окно с операциями. При запуске приложения открыта по умолчанию.">
+                            ToolTip="Открывает таблицу с операциями. При запуске приложения открыта по умолчанию.">
                         <StackPanel Orientation="Horizontal">
                             <Image Source="pack://application:,,,/CoinPlanner.UI;component/Resources/opentable.png" 
                                    Width="30" 
