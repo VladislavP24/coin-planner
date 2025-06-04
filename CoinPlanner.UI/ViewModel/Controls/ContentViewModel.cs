@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CoinPlanner.DataBase;
+using CoinPlanner.LogService;
 using CoinPlanner.UI.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -21,6 +22,7 @@ public class ContentViewModel : ObservableObject
     public DateTime? EndDate { get; set; }
     public PlanModel? Plan { get; set; }
     public string IsType { get; set; } = "Все операции";
+    private const string logSender = "Content/Table";
 
     public bool IsVisibleContent
     {
@@ -35,6 +37,7 @@ public class ContentViewModel : ObservableObject
     /// </summary>
     public void UpdateOperation()
     {
+        Log.Send(EventLevel.Info, logSender, "Обновление таблицы");
         DynamicOperationCollection.Clear();
         if (StartDate == null || EndDate == null || Plan == null)
             return;
@@ -62,6 +65,7 @@ public class ContentViewModel : ObservableObject
         }
 
         CalculationOfParameters();
+        Log.Send(EventLevel.Info, logSender, "Таблицы и статистика обновлены");
     }
 
 

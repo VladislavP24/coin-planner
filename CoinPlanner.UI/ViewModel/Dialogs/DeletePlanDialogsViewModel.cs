@@ -11,6 +11,7 @@ using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CoinPlanner.LogService;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
@@ -26,6 +27,8 @@ public class DeletePlanDialogsViewModel : ObservableObject
 
         Ok = new RelayCommand(OkCommand);
         Cancel = new RelayCommand(CancelCommand);
+
+        Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
     private PanelViewModel _panelViewModel;
@@ -34,6 +37,8 @@ public class DeletePlanDialogsViewModel : ObservableObject
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
     public ObservableCollection<string> Items { get; set; } = new();
+    private const string logSender = "Delete Plan";
+
     public string SelectedItem
     {
         get => _selectedItem;
@@ -55,6 +60,7 @@ public class DeletePlanDialogsViewModel : ObservableObject
             
 
         _dataService.PlansList.Remove(plan);
+        Log.Send(EventLevel.Info, logSender, $"План {plan.Plan_Name} удалён");
 
         if (_panelViewModel.SelectedItemPlan != null && plan.Plan_Name == _panelViewModel.SelectedItemPlan.PlanName)
         {
@@ -72,5 +78,8 @@ public class DeletePlanDialogsViewModel : ObservableObject
     }
 
     private void CancelCommand()
-        => _deletePlanDialogs.Close();
+    {
+        Log.Send(EventLevel.Info, logSender, "Окно закрыто");
+        _deletePlanDialogs.Close();
+    }
 }

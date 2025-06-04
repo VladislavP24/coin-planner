@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CoinPlanner.DataBase;
+using CoinPlanner.LogService;
 using CoinPlanner.UI.Model;
 using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
@@ -28,6 +29,8 @@ public class AddDataDialogsViewmodel : ObservableObject
 
         Ok = new RelayCommand(OkCommand);
         Cancel = new RelayCommand(CancelCommand);
+
+        Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
     private AddDataDialogs _addDataDialogs;
@@ -42,6 +45,8 @@ public class AddDataDialogsViewmodel : ObservableObject
     public double Sum { get; set; }
     public bool Completed { get; set; }
     public DateTime Date { get; set; } = DateTime.Now;
+
+    private const string logSender = "Add Data";
 
 
     //ComboBox Items and Selected
@@ -81,11 +86,16 @@ public class AddDataDialogsViewmodel : ObservableObject
             Oper_Plan_Id = _panelViewModel.SelectedItemPlan.PlanId,
         });
 
+        Log.Send(EventLevel.Info, logSender, "Операция добавлена");
+
         _panelViewModel.UpdateDatePlan();
         _contentViewModel.UpdateOperation();
         _addDataDialogs.Close();
     }
 
     private void CancelCommand()
-        => _addDataDialogs.Close();
+    {
+        Log.Send(EventLevel.Info, logSender, "Окно закрыто");
+        _addDataDialogs.Close();
+    }
 }

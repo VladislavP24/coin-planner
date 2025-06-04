@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CoinPlanner.DataBase\CoinPlanner.DataBase.csproj" />
+    <ProjectReference Include="..\CoinPlanner.LogService\CoinPlanner.LogService.csproj" />
     <ProjectReference Include="..\CoinPlanner.UI\CoinPlanner.UI.csproj" />
   </ItemGroup>
 

@@ -13,6 +13,7 @@ using CoinPlanner.DataBase.ModelsDb;
 using CoinPlanner.DataBase.ModelsDB;
 using CoinPlanner.FileService;
 using CoinPlanner.FileService.DTO;
+using CoinPlanner.LogService;
 using CoinPlanner.UI.Model;
 using CoinPlanner.UI.View.Dialogs;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -42,6 +43,8 @@ public class PanelViewModel : ObservableObject
     private ContentViewModel _contentViewModel { get; set; }
     private DiagramViewModel _diagramViewModel { get; set; }
     private DataService _dataService { get; set; }
+
+    private const string logSender = "Panel";
 
     /// <summary>
     /// Факт включения Зачисления
@@ -83,7 +86,6 @@ public class PanelViewModel : ObservableObject
     }
     private bool _isCheckedDiagram = false;
 
-
     public ObservableCollection<PlanModel> Items { get; set; } = new(); // Элементы комбобокс Планы
     public Dictionary<int, string> Categories { get; set; } = new();
 
@@ -95,11 +97,11 @@ public class PanelViewModel : ObservableObject
             SetProperty(ref _selectedItemPlan, value, nameof(SelectedItemPlan));
             if (value != null)
             {
+                Log.Send(EventLevel.Info, logSender, "Отправка данных плана в Content/Table, Diagram, Calendar");
                 _contentViewModel.Plan = value;
                 _calendarViewModel.PlanId = value.PlanId;
                 _diagramViewModel.CreatDiagram(SelectedItemPlan.PlanId);
                 _contentViewModel.UpdateOperation();
-
             } 
         }
     }
@@ -108,6 +110,7 @@ public class PanelViewModel : ObservableObject
 
     public void PlanUpdate()
     {
+        Log.Send(EventLevel.Info, logSender, "Обновление планов");
         Items.Clear();
         foreach (var plan in _dataService.PlansList)
         {
@@ -119,11 +122,12 @@ public class PanelViewModel : ObservableObject
                 DataUpdate = plan.Date_Update
             });
         }
+        Log.Send(EventLevel.Info, logSender, "Обновление завершено");
     }
 
     public void UpdateDatePlan()
     {
-        // Обновление даты последнего изменения плана
+        Log.Send(EventLevel.Info, logSender, "Обновление даты последнего изменения плана");
         var plan = _dataService.PlansList.Where(x => x.Plan_Id == SelectedItemPlan.PlanId).First();
         plan.Date_Update = DateTime.Now;
 
@@ -271,17 +275,19 @@ public class PanelViewModel : ObservableObject
         else
             _contentViewModel.IsType = "Все операции";
 
+        Log.Send(EventLevel.Info, logSender, $"Сортировка таблицы по параметру: {_contentViewModel.IsType}");
         _contentViewModel.UpdateOperation();
     }
 
     public void OpenDiagramCommand()
     {
+        Log.Send(EventLevel.Info, logSender, $"Открытие таблицы");
         if (IsCheckedDiagram)
         {
             IsCheckedDiagram = false;
             IsCheckedTable = true;
             _contentViewModel.IsVisibleContent = true;
-            _diagramViewModel.IsVisibleDiagram = false;
+            _diagramViewModel.IsVisibleDiagram = false; 
         }
         else
             _diagramViewModel.IsVisibleDiagram = false;
@@ -289,7 +295,7 @@ public class PanelViewModel : ObservableObject
 
     public void OpenTableCommand()
     {
-
+        Log.Send(EventLevel.Info, logSender, $"Открытие диаграммы");
         if (IsCheckedTable)
         {
             IsCheckedTable = false;
@@ -303,6 +309,7 @@ public class PanelViewModel : ObservableObject
 
     public async Task DownloadPlansDBCommandAsync()
     {
+        Log.Send(EventLevel.Info, logSender, $"Запуск выгрузки планов из БД");
         bool isConnected = await _dataService.CheckDatabaseConnectionAsync();
 
         if (isConnected)
@@ -381,9 +388,17 @@ public class PanelViewModel : ObservableObject
             string selectedPath = openFolderDialog.FolderName;
             string fileName = $"{SelectedItemPlan.PlanName}.xml";
             string fullPath = Path.Combine(selectedPath, fileName);
-            XmlSerializationHelper.SerializeToXml(ConvertModelToDTO(), fullPath);
-        }
-            
+            try
+            {
+                XmlSerializationHelper.SerializeToXml(ConvertModelToDTO(), fullPath);
+                
+            }
+            catch (Exception ex)
+            {
+                Log.Send(EventLevel.Info, logSender, "Сериализация в XML завершилась с ошибкой.");
+                Log.Send(EventLevel.Error, logSender, ex.ToString());
+            }   
+        }        
     }
 
     public void OpenPlanCommand()
@@ -393,8 +408,19 @@ public class PanelViewModel : ObservableObject
             Filter = "XML Files (*.xml)|*.xml"
         };
 
-        if (openFileDialog.ShowDialog() == true)
-            ConvertDTOToModel(XmlSerializationHelper.DeserializeFromXml(openFileDialog.FileName));
+        try
+        {
+            if (openFileDialog.ShowDialog() == true)
+                ConvertDTOToModel(XmlSerializationHelper.DeserializeFromXml(openFileDialog.FileName));
+
+            Log.Send(EventLevel.Info, logSender, "Десериализация из XML прошла успешно.");
+        }
+        catch (Exception ex)
+        {
+            Log.Send(EventLevel.Info, logSender, "Десериализация из XML завершилась с ошибкой.");
+            Log.Send(EventLevel.Error, logSender, ex.ToString());
+        }        
+           
     }
 
     public void ExportPlanCommand()
@@ -409,11 +435,14 @@ public class PanelViewModel : ObservableObject
 
         if (openFolderDialog.ShowDialog() == true)
         {
+            Log.Send(EventLevel.Info, logSender, "Запущена конвертация плана в TXT");
             string selectedPath = openFolderDialog.FolderName;
             string fileName = $"{SelectedItemPlan.PlanName}.txt";
             string fullPath = Path.Combine(selectedPath, fileName);
             TxtExportHelper.ExportToTxt(ConvertModelToDTO(), fullPath);
         }
+
+        Log.Send(EventLevel.Info, logSender, "Конвертация завершена");
     }
 
     public void InfoCommand()
@@ -423,6 +452,8 @@ public class PanelViewModel : ObservableObject
 
         MessageBox.Show($"ID: {SelectedItemPlan.PlanId}\nИмя плана: {SelectedItemPlan.PlanName}\nДата создания: {SelectedItemPlan.DateCreate}\nДата последнего изменения: {SelectedItemPlan.DataUpdate}",
                         "Информация о плане", MessageBoxButton.OK, MessageBoxImage.Information);
+
+        
     }
     #endregion
 
@@ -444,7 +475,13 @@ public class PanelViewModel : ObservableObject
                                                   "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
         if (result == MessageBoxResult.Yes)
+        {
             _dataService.IsDownLoad = true;
+        }
+        else
+            _dataService.IsDownLoad = false;
+
+        Log.Send(EventLevel.Info, logSender, $"Параметр для перезаписи планов устновлен - {_dataService.IsDownLoad}");
     }
 
     /// <summary>
@@ -538,6 +575,7 @@ public class PanelViewModel : ObservableObject
     /// </summary>
     private void ConvertDTOToModel(DataCollection data)
     {
+        Log.Send(EventLevel.Info, logSender, "Обработка данных из файла");
         // Проверяем, загружен ли такой же план
         bool planExists = _dataService.PlansList.Any(x => x.Plan_Id == data.Plan.PlanId);
 
@@ -547,6 +585,7 @@ public class PanelViewModel : ObservableObject
 
             if (result == MessageBoxResult.Yes)
             {
+                Log.Send(EventLevel.Info, logSender, "Перезапись данных");
                 // Находим и удаляем все элементы плана
                 var delPlan = _dataService.PlansList.First(x => x.Plan_Id == data.Plan.PlanId);      
                 if (_dataService.PlanCondition.Any(x => x.Key == delPlan.Plan_Id && x.Value == 1))
@@ -633,6 +672,7 @@ public class PanelViewModel : ObservableObject
         foreach(var cond in data.FixConditionPairs)
             _dataService.FixCondition.Add(cond.Key, cond.Value);
 
+        Log.Send(EventLevel.Info, logSender, "Обработка завершена");
         PlanUpdate();
     }
 }

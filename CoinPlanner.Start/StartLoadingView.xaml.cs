@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using CoinPlanner.DataBase;
+using CoinPlanner.LogService;
 using CoinPlanner.UI.View;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
@@ -17,9 +18,9 @@ namespace CoinPlanner.Start
             Loaded += StartLoadingView_Loaded;
             Loaded += MainWindow_DBLoaded;
             _dataService = new DataService();
-
         }
 
+        private const string logSender = "Loading Window";
         private DataService _dataService;
         private bool isEnd = false;
 
@@ -28,8 +29,10 @@ namespace CoinPlanner.Start
         /// </summary>
         private async void StartLoadingView_Loaded(object sender, RoutedEventArgs e)
         {
+            Log.Send(EventLevel.Info, logSender, "Начало загрузки окна");
             await SomeLongRunningTask();
 
+            Log.Send(EventLevel.Info, logSender, "Открытие главного окна");
             Dispatcher.Invoke(() =>
             {
                 MainWindowView mainWindowView = new MainWindowView(_dataService);
@@ -43,6 +46,7 @@ namespace CoinPlanner.Start
         /// </summary>
         private async void MainWindow_DBLoaded(object sender, RoutedEventArgs e)
         {
+            Log.Send(EventLevel.Info, logSender, "Проверка подключения к БД");
             bool isConnected = await _dataService.CheckDatabaseConnectionAsync();
 
             if (isConnected)

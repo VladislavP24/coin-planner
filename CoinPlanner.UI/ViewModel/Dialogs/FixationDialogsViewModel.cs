@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Xml.Linq;
 using CoinPlanner.DataBase;
 using CoinPlanner.DataBase.ModelsDb;
+using CoinPlanner.LogService;
 using CoinPlanner.UI.Model;
 using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
@@ -49,12 +50,15 @@ public class FixationDialogsViewModel : ObservableObject
         DeleteItem = new RelayCommand<FixationModel>(DeleteItemCommand);
         Ok = new RelayCommand(OkCommand);
         Cancel = new RelayCommand(CancelCommand);
+
+        Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
     private  FixationDialogs _fixationDialogs { get; }
     private PanelViewModel _panelViewModel { get; }
     private DataService _dataService { get; }
     private ContentViewModel _contentViewModel { get; }
+    private const string logSender = "Fixation";
 
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
@@ -64,7 +68,6 @@ public class FixationDialogsViewModel : ObservableObject
     public ObservableCollection<FixationModel> Items { get; set; } = new();
     public ObservableCollection<string> TypeItems { get; set; } = new ObservableCollection<string> { "Зачисление", "Оплата" };
     public ObservableCollection<string> CategoryItems { get; set; } = new();
-    private IList<int> usedIdList = new List<int>();
 
     public void AddItemCommand()
     {
@@ -83,7 +86,8 @@ public class FixationDialogsViewModel : ObservableObject
             FixPlanId = _panelViewModel.SelectedItemPlan.PlanId,
             IsCheckFix = false
         });
-        
+
+        Log.Send(EventLevel.Info, logSender, "Добавлена новая фиксация");
     }
 
     public void DeleteItemCommand(FixationModel fixation)
@@ -101,6 +105,7 @@ public class FixationDialogsViewModel : ObservableObject
         }
 
         Items.Remove(fixation);
+        Log.Send(EventLevel.Info, logSender, $"Удалена фиксация: {fixation.FixName}");
     }
 
     private void OkCommand()
@@ -122,6 +127,7 @@ public class FixationDialogsViewModel : ObservableObject
         foreach (FixationModel fixation in Items)
             SaveFixations(fixation);
 
+        Log.Send(EventLevel.Info, logSender, "Окно закрыто");
         _fixationDialogs.Close();
     }
 
@@ -131,6 +137,8 @@ public class FixationDialogsViewModel : ObservableObject
     /// </summary>
     private void SaveFixations(FixationModel fixation)
     {
+        Log.Send(EventLevel.Info, logSender, "Сохранение фиксаций и их состояний");
+
         var newFixation = new DataBase.ModelsDb.Fixations
         {
             Fix_Id = fixation.FixId,
@@ -158,6 +166,8 @@ public class FixationDialogsViewModel : ObservableObject
             _dataService.FixCondition.Add(fixation.FixId, 2);
             _dataService.FixationsList.Add(newFixation);
         }
+
+        Log.Send(EventLevel.Info, logSender, "Фиксации сохранены");
     }
 
     /// <summary>
@@ -181,6 +191,7 @@ public class FixationDialogsViewModel : ObservableObject
             Oper_Plan_Id = _panelViewModel.SelectedItemPlan.PlanId,
         });
 
+        Log.Send(EventLevel.Info, logSender, "Добавлены фиксции в операции");
         _panelViewModel.UpdateDatePlan();
         _contentViewModel.UpdateOperation();
     }

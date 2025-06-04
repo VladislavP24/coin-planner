@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CoinPlanner.DataBase;
 using CoinPlanner.DataBase.ModelsDb;
+using CoinPlanner.LogService;
 using CoinPlanner.UI.Model;
 using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
@@ -37,6 +38,8 @@ public class MarkDialogsViewModel : ObservableObject
         Cancel = new RelayCommand(CancelCommand);
         AddItem = new RelayCommand(AddItemCommand);
         DeleteItem = new RelayCommand<MarkModel>(DeleteItemCommand);
+
+        Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
     private MarkDialogs _markDialogs { get; }
@@ -51,6 +54,7 @@ public class MarkDialogsViewModel : ObservableObject
     public ICommand DeleteItem { get; set; }
 
     public ObservableCollection<MarkModel> Items { get; set; } = new();
+    private const string logSender = "Mark";
 
     private void AddItemCommand()
     {
@@ -64,6 +68,8 @@ public class MarkDialogsViewModel : ObservableObject
             MarkDate = DateTime.Now,
             MarkPlanId = _panelViewModel.SelectedItemPlan.PlanId
         });
+
+        Log.Send(EventLevel.Info, logSender, "Добавлена новая отметка");
     }
 
     private void DeleteItemCommand(MarkModel markModel)
@@ -81,6 +87,7 @@ public class MarkDialogsViewModel : ObservableObject
         }
 
         Items.Remove(markModel);
+        Log.Send(EventLevel.Info, logSender, $"Удалена ометка : {markModel.MarkName}");
     }
 
     private void OkCommand()
@@ -98,6 +105,7 @@ public class MarkDialogsViewModel : ObservableObject
         foreach (MarkModel mark in Items)
             SaveMarks(mark);
 
+        Log.Send(EventLevel.Info, logSender, "Окно закрыто");
         _markDialogs.Close();
     }
 
@@ -106,6 +114,7 @@ public class MarkDialogsViewModel : ObservableObject
     /// </summary>
     private void SaveMarks(MarkModel markModel)
     {
+        Log.Send(EventLevel.Info, logSender, "Сохранение отметок и проверка их");
         var newMark = new DataBase.ModelsDb.Marks
         {
             Mark_Id = markModel.MarkId,
@@ -125,5 +134,7 @@ public class MarkDialogsViewModel : ObservableObject
             _dataService.MarkCondition.Add(markModel.MarkId, 2);
             _dataService.MarksList.Add(newMark);
         }
+
+        Log.Send(EventLevel.Info, logSender, "Отметки сохранены");
     }
 }

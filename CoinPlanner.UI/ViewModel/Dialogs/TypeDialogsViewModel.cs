@@ -1,4 +1,5 @@
-﻿using CoinPlanner.UI.View.Dialogs;
+﻿using CoinPlanner.LogService;
+using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -18,6 +19,8 @@ public class TypeDialogsViewModel : ObservableObject
         _selectedItem = calendarViewModel.Type;
 
         Items = new ObservableCollection<string> { "Год", "Месяц", "Неделя", "День", "Интервал" };
+
+        Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
     private CalendarViewModel _calendarViewModel { get; }
@@ -26,6 +29,7 @@ public class TypeDialogsViewModel : ObservableObject
     public ICommand Cancel { get; set; }
 
     public ObservableCollection<string> Items { get; set; }
+    private const string logSender = "Type Calendar";
 
     public string SelectedItem
     {
@@ -39,11 +43,16 @@ public class TypeDialogsViewModel : ObservableObject
         if (SelectedItem == null)
             return;
 
+        Log.Send(EventLevel.Info, logSender, "Тип календаря установлен.");
+
         _calendarViewModel.Type = SelectedItem;
         _calendarViewModel.UpdateButtons();
         _typeDialogs.Close();
     }
 
     private void CancelCommand()
-        => _typeDialogs.Close();
+    {
+        Log.Send(EventLevel.Info, logSender, "Окно закрыто");
+        _typeDialogs.Close();
+    }
 }

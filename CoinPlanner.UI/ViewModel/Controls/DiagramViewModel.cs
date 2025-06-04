@@ -3,6 +3,7 @@ using System.Numerics;
 using System.Windows.Input;
 using CoinPlanner.DataBase;
 using CoinPlanner.DataBase.ModelsDB;
+using CoinPlanner.LogService;
 using CoinPlanner.UI.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -27,6 +28,7 @@ public class DiagramViewModel : ObservableObject
     private Guid selectedPlanId;
     public DateTime? Start { get; set; }
     public DateTime? End { get; set; }
+    public const string logSender = "Diagram";
 
     public bool IsVisibleDiagram
     {
@@ -81,8 +83,9 @@ public class DiagramViewModel : ObservableObject
         else
             operations = _dataService.OperationsList;
 
+        Log.Send(EventLevel.Info, logSender, "Получение данных для отображения диаграммы");
 
-            PieSeriesExpenses = new SeriesCollection();
+        PieSeriesExpenses = new SeriesCollection();
 
         foreach (var item in operations.Where(x => x.Oper_Plan_Id == selectedPlanId && x.Type_Name == "Оплата")
                                                         .GroupBy(x => x.Category_Name)
@@ -111,6 +114,8 @@ public class DiagramViewModel : ObservableObject
                 DataLabels = true
             });
         }
+
+        Log.Send(EventLevel.Info, logSender, "Диаграммы созданы");
     }
 
 

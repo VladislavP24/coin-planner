@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Xml.Linq;
 using CoinPlanner.DataBase;
 using CoinPlanner.DataBase.ModelsDB;
+using CoinPlanner.LogService;
 using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -26,6 +27,8 @@ public class CreatePlanDialogsViewModel : ObservableObject
 
         Ok = new RelayCommand(OkCommand);
         Cancel = new RelayCommand(CancelCommand);
+
+        Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
     private PanelViewModel _panelViewModel;
@@ -34,6 +37,8 @@ public class CreatePlanDialogsViewModel : ObservableObject
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
     public string InputName { get; set; }
+
+    private const string logSender = "Create Plan";
 
     private void OkCommand()
     {
@@ -48,6 +53,7 @@ public class CreatePlanDialogsViewModel : ObservableObject
             Date_Update = DateTime.Now
         });
 
+        Log.Send(EventLevel.Info, logSender, "План добавлен");
         var saveSelectedPlan = _panelViewModel.SelectedItemPlan;
         _panelViewModel.PlanUpdate();
         _panelViewModel.SelectedItemPlan = saveSelectedPlan;
@@ -56,5 +62,8 @@ public class CreatePlanDialogsViewModel : ObservableObject
     }
 
     private void CancelCommand()
-        => _createPlanDialogs.Close();
+    {
+        Log.Send(EventLevel.Info, logSender, "Окно закрыто");
+        _createPlanDialogs.Close();
+    } 
 }

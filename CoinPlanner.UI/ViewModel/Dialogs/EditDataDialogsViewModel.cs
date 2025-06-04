@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using CoinPlanner.DataBase;
+using CoinPlanner.LogService;
 using CoinPlanner.UI.Model;
 using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
@@ -27,6 +28,8 @@ public class EditDataDialogsViewModel : ObservableObject
 
         foreach (var category in _panelViewModel.Categories)
             CategoryItems.Add(category.Value);
+
+        Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
     private DataService _dataService;
@@ -36,12 +39,15 @@ public class EditDataDialogsViewModel : ObservableObject
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
 
+    private const string logSender = "Edit Data";
+
     public int NumberRow
     {
         get => _numberRow;
         set
         {
             SetProperty(ref _numberRow, value, nameof(NumberRow));
+            Log.Send(EventLevel.Info, logSender, $"Установлен номер операции: {value}");
             ShowData();
         }
     }
@@ -120,7 +126,7 @@ public class EditDataDialogsViewModel : ObservableObject
     }
 
     private void OkCommand()
-    {   
+    {
         int row = 0;
         foreach (var oper in _dataService.OperationsList.Where(x => x.Oper_Next_Date >= _contentViewModel.StartDate && x.Oper_Next_Date <= _contentViewModel.EndDate).Where(x => x.Oper_Plan_Id == _contentViewModel.Plan.PlanId))
         {
@@ -140,7 +146,8 @@ public class EditDataDialogsViewModel : ObservableObject
                     _dataService.OperCondition.Remove(oper.Oper_Id);
                     _dataService.OperCondition.Add(oper.Oper_Id, 2);
                 }
-                
+
+                Log.Send(EventLevel.Info, logSender, "Изменения операции применены");
                 break;
             }
         }
@@ -151,5 +158,8 @@ public class EditDataDialogsViewModel : ObservableObject
     }
 
     private void CancelCommand()
-        => _editDataDialogs.Close();
+    {
+        Log.Send(EventLevel.Info, logSender, "Открытие окна");
+        _editDataDialogs.Close();
+    }
 }

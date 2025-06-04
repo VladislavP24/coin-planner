@@ -1,5 +1,6 @@
 ﻿using CoinPlanner.DataBase.ModelsDb;
 using CoinPlanner.DataBase.ModelsDB;
+using CoinPlanner.LogService;
 using Microsoft.EntityFrameworkCore;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ public class DataService
     public delegate void WarningEventHandler(object sender, string message);
     public event WarningEventHandler OnWarning;
     public bool IsDownLoad { get; set; }
+    public static string logSender = "Data Service";
 
     public List<Plans> PlansList { get; set; } = new();
     public List<Operations> OperationsList { get; set; } = new();
@@ -37,11 +39,14 @@ public class DataService
             using (var context = new AppDbContext())
             {
                 await context.Database.CanConnectAsync();
+                Log.Send(EventLevel.Info, logSender, "Установлено подключение к БД");
                 return true;
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Log.Send(EventLevel.Error, logSender, "Подключение не установлено к БД. ");
+            Log.Send(EventLevel.Trace, logSender, ex.ToString());
             return false;
         }
     }
@@ -57,6 +62,8 @@ public class DataService
             List<Marks> markDBList = new();
             List<Operations> operDBList = new();
             List<Fixations> fixDBList = new();
+
+            Log.Send(EventLevel.Info, logSender, "Запуск получения данных с БД");
 
             using (AppDbContext db = new AppDbContext())
             {
@@ -77,6 +84,7 @@ public class DataService
                                                                      "JOIN categories ct ON f.fix_category_id = ct.category_id " +
                                                                      "ORDER BY f.fix_id;").ToListAsync();
             }
+            Log.Send(EventLevel.Info, logSender, "Данные получены с БД");
 
             foreach (var plan in planDBList)
             {
@@ -106,8 +114,10 @@ public class DataService
 
             return true;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Log.Send(EventLevel.Error, logSender, "Получение данных не произошло. ");
+            Log.Send(EventLevel.Trace, logSender, ex.ToString());
             return false;
         }
     }

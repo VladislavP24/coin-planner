@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using CoinPlanner.DataBase;
 using CoinPlanner.DataBase.ModelsDb;
+using CoinPlanner.LogService;
 using CoinPlanner.UI.ViewModel.Items;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -32,6 +33,7 @@ public class CalendarViewModel : ObservableObject
     private DiagramViewModel _diagranViewModel;
     public ICommand SendInterval { get; set; }
     public Guid PlanId { get; set; }
+    private const string logSender = "Calendar";
 
     /// <summary>
     /// Начальная дата
@@ -82,6 +84,8 @@ public class CalendarViewModel : ObservableObject
     /// </summary>
     private void SendIntervalCommand()
     {
+        Log.Send(EventLevel.Info, logSender, "Отправка интервала в Content/Table и Diagram");
+
         _contentViewModel.StartDate = Buttons.Where(x => x.IsChecked == true).Select(x => x.StartTime).FirstOrDefault();
         _contentViewModel.EndDate = Buttons.Where(x => x.IsChecked == true).Select(x => x.EndTime).FirstOrDefault();
         _contentViewModel.UpdateOperation();
@@ -100,6 +104,7 @@ public class CalendarViewModel : ObservableObject
     /// </summary>
     public void UpdateButtons()
     {
+        Log.Send(EventLevel.Info, logSender, "Обновление кнопок календаря");
         Buttons.Clear();
 
         switch (Type)
@@ -164,12 +169,14 @@ public class CalendarViewModel : ObservableObject
                 break;
         }
 
+        Log.Send(EventLevel.Info, logSender, "Календарь обновлён");
         AddMarkToButton();
     }
 
 
     public void AddMarkToButton()
     {
+        Log.Send(EventLevel.Info, logSender, "Добавление отметок на календарь");
         Marks? mark = new Marks();
 
         foreach (var button in Buttons)
@@ -187,5 +194,7 @@ public class CalendarViewModel : ObservableObject
                     button.Mark = mark.Mark_Name;
             }                
         }
+
+        Log.Send(EventLevel.Info, logSender, "Отметки добавлены");
     }
 }

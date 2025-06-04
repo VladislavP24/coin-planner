@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Input;
 using CoinPlanner.DataBase;
 using CoinPlanner.DataBase.ModelsDB;
+using CoinPlanner.LogService;
 using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -27,6 +28,8 @@ public class RenamePlanDialogsViewModel : ObservableObject
 
         Ok = new RelayCommand(OkCommand);
         Cancel = new RelayCommand(CancelCommand);
+
+        Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
     private PanelViewModel _panelViewModel;
@@ -36,6 +39,8 @@ public class RenamePlanDialogsViewModel : ObservableObject
     public ICommand Cancel { get; set; }
     public string InputName { get; set; }
     public ObservableCollection<string> Items { get; set; } = new();
+    private const string logSender = "Rename Plan";
+
     public string SelectedItem
     {
         get => _selectedItem;
@@ -49,6 +54,7 @@ public class RenamePlanDialogsViewModel : ObservableObject
 
         if (InputName != _dataService.PlansList.Where(x => x.Plan_Name == InputName).Select(x => x.Plan_Name).FirstOrDefault())
         {
+            Log.Send(EventLevel.Info, logSender, $"План {plan.Plan_Name} переименован на {InputName}");
             plan.Plan_Name = InputName;
             plan.Date_Update = DateTime.Now;
 
@@ -83,5 +89,8 @@ public class RenamePlanDialogsViewModel : ObservableObject
     }
 
     private void CancelCommand()
-        => _renamePlanDialogs.Close();
+    {
+        Log.Send(EventLevel.Info, logSender, "Окно закрыто");
+        _renamePlanDialogs.Close();
+    }
 }

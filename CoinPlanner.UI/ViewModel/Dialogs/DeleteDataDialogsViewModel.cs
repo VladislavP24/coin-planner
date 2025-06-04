@@ -10,6 +10,7 @@ using CoinPlanner.UI.ViewModel.Controls;
 using System.Xml.Linq;
 using CommunityToolkit.Mvvm.Input;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using CoinPlanner.LogService;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
@@ -23,6 +24,8 @@ public class DeleteDataDialogsViewModel
         _panelViewModel = panelViewModel;
         Ok = new RelayCommand(OkCommand);
         Cancel = new RelayCommand(CancelCommand);
+
+        Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
     private DataService _dataService;
@@ -33,6 +36,7 @@ public class DeleteDataDialogsViewModel
     public ICommand Cancel { get; set; }
     public int NumberRow { get; set; }
 
+    private const string logSender = "Delete Data";
 
     private void OkCommand()
     {
@@ -55,6 +59,7 @@ public class DeleteDataDialogsViewModel
                     _dataService.OperCondition.Add(oper.Oper_Id, 3);
                 }
 
+                Log.Send(EventLevel.Info, logSender, $"Операция {oper.Oper_Name} удалена");
                 _dataService.OperCondition.Remove(oper.Oper_Id);
                 _dataService.OperationsList.Remove(oper);
                 break;
@@ -67,5 +72,8 @@ public class DeleteDataDialogsViewModel
     }
 
     private void CancelCommand()
-        => _deleteDataDialogs.Close();
+    {
+        Log.Send(EventLevel.Info, logSender, "Окно закрыто");
+        _deleteDataDialogs.Close();
+    }
 }

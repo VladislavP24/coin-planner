@@ -126,7 +126,7 @@ public static class Log
         // Првоерка на имя файла
         if (string.IsNullOrEmpty(filename))
         {
-            Send(EventLevel.Warn, "Logger warning", "Filename cannot be null or empty.");
+            Send(EventLevel.Warn, "Logger warning", "Имя файла не может быть нулевым или пустым.");
             return;
         }
 
@@ -135,7 +135,7 @@ public static class Log
         // Проверка на существование данной директорри
         if (!Directory.Exists(LogPatch))
         {
-            Send(EventLevel.Warn, "Logger warning", $"Directory {LogPatch} does not exist.");
+            Send(EventLevel.Warn, "Logger warning", $"Директория {LogPatch} не существует.");
             return;
         }
 
@@ -160,12 +160,12 @@ public static class Log
                 if (m.Success && Int32.Parse(m.Groups[1].Value.ToString()) < Int32.Parse(oldTime))
                 {
                     fileinfo[i].Delete();
-                    Send(EventLevel.Debug, "Logger info", "Delete oldArchive: " + fileinfo[i].Name);
+                    Send(EventLevel.Debug, "Logger info", "Удаление старого архива: " + fileinfo[i].Name);
                 }
             }
             catch (Exception ex)
             {
-                Send(EventLevel.Error, "Logger error", $"Error deleting file {fileinfo[i].Name}: {ex.Message}");
+                Send(EventLevel.Error, "Logger error", $"Ошибка удаления файла {fileinfo[i].Name}: {ex.Message}");
             }
         }
     }
