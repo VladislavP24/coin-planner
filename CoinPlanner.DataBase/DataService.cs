@@ -91,7 +91,12 @@ public class DataService
                 if (PlansList.Any(x => x.Plan_Id == plan.Plan_Id && x.Date_Update == plan.Date_Update))
                     continue;
                 else if (!PlansList.Any(x => x.Plan_Id == plan.Plan_Id))
+                {
                     PlansList.Add(plan);
+                    OperationsList.AddRange(operDBList.Where(x => x.Oper_Plan_Id == plan.Plan_Id));
+                    MarksList.AddRange(markDBList.Where(x => x.Mark_Plan_Id == plan.Plan_Id));
+                    FixationsList.AddRange(fixDBList.Where(x => x.Fix_Plan_Id == plan.Plan_Id));
+                }    
                 else
                 {
                     OnWarning?.Invoke(this, $"Информация о загружаемом плане:\nID: {plan.Plan_Id}\nИмя: {plan.Plan_Name}\nДата создания: {plan.Date_Create}\nДата изменения: {plan.Date_Update}");
