@@ -2,6 +2,7 @@
 using System.Numerics;
 using System.Windows.Input;
 using CoinPlanner.DataBase;
+using CoinPlanner.DataBase.ModelsDb;
 using CoinPlanner.DataBase.ModelsDB;
 using CoinPlanner.LogService;
 using CoinPlanner.UI.Model;
@@ -17,6 +18,7 @@ public class DiagramViewModel : ObservableObject
     public DiagramViewModel(DataService dataService)
     {
         _dataService = dataService;
+        CategoryFilling();
 
         AllTime = new RelayCommand(AllTimeCommand);
         SelectTime = new RelayCommand(SelectTimeCommand);
@@ -28,6 +30,13 @@ public class DiagramViewModel : ObservableObject
     private Guid selectedPlanId;
     public DateTime? Start { get; set; }
     public DateTime? End { get; set; }
+
+    private readonly List<string> categories = new() 
+    { 
+        "Зарплата и аванс", "Продукт. магазины", "Медицина", "Авто", "Рестораны и кафе", "Развлечения", "Налоги",
+        "Электронная техника", "Транспорт и такси", "Отдых", "Одежда и обувь", "Материалы и мебель", "Накопления", "Кредит"
+    };
+
     public const string logSender = "Diagram";
 
     public bool IsVisibleDiagram
@@ -118,7 +127,6 @@ public class DiagramViewModel : ObservableObject
         Log.Send(EventLevel.Info, logSender, "Диаграммы созданы");
     }
 
-
     public void AllTimeCommand()
     {
         if(IsAllTime)
@@ -151,4 +159,16 @@ public class DiagramViewModel : ObservableObject
         CreatDiagram(selectedPlanId);
     }
 
+    /// <summary>
+    /// Заполнение категории, если не прошло подключение к БД.
+    /// Заполнение происходит здесь, так как эта модель первая получает CatigoryList.
+    /// </summary>
+    public void CategoryFilling()
+    {
+        if (_dataService.CategoriesList.Count == 0)
+            return;
+
+        foreach (var category in categories)
+            _dataService.CategoriesList.Add(new Categories { Category_Id = _dataService.CategoriesList.Count + 1, Category_Name = category });
+    }
 }
