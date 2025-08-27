@@ -17,7 +17,7 @@ namespace CoinPlanner.UI.View.Dialogs
         {
             InitializeComponent();
 
-            DataContext = new IntervalDialogsViewModel(this, calendarViewModel);
+            DataContext = new IntervalDialogsViewModel(calendarViewModel);
         }
 
         /// <summary>

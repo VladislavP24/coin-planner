@@ -4,11 +4,13 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
 using CoinPlanner.DataBase;
 using CoinPlanner.DataBase.ModelsDB;
 using CoinPlanner.LogService;
+using CoinPlanner.UI.Interface;
 using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -17,30 +19,28 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
-public class CreatePlanDialogsViewModel : ObservableObject
+public class CreatePlanDialogsViewModel : ObservableObject, IViewModelDialogs
 {
-    public CreatePlanDialogsViewModel(PanelViewModel panelViewModel, DataService dataService, CreatePlanDialogs createPlanDialogs) 
+    public CreatePlanDialogsViewModel(PanelViewModel panelViewModel, DataService dataService) 
     { 
         _dataService = dataService;
         _panelViewModel = panelViewModel;
-        _createPlanDialogs = createPlanDialogs;
 
-        Ok = new RelayCommand(OkCommand);
-        Cancel = new RelayCommand(CancelCommand);
+        Ok = new RelayCommand<Window>(OkCommand);
+        Cancel = new RelayCommand<Window>(CancelCommand);
 
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
     private PanelViewModel _panelViewModel;
     private DataService _dataService;
-    private CreatePlanDialogs _createPlanDialogs;
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
     public string InputName { get; set; }
 
     private const string logSender = "Create Plan";
 
-    private void OkCommand()
+    public void OkCommand(Window window)
     {
         Guid guid = Guid.NewGuid();
         _dataService.PlanCondition.Add(guid, 1);
@@ -58,12 +58,12 @@ public class CreatePlanDialogsViewModel : ObservableObject
         _panelViewModel.PlanUpdate();
         _panelViewModel.SelectedItemPlan = saveSelectedPlan;
 
-        _createPlanDialogs.Close();
+        window.Close();
     }
 
-    private void CancelCommand()
+    public void CancelCommand(Window window)
     {
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
-        _createPlanDialogs.Close();
+        window.Close();
     } 
 }

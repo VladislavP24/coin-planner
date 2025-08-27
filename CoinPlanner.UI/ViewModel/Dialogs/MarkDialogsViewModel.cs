@@ -4,10 +4,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using CoinPlanner.DataBase;
 using CoinPlanner.DataBase.ModelsDb;
 using CoinPlanner.LogService;
+using CoinPlanner.UI.Interface;
 using CoinPlanner.UI.Model;
 using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
@@ -16,12 +18,11 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
-public class MarkDialogsViewModel : ObservableObject
+public class MarkDialogsViewModel : ObservableObject, IViewModelDialogs
 {
-    public MarkDialogsViewModel(MarkDialogs markDialogs, DataService dataService, CalendarViewModel calendarViewModel, PanelViewModel panelViewModel)
+    public MarkDialogsViewModel(DataService dataService, CalendarViewModel calendarViewModel, PanelViewModel panelViewModel)
     {
         _calendarViewModel = calendarViewModel;
-        _markDialogs = markDialogs;
         _dataService = dataService;
         _panelViewModel = panelViewModel;
 
@@ -34,15 +35,14 @@ public class MarkDialogsViewModel : ObservableObject
                 MarkPlanId = item.Mark_Plan_Id,
             });
 
-        Ok = new RelayCommand(OkCommand);
-        Cancel = new RelayCommand(CancelCommand);
+        Ok = new RelayCommand<Window>(OkCommand);
+        Cancel = new RelayCommand<Window>(CancelCommand);
         AddItem = new RelayCommand(AddItemCommand);
         DeleteItem = new RelayCommand<MarkModel>(DeleteItemCommand);
 
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
-    private MarkDialogs _markDialogs { get; }
     private DataService _dataService { get; }
     private CalendarViewModel _calendarViewModel { get; }
     private PanelViewModel _panelViewModel { get; }
@@ -90,23 +90,23 @@ public class MarkDialogsViewModel : ObservableObject
         Log.Send(EventLevel.Info, logSender, $"Удалена ометка : {markModel.MarkName}");
     }
 
-    private void OkCommand()
+    public void OkCommand(Window window)
     {
         foreach (MarkModel mark in Items)
             SaveMarks(mark);
 
         _panelViewModel.UpdateDatePlan();
         _calendarViewModel.UpdateButtons();
-        _markDialogs.Close();
+        window.Close();
     }
 
-    private void CancelCommand()
+    public void CancelCommand(Window window)
     {
         foreach (MarkModel mark in Items)
             SaveMarks(mark);
 
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
-        _markDialogs.Close();
+        window.Close();
     }
 
     /// <summary>

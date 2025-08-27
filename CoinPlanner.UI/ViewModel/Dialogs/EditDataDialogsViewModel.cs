@@ -4,9 +4,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using CoinPlanner.DataBase;
 using CoinPlanner.LogService;
+using CoinPlanner.UI.Interface;
 using CoinPlanner.UI.Model;
 using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
@@ -15,16 +17,15 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
-public class EditDataDialogsViewModel : ObservableObject
+public class EditDataDialogsViewModel : ObservableObject, IViewModelDialogs
 {
-    public EditDataDialogsViewModel(EditDataDialogs editDataDialogs, DataService dataService, ContentViewModel contentViewModel, PanelViewModel panelViewModel) 
+    public EditDataDialogsViewModel(DataService dataService, ContentViewModel contentViewModel, PanelViewModel panelViewModel) 
     {
-        _editDataDialogs = editDataDialogs;
         _dataService = dataService;
         _contentViewModel = contentViewModel;
         _panelViewModel = panelViewModel;
-        Ok = new RelayCommand(OkCommand);
-        Cancel = new RelayCommand(CancelCommand);
+        Ok = new RelayCommand<Window>(OkCommand);
+        Cancel = new RelayCommand<Window>(CancelCommand);
 
         foreach (var category in _panelViewModel.Categories)
             CategoryItems.Add(category.Value);
@@ -34,7 +35,6 @@ public class EditDataDialogsViewModel : ObservableObject
 
     private DataService _dataService;
     private ContentViewModel _contentViewModel;
-    private EditDataDialogs _editDataDialogs;
     private PanelViewModel _panelViewModel;
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
@@ -125,7 +125,7 @@ public class EditDataDialogsViewModel : ObservableObject
         }
     }
 
-    private void OkCommand()
+    public void OkCommand(Window window)
     {
         int row = 0;
         foreach (var oper in _dataService.OperationsList.Where(x => x.Oper_Next_Date >= _contentViewModel.StartDate && x.Oper_Next_Date <= _contentViewModel.EndDate).Where(x => x.Oper_Plan_Id == _contentViewModel.Plan.PlanId))
@@ -154,12 +154,12 @@ public class EditDataDialogsViewModel : ObservableObject
 
         _panelViewModel.UpdateDatePlan();
         _contentViewModel.UpdateOperation();
-        _editDataDialogs.Close();
+        window.Close();
     }
 
-    private void CancelCommand()
+    public void CancelCommand(Window window)
     {
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
-        _editDataDialogs.Close();
+        window.Close();
     }
 }

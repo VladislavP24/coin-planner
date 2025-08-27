@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using CoinPlanner.DataBase;
 using CoinPlanner.DataBase.ModelsDb;
 using CoinPlanner.LogService;
+using CoinPlanner.UI.Interface;
 using CoinPlanner.UI.Model;
 using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
@@ -19,12 +20,11 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
-public class FixationDialogsViewModel : ObservableObject
+public class FixationDialogsViewModel : ObservableObject, IViewModelDialogs
 {
 
-    public FixationDialogsViewModel(FixationDialogs fixationDialogs, PanelViewModel panelViewModel, DataService dataService, ContentViewModel contentViewModel)
+    public FixationDialogsViewModel(PanelViewModel panelViewModel, DataService dataService, ContentViewModel contentViewModel)
     {
-        _fixationDialogs = fixationDialogs;
         _panelViewModel = panelViewModel;
         _dataService = dataService;
         _contentViewModel = contentViewModel;
@@ -48,13 +48,12 @@ public class FixationDialogsViewModel : ObservableObject
 
         AddItem = new RelayCommand(AddItemCommand);
         DeleteItem = new RelayCommand<FixationModel>(DeleteItemCommand);
-        Ok = new RelayCommand(OkCommand);
-        Cancel = new RelayCommand(CancelCommand);
+        Ok = new RelayCommand<Window>(OkCommand);
+        Cancel = new RelayCommand<Window>(CancelCommand);
 
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
-    private  FixationDialogs _fixationDialogs { get; }
     private PanelViewModel _panelViewModel { get; }
     private DataService _dataService { get; }
     private ContentViewModel _contentViewModel { get; }
@@ -108,7 +107,7 @@ public class FixationDialogsViewModel : ObservableObject
         Log.Send(EventLevel.Info, logSender, $"Удалена фиксация: {fixation.FixName}");
     }
 
-    private void OkCommand()
+    public void OkCommand(Window window)
     {
         foreach (FixationModel fixation in Items)
         {
@@ -119,16 +118,16 @@ public class FixationDialogsViewModel : ObservableObject
 
         _panelViewModel.UpdateDatePlan();
         _contentViewModel.UpdateOperation();
-        _fixationDialogs.Close();
+        window.Close();
     }
 
-    private void CancelCommand()
+    public void CancelCommand(Window window)
     {
         foreach (FixationModel fixation in Items)
             SaveFixations(fixation);
 
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
-        _fixationDialogs.Close();
+        window.Close();
     }
 
 

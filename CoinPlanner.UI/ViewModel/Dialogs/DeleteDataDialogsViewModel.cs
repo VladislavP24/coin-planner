@@ -11,26 +11,26 @@ using System.Xml.Linq;
 using CommunityToolkit.Mvvm.Input;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using CoinPlanner.LogService;
+using System.Windows;
+using CoinPlanner.UI.Interface;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
-public class DeleteDataDialogsViewModel
+public class DeleteDataDialogsViewModel : IViewModelDialogs
 {
-    public DeleteDataDialogsViewModel(DeleteDataDialogs deleteDataDialogs, DataService dataService, ContentViewModel contentViewModel, PanelViewModel panelViewModel) 
+    public DeleteDataDialogsViewModel(DataService dataService, ContentViewModel contentViewModel, PanelViewModel panelViewModel) 
     {
-        _deleteDataDialogs = deleteDataDialogs;
         _contentViewModel = contentViewModel;
         _dataService = dataService;
         _panelViewModel = panelViewModel;
-        Ok = new RelayCommand(OkCommand);
-        Cancel = new RelayCommand(CancelCommand);
+        Ok = new RelayCommand<Window>(OkCommand);
+        Cancel = new RelayCommand<Window>(CancelCommand);
 
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
     private DataService _dataService;
     private ContentViewModel _contentViewModel;
-    private DeleteDataDialogs _deleteDataDialogs;
     private PanelViewModel _panelViewModel;
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
@@ -38,11 +38,11 @@ public class DeleteDataDialogsViewModel
 
     private const string logSender = "Delete Data";
 
-    private void OkCommand()
+    public void OkCommand(Window window)
     {
         if (_panelViewModel.SelectedItemPlan == null)
         {
-            _deleteDataDialogs.Close();
+            window.Close();
             return;
         }
 
@@ -68,12 +68,12 @@ public class DeleteDataDialogsViewModel
 
         _panelViewModel.UpdateDatePlan();
         _contentViewModel.UpdateOperation();
-        _deleteDataDialogs.Close();
+        window.Close();
     }
 
-    private void CancelCommand()
+    public void CancelCommand(Window window)
     {
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
-        _deleteDataDialogs.Close();
+        window.Close();
     }
 }

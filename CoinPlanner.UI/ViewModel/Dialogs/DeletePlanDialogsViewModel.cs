@@ -12,28 +12,27 @@ using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CoinPlanner.LogService;
+using CoinPlanner.UI.Interface;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
-public class DeletePlanDialogsViewModel : ObservableObject
+public class DeletePlanDialogsViewModel : ObservableObject, IViewModelDialogs
 {
-    public DeletePlanDialogsViewModel(PanelViewModel panelViewModel, DataService dataService, DeletePlanDialogs deletePlanDialogs)
+    public DeletePlanDialogsViewModel(PanelViewModel panelViewModel, DataService dataService)
     {
         _dataService = dataService;
         _panelViewModel = panelViewModel;
-        _deletePlanDialogs = deletePlanDialogs;
         foreach (var plan in _dataService.PlansList.Select(x => x.Plan_Name))
             Items.Add(plan);
 
-        Ok = new RelayCommand(OkCommand);
-        Cancel = new RelayCommand(CancelCommand);
+        Ok = new RelayCommand<Window>(OkCommand);
+        Cancel = new RelayCommand<Window>(CancelCommand);
 
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
     private PanelViewModel _panelViewModel;
     private DataService _dataService;
-    private DeletePlanDialogs _deletePlanDialogs;
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
     public ObservableCollection<string> Items { get; set; } = new();
@@ -46,7 +45,7 @@ public class DeletePlanDialogsViewModel : ObservableObject
     }
     private string _selectedItem;
 
-    private void OkCommand()
+    public void OkCommand(Window window)
     {
         var plan = _dataService.PlansList.Where(x => x.Plan_Name == SelectedItem).First();
 
@@ -74,12 +73,12 @@ public class DeletePlanDialogsViewModel : ObservableObject
             _panelViewModel.SelectedItemPlan = saveSelectedPlan;
         }
 
-        _deletePlanDialogs.Close();
+        window.Close();
     }
 
-    private void CancelCommand()
+    public void CancelCommand(Window window)
     {
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
-        _deletePlanDialogs.Close();
+        window.Close();
     }
 }

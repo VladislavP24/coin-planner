@@ -1,20 +1,21 @@
 ﻿using CoinPlanner.LogService;
+using CoinPlanner.UI.Interface;
 using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
-public class TypeDialogsViewModel : ObservableObject
+public class TypeDialogsViewModel : ObservableObject, IViewModelDialogs
 {
-    public TypeDialogsViewModel(TypeDialogs typeDialogs, CalendarViewModel calendarViewModel)
+    public TypeDialogsViewModel(CalendarViewModel calendarViewModel)
     {
-        Ok = new RelayCommand(OkCommand);
-        Cancel = new RelayCommand(CancelCommand);
-        _typeDialogs = typeDialogs;
+        Ok = new RelayCommand<Window>(OkCommand);
+        Cancel = new RelayCommand<Window>(CancelCommand);
         _calendarViewModel = calendarViewModel;
         _selectedItem = calendarViewModel.Type;
 
@@ -24,7 +25,6 @@ public class TypeDialogsViewModel : ObservableObject
     }
 
     private CalendarViewModel _calendarViewModel { get; }
-    private TypeDialogs _typeDialogs { get; }
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
 
@@ -38,7 +38,7 @@ public class TypeDialogsViewModel : ObservableObject
     }
     private string _selectedItem;
 
-    private void OkCommand()
+    public void OkCommand(Window window)
     {
         if (SelectedItem == null)
             return;
@@ -47,12 +47,12 @@ public class TypeDialogsViewModel : ObservableObject
 
         _calendarViewModel.Type = SelectedItem;
         _calendarViewModel.UpdateButtons();
-        _typeDialogs.Close();
+        window.Close();
     }
 
-    private void CancelCommand()
+    public void CancelCommand(Window window)
     {
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
-        _typeDialogs.Close();
+        window.Close();
     }
 }

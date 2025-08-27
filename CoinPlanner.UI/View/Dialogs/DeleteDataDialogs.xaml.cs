@@ -26,7 +26,7 @@ namespace CoinPlanner.UI.View.Dialogs
         {
             InitializeComponent();
 
-            DataContext = new DeleteDataDialogsViewModel(this, dataService, contentViewModel, panelViewModel);
+            DataContext = new DeleteDataDialogsViewModel(dataService, contentViewModel, panelViewModel);
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)

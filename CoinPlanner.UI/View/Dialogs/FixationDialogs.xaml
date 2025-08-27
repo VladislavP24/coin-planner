@@ -197,6 +197,7 @@
                     BorderThickness="1"
                     BorderBrush="Gray"
                     Command="{Binding DataContext.Ok, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:FixationDialogs}}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"
                     Style="{StaticResource PanelButton}"/>
             <Button Content="Отмена" 
                     Height="30" 
@@ -208,6 +209,7 @@
                     BorderThickness="1"
                     BorderBrush="Gray"
                     Command="{Binding DataContext.Cancel, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:FixationDialogs}}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}"
                     Style="{StaticResource PanelButton}"/>
         </Grid>
     </Grid>

@@ -9,6 +9,7 @@ using System.Windows.Input;
 using CoinPlanner.DataBase;
 using CoinPlanner.DataBase.ModelsDB;
 using CoinPlanner.LogService;
+using CoinPlanner.UI.Interface;
 using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -16,25 +17,23 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
-public class RenamePlanDialogsViewModel : ObservableObject
+public class RenamePlanDialogsViewModel : ObservableObject, IViewModelDialogs
 {
-    public RenamePlanDialogsViewModel(PanelViewModel panelViewModel, DataService dataService, RenamePlanDialogs renamePlanDialogs)
+    public RenamePlanDialogsViewModel(PanelViewModel panelViewModel, DataService dataService)
     {
         _dataService = dataService;
         _panelViewModel = panelViewModel;
-        _renamePlanDialogs = renamePlanDialogs;
         foreach (var plan in _dataService.PlansList.Select(x => x.Plan_Name))
             Items.Add(plan);
 
-        Ok = new RelayCommand(OkCommand);
-        Cancel = new RelayCommand(CancelCommand);
+        Ok = new RelayCommand<Window>(OkCommand);
+        Cancel = new RelayCommand<Window>(CancelCommand);
 
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
     private PanelViewModel _panelViewModel;
     private DataService _dataService;
-    private RenamePlanDialogs _renamePlanDialogs;
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
     public string InputName { get; set; }
@@ -48,7 +47,7 @@ public class RenamePlanDialogsViewModel : ObservableObject
     }
     private string _selectedItem;
 
-    private void OkCommand()
+    public void OkCommand(Window window)
     {
         var plan = _dataService.PlansList.Where(x => x.Plan_Name == SelectedItem).First();
 
@@ -85,12 +84,12 @@ public class RenamePlanDialogsViewModel : ObservableObject
             _panelViewModel.SelectedItemPlan = saveSelectedPlan;
         }
 
-        _renamePlanDialogs.Close();
+        window.Close();
     }
 
-    private void CancelCommand()
+    public void CancelCommand(Window window)
     {
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
-        _renamePlanDialogs.Close();
+        window.Close();
     }
 }

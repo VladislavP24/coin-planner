@@ -26,7 +26,7 @@ namespace CoinPlanner.UI.View.Dialogs
         {
             InitializeComponent();
 
-            DataContext = new MarkDialogsViewModel(this, dataService, calendarViewModel, panelViewModel);
+            DataContext = new MarkDialogsViewModel(dataService, calendarViewModel, panelViewModel);
         }
     }
 }

@@ -4,9 +4,11 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using CoinPlanner.DataBase;
 using CoinPlanner.LogService;
+using CoinPlanner.UI.Interface;
 using CoinPlanner.UI.Model;
 using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
@@ -15,25 +17,23 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
-public class AddDataDialogsViewmodel : ObservableObject
+public class AddDataDialogsViewmodel : ObservableObject, IViewModelDialogs
 {
-    public AddDataDialogsViewmodel(AddDataDialogs addDataDialogs, DataService dataService, PanelViewModel panelViewModel, ContentViewModel contentViewModel) 
+    public AddDataDialogsViewmodel(DataService dataService, PanelViewModel panelViewModel, ContentViewModel contentViewModel) 
     {
         _panelViewModel = panelViewModel;
         _dataService = dataService;
-        _addDataDialogs = addDataDialogs;
         _contentViewModel = contentViewModel;
 
         foreach (var category in _panelViewModel.Categories)
             CategoryItems.Add(category.Value);
 
-        Ok = new RelayCommand(OkCommand);
-        Cancel = new RelayCommand(CancelCommand);
+        Ok = new RelayCommand<Window>(OkCommand);
+        Cancel = new RelayCommand<Window>(CancelCommand);
 
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
-    private AddDataDialogs _addDataDialogs;
     private DataService _dataService;
     private PanelViewModel _panelViewModel;
     private ContentViewModel _contentViewModel;
@@ -69,7 +69,7 @@ public class AddDataDialogsViewmodel : ObservableObject
     private string _categorySelected;
 
 
-    private void OkCommand()
+    public void OkCommand(Window window)
     {
         Guid newGuid = Guid.NewGuid();
         _dataService.OperCondition.Add(newGuid, 1);
@@ -90,12 +90,12 @@ public class AddDataDialogsViewmodel : ObservableObject
 
         _panelViewModel.UpdateDatePlan();
         _contentViewModel.UpdateOperation();
-        _addDataDialogs.Close();
+        window.Close();
     }
 
-    private void CancelCommand()
+    public void CancelCommand(Window window)
     {
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
-        _addDataDialogs.Close();
+        window.Close();
     }
 }

@@ -26,7 +26,7 @@ namespace CoinPlanner.UI.View.Dialogs
         {
             InitializeComponent();
             
-            DataContext = new FixationDialogsViewModel(this, panelViewModel, dataService, contentViewModel);
+            DataContext = new FixationDialogsViewModel(panelViewModel, dataService, contentViewModel);
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)

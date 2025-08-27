@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using CoinPlanner.LogService;
+using CoinPlanner.UI.Interface;
 using CoinPlanner.UI.View.Dialogs;
 using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -8,13 +9,12 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
-public class IntervalDialogsViewModel : ObservableObject
+public class IntervalDialogsViewModel : ObservableObject, IViewModelDialogs
 {
-    public IntervalDialogsViewModel(IntervalDialogs intervalDialogs, CalendarViewModel calendarViewModel) 
+    public IntervalDialogsViewModel(CalendarViewModel calendarViewModel) 
     {
-        Ok = new RelayCommand(OkCommand);
-        Cancel = new RelayCommand(CancelCommand);
-        _intervalDialogs = intervalDialogs;
+        Ok = new RelayCommand<Window>(OkCommand);
+        Cancel = new RelayCommand<Window>(CancelCommand);
         _calendarViewModel = calendarViewModel;
         StartDate = calendarViewModel.Start;
         EndDate = calendarViewModel.End;
@@ -23,7 +23,6 @@ public class IntervalDialogsViewModel : ObservableObject
     }
 
     private CalendarViewModel _calendarViewModel { get; }
-    private IntervalDialogs _intervalDialogs { get; }
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
 
@@ -43,7 +42,7 @@ public class IntervalDialogsViewModel : ObservableObject
     }
     private DateTime _endDate;
 
-    private void OkCommand() 
+    public void OkCommand(Window window) 
     {
 
         StartDate = StartDate.Date;
@@ -60,12 +59,12 @@ public class IntervalDialogsViewModel : ObservableObject
         _calendarViewModel.Start = StartDate;
         _calendarViewModel.End = EndDate;
         _calendarViewModel.UpdateButtons();
-        _intervalDialogs.Close();
+        window.Close();
     }
 
-    private void CancelCommand()
+    public void CancelCommand(Window window)
     {
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
-        _intervalDialogs.Close();
+        window.Close();
     }
 }
