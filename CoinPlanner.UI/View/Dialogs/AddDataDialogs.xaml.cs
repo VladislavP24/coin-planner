@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CoinPlanner.DataBase;
-using CoinPlanner.UI.ViewModel.Controls;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
 using CoinPlanner.UI.ViewModel.Dialogs;
 
 
@@ -13,11 +13,11 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class AddDataDialogs : Window
     {
-        public AddDataDialogs(PanelViewModel panelViewModel, DataService dataService, ContentViewModel contentViewModel)
+        public AddDataDialogs(IDataService dataService, IPanelControls panel, IContentControls content)
         {
             InitializeComponent();
 
-            DataContext = new AddDataDialogsViewmodel(dataService, panelViewModel, contentViewModel);
+            DataContext = new AddDataDialogsViewmodel(dataService, panel, content);
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)

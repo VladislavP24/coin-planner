@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mime;
-using System.Text;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace CoinPlanner.UI.ViewModel.Items;
 
@@ -19,7 +13,7 @@ public class ButtonItemsViewModel : ObservableObject
         _endTime = endTime;
         _isChecked = isChecked;
     }
-   
+
     /// <summary>
     /// Факт выбора
     /// </summary>
@@ -41,7 +35,7 @@ public class ButtonItemsViewModel : ObservableObject
     }
     private string _content;
 
-    
+
     /// <summary>
     /// Начальная дата в формате DateTime
     /// </summary>
@@ -52,7 +46,7 @@ public class ButtonItemsViewModel : ObservableObject
     }
     private DateTime _startTime;
 
-    
+
     /// <summary>
     /// Начальная дата в формате DateTime
     /// </summary>

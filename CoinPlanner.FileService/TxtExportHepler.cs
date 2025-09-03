@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace CoinPlanner.FileService
+﻿namespace CoinPlanner.FileService
 {
     public static class TxtExportHelper
     {

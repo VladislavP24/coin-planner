@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
-using CoinPlanner.DataBase;
-using CoinPlanner.DataBase.ModelsDb;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
+using CoinPlanner.Contracts.DTO.DataServieDTO;
 using CoinPlanner.LogService;
 using CoinPlanner.UI.ViewModel.Items;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -17,20 +10,20 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace CoinPlanner.UI.ViewModel.Controls;
 
-public class CalendarViewModel : ObservableObject
+public class CalendarViewModel : ObservableObject, ICalendarControls
 {
-    public CalendarViewModel(DiagramViewModel diagranViewModel, ContentViewModel contentViewModel, DataService dataService)
+    public CalendarViewModel(IDataService dataService)
     {
-        _contentViewModel = contentViewModel;
         _dataService = dataService;
-        _diagranViewModel = diagranViewModel;
         SendInterval = new RelayCommand(SendIntervalCommand);
         UpdateButtons();
     }
 
-    private ContentViewModel _contentViewModel;
-    private DataService _dataService;
-    private DiagramViewModel _diagranViewModel;
+    private readonly IDataService _dataService;
+
+    public delegate void EventHandler(object sender, DateTime start, DateTime? end, Guid guid);
+    public event EventHandler OnUpdateAndCreate;
+
     public ICommand SendInterval { get; set; }
     public Guid PlanId { get; set; }
     private const string logSender = "Calendar";
@@ -86,12 +79,9 @@ public class CalendarViewModel : ObservableObject
     {
         Log.Send(EventLevel.Info, logSender, "Отправка интервала в Content/Table и Diagram");
 
-        _contentViewModel.StartDate = Buttons.Where(x => x.IsChecked == true).Select(x => x.StartTime).FirstOrDefault();
-        _contentViewModel.EndDate = Buttons.Where(x => x.IsChecked == true).Select(x => x.EndTime).FirstOrDefault();
-        _contentViewModel.UpdateOperation();
-        _diagranViewModel.Start = Buttons.Where(x => x.IsChecked == true).Select(x => x.StartTime).FirstOrDefault();
-        _diagranViewModel.End = Buttons.Where(x => x.IsChecked == true).Select(x => x.EndTime).FirstOrDefault();
-        _diagranViewModel.CreatDiagram(PlanId);
+        DateTime start = Buttons.Where(x => x.IsChecked == true).Select(x => x.StartTime).FirstOrDefault();
+        DateTime? end = Buttons.Where(x => x.IsChecked == true).Select(x => x.EndTime).FirstOrDefault();
+        OnUpdateAndCreate.Invoke(this, start, end, PlanId);
 
         // Сброc IsCheked
         foreach (var button in Buttons.Where(x => x.IsChecked == true))
@@ -128,7 +118,7 @@ public class CalendarViewModel : ObservableObject
                 while (startOfWeek <= End)
                 {
                     var weekEnd = startOfWeek.AddDays(6);
-                    if (weekEnd > End.AddDays(6)) 
+                    if (weekEnd > End.AddDays(6))
                         break;
 
                     Buttons.Add(new ButtonItemsViewModel { Content = $"{startOfWeek:dd}-{weekEnd:dd MMMM yyyy 'г.'}", StartTime = startOfWeek, EndTime = weekEnd.AddDays(1) });
@@ -177,22 +167,22 @@ public class CalendarViewModel : ObservableObject
     public void AddMarkToButton()
     {
         Log.Send(EventLevel.Info, logSender, "Добавление отметок на календарь");
-        Marks? mark = new Marks();
+        MarksDTO? mark = new MarksDTO();
 
         foreach (var button in Buttons)
         {
             if (button.EndTime == null)
             {
-                mark  = _dataService.MarksList.Where(x => x.Mark_Date.Date == button.StartTime.Date && x.Mark_Plan_Id == PlanId).FirstOrDefault();
+                mark = _dataService.GetMarkList().Where(x => x.Mark_Date.Date == button.StartTime.Date && x.Mark_Plan_Id == PlanId).FirstOrDefault();
                 if (mark != null)
                     button.Mark = mark.Mark_Name;
             }
             else
             {
-                mark = _dataService.MarksList.Where(x => x.Mark_Date.Date >= button.StartTime.Date && x.Mark_Date.Date <= button.EndTime?.Date && x.Mark_Plan_Id == PlanId).FirstOrDefault();
+                mark = _dataService.GetMarkList().Where(x => x.Mark_Date.Date >= button.StartTime.Date && x.Mark_Date.Date <= button.EndTime?.Date && x.Mark_Plan_Id == PlanId).FirstOrDefault();
                 if (mark != null)
                     button.Mark = mark.Mark_Name;
-            }                
+            }
         }
 
         Log.Send(EventLevel.Info, logSender, "Отметки добавлены");

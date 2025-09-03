@@ -1,9 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using CoinPlanner.Contracts.Abstractions.ViewModel;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
 using CoinPlanner.LogService;
-using CoinPlanner.UI.Interface;
-using CoinPlanner.UI.View.Dialogs;
-using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -11,18 +10,19 @@ namespace CoinPlanner.UI.ViewModel.Dialogs;
 
 public class IntervalDialogsViewModel : ObservableObject, IViewModelDialogs
 {
-    public IntervalDialogsViewModel(CalendarViewModel calendarViewModel) 
+    public IntervalDialogsViewModel(ICalendarControls calendar)
     {
         Ok = new RelayCommand<Window>(OkCommand);
         Cancel = new RelayCommand<Window>(CancelCommand);
-        _calendarViewModel = calendarViewModel;
-        StartDate = calendarViewModel.Start;
-        EndDate = calendarViewModel.End;
+
+        _calendar = calendar;
+        StartDate = _calendar.Start;
+        EndDate = _calendar.End;
 
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
-    private CalendarViewModel _calendarViewModel { get; }
+    private readonly ICalendarControls _calendar;
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
 
@@ -42,7 +42,7 @@ public class IntervalDialogsViewModel : ObservableObject, IViewModelDialogs
     }
     private DateTime _endDate;
 
-    public void OkCommand(Window window) 
+    public void OkCommand(object currWindow)
     {
 
         StartDate = StartDate.Date;
@@ -56,15 +56,19 @@ public class IntervalDialogsViewModel : ObservableObject, IViewModelDialogs
 
         Log.Send(EventLevel.Info, logSender, "Установлен интервал");
 
-        _calendarViewModel.Start = StartDate;
-        _calendarViewModel.End = EndDate;
-        _calendarViewModel.UpdateButtons();
+        _calendar.Start = StartDate;
+        _calendar.End = EndDate;
+        _calendar.UpdateButtons();
+
+        Window window = currWindow as Window;
         window.Close();
     }
 
-    public void CancelCommand(Window window)
+    public void CancelCommand(object currWindow)
     {
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
+
+        Window window = currWindow as Window;
         window.Close();
     }
 }

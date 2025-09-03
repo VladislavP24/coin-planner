@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using CoinPlanner.UI.ViewModel.Controls;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
 using CoinPlanner.UI.ViewModel.Dialogs;
 
 
@@ -13,11 +13,11 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class IntervalDialogs : Window
     {
-        public IntervalDialogs(CalendarViewModel calendarViewModel)
+        public IntervalDialogs(ICalendarControls calendar)
         {
             InitializeComponent();
 
-            DataContext = new IntervalDialogsViewModel(calendarViewModel);
+            DataContext = new IntervalDialogsViewModel(calendar);
         }
 
         /// <summary>

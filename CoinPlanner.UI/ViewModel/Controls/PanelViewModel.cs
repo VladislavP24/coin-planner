@@ -1,50 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Xml;
-using CoinPlanner.DataBase;
-using CoinPlanner.DataBase.ModelsDb;
-using CoinPlanner.DataBase.ModelsDB;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Factory;
+using CoinPlanner.Contracts.DTO.DataServieDTO;
+using CoinPlanner.Contracts.DTO.FileServiceDTO;
 using CoinPlanner.FileService;
-using CoinPlanner.FileService.DTO;
 using CoinPlanner.LogService;
 using CoinPlanner.UI.Model;
-using CoinPlanner.UI.View.Dialogs;
+using CoinPlanner.UI.ViewModel.Factory;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
 
 namespace CoinPlanner.UI.ViewModel.Controls;
 
-public class PanelViewModel : ObservableObject
+public class PanelViewModel : ObservableObject, IPanelControls
 {
-    public PanelViewModel(CalendarViewModel calendarViewModel, ContentViewModel contentViewModel, DiagramViewModel diagramViewModel, DataService dataService) 
+    public PanelViewModel(IDataService dataService, IContentControls contentControls, ICalendarControls calendarControls, IDialogFactory dialogFactory)
     {
         BindingCommandToButton();
-        _calendarViewModel = calendarViewModel;
-        _contentViewModel = contentViewModel;
-        _diagramViewModel = diagramViewModel;
         _dataService = dataService;
+        _contentControls = contentControls;
+        _calendarControls = calendarControls;
+        _dialogFactory = dialogFactory;
         _dataService.OnWarning += Choice_OnWarning;
 
-        foreach (var category in _dataService.CategoriesList)
+        foreach (var category in _dataService.GetCategoryList())
             Categories.Add(category.Category_Id, category.Category_Name);
 
         PlanUpdate();
     }
 
-    private CalendarViewModel _calendarViewModel { get; set; }
-    private ContentViewModel _contentViewModel { get; set; }
-    private DiagramViewModel _diagramViewModel { get; set; }
-    private DataService _dataService { get; set; }
+    private readonly IDataService _dataService;
+    private readonly IDialogFactory _dialogFactory;
+    private readonly IContentControls _contentControls;
+    private readonly ICalendarControls _calendarControls;
 
     private const string logSender = "Panel";
+
+    public EventHandler<PlansDTO> OnUpdateAndCreate { get; set; }
+    public EventHandler<string> OnChangeType { get; set; }
+    public EventHandler<bool> OnVisibleContent { get; set; }
 
     /// <summary>
     /// Факт включения Зачисления
@@ -86,10 +85,10 @@ public class PanelViewModel : ObservableObject
     }
     private bool _isCheckedDiagram = true;
 
-    public ObservableCollection<PlanModel> Items { get; set; } = new(); // Элементы комбобокс Планы
+    public ObservableCollection<PlansDTO> Items { get; set; } = new(); // Элементы комбобокс Планы
     public Dictionary<int, string> Categories { get; set; } = new();
 
-    public PlanModel SelectedItemPlan  // Выбранный элемент из комбобокс Планы
+    public PlansDTO SelectedItemPlan  // Выбранный элемент из комбобокс Планы
     {
         get => _selectedItemPlan;
         set
@@ -98,28 +97,25 @@ public class PanelViewModel : ObservableObject
             if (value != null)
             {
                 Log.Send(EventLevel.Info, logSender, "Отправка данных плана в Content/Table, Diagram, Calendar");
-                _contentViewModel.Plan = value;
-                _calendarViewModel.PlanId = value.PlanId;
-                _diagramViewModel.CreatDiagram(SelectedItemPlan.PlanId);
-                _contentViewModel.UpdateOperation();
-            } 
+                OnUpdateAndCreate.Invoke(this, value);
+            }
         }
     }
-    private PlanModel _selectedItemPlan;
+    private PlansDTO _selectedItemPlan;
 
 
     public void PlanUpdate()
     {
         Log.Send(EventLevel.Info, logSender, "Обновление планов");
         Items.Clear();
-        foreach (var plan in _dataService.PlansList)
+        foreach (var plan in _dataService.GetPlanList())
         {
-            Items.Add(new PlanModel()
+            Items.Add(new PlansDTO()
             {
-                PlanId = plan.Plan_Id,
-                PlanName = plan.Plan_Name,
-                DateCreate = plan.Date_Create,
-                DataUpdate = plan.Date_Update
+                Plan_Id = plan.Plan_Id,
+                Plan_Name = plan.Plan_Name,
+                Date_Create = plan.Date_Create,
+                Date_Update = plan.Date_Update
             });
         }
         Log.Send(EventLevel.Info, logSender, "Обновление завершено");
@@ -128,14 +124,14 @@ public class PanelViewModel : ObservableObject
     public void UpdateDatePlan()
     {
         Log.Send(EventLevel.Info, logSender, "Обновление даты последнего изменения плана");
-        var plan = _dataService.PlansList.Where(x => x.Plan_Id == SelectedItemPlan.PlanId).First();
+        var plan = _dataService.GetPlanList().Where(x => x.Plan_Id == SelectedItemPlan.Plan_Id).First();
         plan.Date_Update = DateTime.Now;
 
         if (_dataService.PlanCondition.Where(x => x.Key == plan.Plan_Id && x.Value == 1) == null)
         {
             _dataService.PlanCondition.Remove(plan.Plan_Id);
             _dataService.PlanCondition.Add(plan.Plan_Id, 2);
-        }        
+        }
     }
 
 
@@ -190,25 +186,16 @@ public class PanelViewModel : ObservableObject
         Info = new RelayCommand(InfoCommand);
     }
 
-    public void IntervalCommand()
-    {
-        IntervalDialogs dialog = new IntervalDialogs(_calendarViewModel);
-        dialog.ShowDialog();
-    }
+    public void IntervalCommand() => _dialogFactory.ShowIntervalDialogs(_calendarControls);
 
-    public void TypeCommand() 
-    {
-        TypeDialogs typeDialogs = new TypeDialogs(_calendarViewModel);
-        typeDialogs.ShowDialog();
-    }
+    public void TypeCommand() => _dialogFactory.ShowTypeDialogs(_calendarControls);
 
     public void AddDataCommand()
     {
         if (SelectedItemPlan == null)
             return;
 
-        AddDataDialogs addDataDialogs = new AddDataDialogs(this, _dataService,  _contentViewModel);
-        addDataDialogs.ShowDialog();
+        _dialogFactory.ShowAddDataDialogs(this, _dataService, _contentControls);
     }
 
     public void EditDataCommand()
@@ -216,8 +203,7 @@ public class PanelViewModel : ObservableObject
         if (SelectedItemPlan == null)
             return;
 
-        EditDataDialogs editDataDialogs = new EditDataDialogs(this, _dataService, _contentViewModel);
-        editDataDialogs.ShowDialog();
+        _dialogFactory.ShowEditDataDialogs(this, _dataService, _contentControls);
     }
 
     public void DeleteDataCommand()
@@ -225,42 +211,41 @@ public class PanelViewModel : ObservableObject
         if (SelectedItemPlan == null)
             return;
 
-        DeleteDataDialogs deleteDataDialogs = new DeleteDataDialogs(this, _dataService, _contentViewModel);
-        deleteDataDialogs.ShowDialog();
+        _dialogFactory.ShowDeleteDataDialogs(this, _dataService, _contentControls);
     }
 
     public void SynchronizationCommand()
     {
         if (SelectedItemPlan == null)
             return;
-        
-        if(_dataService.ExistsById(SelectedItemPlan.PlanId))
+
+        if (_dataService.ExistsById(SelectedItemPlan.Plan_Id))
         {
-            MessageBoxResult result = MessageBox.Show("Данный план с таким же ID уже есть в базе данных. Перезаписать план?\nЕсли нет, то синхронизируется, как новый!", 
+            MessageBoxResult result = MessageBox.Show("Данный план с таким же ID уже есть в базе данных. Перезаписать план?\nЕсли нет, то синхронизируется, как новый!",
                                                       "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
             if (result == MessageBoxResult.No)
             {
                 Guid newGuid = Guid.NewGuid();
 
-                _dataService.PlansList.First(x => x.Plan_Id == SelectedItemPlan.PlanId).Plan_Id = newGuid;
+                _dataService.GetPlanList().First(x => x.Plan_Id == SelectedItemPlan.Plan_Id).Plan_Id = newGuid;
 
-                foreach(var oper in _dataService.OperationsList.Where(x => x.Oper_Plan_Id == SelectedItemPlan.PlanId))
+                foreach (var oper in _dataService.GetOperationsList().Where(x => x.Oper_Plan_Id == SelectedItemPlan.Plan_Id))
                     oper.Oper_Plan_Id = newGuid;
 
-                foreach (var mark in _dataService.MarksList.Where(x => x.Mark_Plan_Id == SelectedItemPlan.PlanId))
+                foreach (var mark in _dataService.GetMarkList().Where(x => x.Mark_Plan_Id == SelectedItemPlan.Plan_Id))
                     mark.Mark_Plan_Id = newGuid;
 
-                foreach (var fix in _dataService.FixationsList.Where(x => x.Fix_Plan_Id == SelectedItemPlan.PlanId))
+                foreach (var fix in _dataService.GetFixationList().Where(x => x.Fix_Plan_Id == SelectedItemPlan.Plan_Id))
                     fix.Fix_Plan_Id = newGuid;
 
-                UpdateKeyInDictionary(_dataService.PlanCondition, SelectedItemPlan.PlanId, newGuid);
-                UpdateKeyInDictionary(_dataService.OperCondition, SelectedItemPlan.PlanId, newGuid);
-                UpdateKeyInDictionary(_dataService.MarkCondition, SelectedItemPlan.PlanId, newGuid);
-                UpdateKeyInDictionary(_dataService.FixCondition, SelectedItemPlan.PlanId, newGuid);
+                UpdateKeyInDictionary(_dataService.PlanCondition, SelectedItemPlan.Plan_Id, newGuid);
+                UpdateKeyInDictionary(_dataService.OperCondition, SelectedItemPlan.Plan_Id, newGuid);
+                UpdateKeyInDictionary(_dataService.MarkCondition, SelectedItemPlan.Plan_Id, newGuid);
+                UpdateKeyInDictionary(_dataService.FixCondition, SelectedItemPlan.Plan_Id, newGuid);
             }
-        }            
+        }
 
-        if (_dataService.SaveDataToDatabaseAsync(SelectedItemPlan.PlanId))
+        if (_dataService.SaveDataToDatabaseAsync(SelectedItemPlan.Plan_Id))
             MessageBox.Show("Синхронизация данных прошла успешно!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
         else
             MessageBox.Show("Не удалось провести синхронизацию данных. Проверьте подключение к БД.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -268,15 +253,17 @@ public class PanelViewModel : ObservableObject
 
     public void SortCommand()
     {
-        if (IsCheckedEnroll && !IsCheckedExpenses)
-            _contentViewModel.IsType = "Зачисление";
-        else if (!IsCheckedEnroll && IsCheckedExpenses)
-            _contentViewModel.IsType = "Оплата";
-        else
-            _contentViewModel.IsType = "Все операции";
+        string type = string.Empty;
 
-        Log.Send(EventLevel.Info, logSender, $"Сортировка таблицы по параметру: {_contentViewModel.IsType}");
-        _contentViewModel.UpdateOperation();
+        if (IsCheckedEnroll && !IsCheckedExpenses)
+            type = "Зачисление";
+        else if (!IsCheckedEnroll && IsCheckedExpenses)
+            type = "Оплата";
+        else
+            type = "Все операции";
+
+        OnChangeType.Invoke(this, type);
+        Log.Send(EventLevel.Info, logSender, $"Сортировка таблицы по параметру: {type}");
     }
 
     public void OpenDiagramCommand()
@@ -286,11 +273,14 @@ public class PanelViewModel : ObservableObject
         {
             IsCheckedDiagram = false;
             IsCheckedTable = true;
-            _contentViewModel.IsVisibleContent = true;
-            _diagramViewModel.IsVisibleDiagram = false; 
+            //_contentViewModel.IsVisibleContent = true;
+            //_diagramViewModel.IsVisibleDiagram = false;
+
         }
-        else
-            _diagramViewModel.IsVisibleDiagram = false;
+        //else
+        //_diagramViewModel.IsVisibleDiagram = false;
+
+        OnVisibleContent.Invoke(this, IsCheckedTable);
     }
 
     public void OpenTableCommand()
@@ -300,11 +290,13 @@ public class PanelViewModel : ObservableObject
         {
             IsCheckedTable = false;
             IsCheckedDiagram = true;
-            _contentViewModel.IsVisibleContent = false;
-            _diagramViewModel.IsVisibleDiagram = true;
+            //_contentViewModel.IsVisibleContent = false;
+            //_diagramViewModel.IsVisibleDiagram = true;
         }
-        else
-            _contentViewModel.IsVisibleContent = false;
+        //else
+        //_contentViewModel.IsVisibleContent = false;
+
+        OnVisibleContent.Invoke(this, IsCheckedTable);
     }
 
     public async Task DownloadPlansDBCommandAsync()
@@ -336,23 +328,17 @@ public class PanelViewModel : ObservableObject
         if (SelectedItemPlan == null)
             return;
 
-        FixationDialogs fixationDialogs = new FixationDialogs(this, _dataService, _contentViewModel);
-        fixationDialogs.ShowDialog();
+        _dialogFactory.ShowFixationDataDialogs(this, _dataService, _contentControls);
     }
 
-    public void CreatePlanCommand()
-    {
-        CreatePlanDialogs createPlanDialogs = new CreatePlanDialogs(this, _dataService);
-        createPlanDialogs.ShowDialog();
-    }
+    public void CreatePlanCommand() => _dialogFactory.ShowCreatePlanDialogs(this, _dataService);
 
     public void DeletePlanCommand()
     {
         if (SelectedItemPlan == null)
             return;
 
-        DeletePlanDialogs deletePlanDialogs = new DeletePlanDialogs(this, _dataService);
-        deletePlanDialogs.ShowDialog();
+        _dialogFactory.ShowDeletePlanDialogs(this, _dataService);
     }
 
     public void RenamePlanCommand()
@@ -360,17 +346,15 @@ public class PanelViewModel : ObservableObject
         if (SelectedItemPlan == null)
             return;
 
-        RenamePlanDialogs renamePlanDialogs = new RenamePlanDialogs(this, _dataService);
-        renamePlanDialogs.ShowDialog();
+        _dialogFactory.ShowRenamePlanDialogs(this, _dataService);
     }
 
     public void MarkCommand()
     {
-        if(SelectedItemPlan == null)
+        if (SelectedItemPlan == null)
             return;
 
-        MarkDialogs markDialogs = new MarkDialogs(this, _dataService, _calendarViewModel);
-        markDialogs.ShowDialog();
+        _dialogFactory.ShowMarkDialogs(this, _dataService, _calendarControls);
     }
 
     public void SavePlanCommand()
@@ -386,19 +370,19 @@ public class PanelViewModel : ObservableObject
         if (openFolderDialog.ShowDialog() == true)
         {
             string selectedPath = openFolderDialog.FolderName;
-            string fileName = $"{SelectedItemPlan.PlanName}.xml";
+            string fileName = $"{SelectedItemPlan.Plan_Name}.xml";
             string fullPath = Path.Combine(selectedPath, fileName);
             try
             {
                 XmlSerializationHelper.SerializeToXml(ConvertModelToDTO(), fullPath);
-                
+
             }
             catch (Exception ex)
             {
                 Log.Send(EventLevel.Info, logSender, "Сериализация в XML завершилась с ошибкой.");
                 Log.Send(EventLevel.Error, logSender, ex.ToString());
-            }   
-        }        
+            }
+        }
     }
 
     public void OpenPlanCommand()
@@ -419,8 +403,8 @@ public class PanelViewModel : ObservableObject
         {
             Log.Send(EventLevel.Info, logSender, "Десериализация из XML завершилась с ошибкой.");
             Log.Send(EventLevel.Error, logSender, ex.ToString());
-        }        
-           
+        }
+
     }
 
     public void ExportPlanCommand()
@@ -437,7 +421,7 @@ public class PanelViewModel : ObservableObject
         {
             Log.Send(EventLevel.Info, logSender, "Запущена конвертация плана в TXT");
             string selectedPath = openFolderDialog.FolderName;
-            string fileName = $"{SelectedItemPlan.PlanName}.txt";
+            string fileName = $"{SelectedItemPlan.Plan_Name}.txt";
             string fullPath = Path.Combine(selectedPath, fileName);
             TxtExportHelper.ExportToTxt(ConvertModelToDTO(), fullPath);
         }
@@ -450,10 +434,10 @@ public class PanelViewModel : ObservableObject
         if (SelectedItemPlan == null)
             return;
 
-        MessageBox.Show($"ID: {SelectedItemPlan.PlanId}\nИмя плана: {SelectedItemPlan.PlanName}\nДата создания: {SelectedItemPlan.DateCreate}\nДата последнего изменения: {SelectedItemPlan.DataUpdate}",
+        MessageBox.Show($"ID: {SelectedItemPlan.Plan_Id}\nИмя плана: {SelectedItemPlan.Plan_Name}\nДата создания: {SelectedItemPlan.Date_Create}\nДата последнего изменения: {SelectedItemPlan.Date_Update}",
                         "Информация о плане", MessageBoxButton.OK, MessageBoxImage.Information);
 
-        
+
     }
     #endregion
 
@@ -471,7 +455,7 @@ public class PanelViewModel : ObservableObject
         MessageBoxResult result = MessageBox.Show("Данный план, выгруженный из сети, уже имеется в приложении, но их дата изменения разная. " +
                                                   "Для загрузки плана из сети синхронизируйте план из приложения как новый. Затем выгрузите снова. " +
                                                   "Если выберите перезаписать план, то план, находящийся в приложении, перезапишется! Перезаписать план?\n\n" +
-                                                  $"{message}", 
+                                                  $"{message}",
                                                   "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
         if (result == MessageBoxResult.Yes)
@@ -492,7 +476,7 @@ public class PanelViewModel : ObservableObject
         DataCollection dataCollection = new();
 
         //Данные о плане
-        Plans plan = _dataService.PlansList.First(x => x.Plan_Id == SelectedItemPlan.PlanId);
+        PlansDTO plan = _dataService.GetPlanList().First(x => x.Plan_Id == SelectedItemPlan.Plan_Id);
         dataCollection.Plan = new PlanDTO
         {
             PlanId = plan.Plan_Id,
@@ -502,7 +486,7 @@ public class PanelViewModel : ObservableObject
         };
 
         // Данные об операциях
-        foreach (var oper in _dataService.OperationsList.Where(x => x.Oper_Plan_Id == SelectedItemPlan.PlanId))
+        foreach (var oper in _dataService.GetOperationsList().Where(x => x.Oper_Plan_Id == SelectedItemPlan.Plan_Id))
             dataCollection.Operations.Add(new OperationDTO
             {
                 OperId = oper.Oper_Id,
@@ -516,7 +500,7 @@ public class PanelViewModel : ObservableObject
             });
 
         // Данные о фиксациях
-        foreach (var fix in _dataService.FixationsList.Where(x => x.Fix_Plan_Id == SelectedItemPlan.PlanId))
+        foreach (var fix in _dataService.GetFixationList().Where(x => x.Fix_Plan_Id == SelectedItemPlan.Plan_Id))
             dataCollection.Fixations.Add(new FixationDTO
             {
                 FixId = fix.Fix_Id,
@@ -530,7 +514,7 @@ public class PanelViewModel : ObservableObject
             });
 
         // Данные об отметках
-        foreach (var mark in _dataService.MarksList.Where(x => x.Mark_Plan_Id == SelectedItemPlan.PlanId))
+        foreach (var mark in _dataService.GetMarkList().Where(x => x.Mark_Plan_Id == SelectedItemPlan.Plan_Id))
             dataCollection.Marks.Add(new MarkDTO
             {
                 MarkId = mark.Mark_Id,
@@ -541,29 +525,32 @@ public class PanelViewModel : ObservableObject
 
         // Далее будет конвертация данных о состояниях, т.к. мы можем работать в offline-режиме и в дальнейшем эти данные будут нужны для синхронизации, как будет сеть
         // Данные о состоянии плана
-        dataCollection.PlanConditionPairs = new KeyValuePairDTO {Key = SelectedItemPlan.PlanId, 
-                                                                 Value = _dataService.PlanCondition.Where(x => x.Key == SelectedItemPlan.PlanId)
+        dataCollection.PlanConditionPairs = new KeyValuePairDTO
+        {
+            Key = SelectedItemPlan.Plan_Id,
+            Value = _dataService.PlanCondition.Where(x => x.Key == SelectedItemPlan.Plan_Id)
                                                                                                    .Select(x => x.Value)
-                                                                                                   .FirstOrDefault() };
+                                                                                                   .FirstOrDefault()
+        };
 
         // Данные о состоянии операций
         foreach (var cond in _dataService.OperCondition)
         {
-            if(_dataService.OperationsList.Where(x => x.Oper_Id == cond.Key && x.Oper_Plan_Id == SelectedItemPlan.PlanId).Any())
-                dataCollection.OperConditionPairs.Add(new KeyValuePairDTO {Key = cond.Key, Value = cond.Value});
+            if (_dataService.GetOperationsList().Where(x => x.Oper_Id == cond.Key && x.Oper_Plan_Id == SelectedItemPlan.Plan_Id).Any())
+                dataCollection.OperConditionPairs.Add(new KeyValuePairDTO { Key = cond.Key, Value = cond.Value });
         }
 
         // Данные о состоянии фиксаций
         foreach (var cond in _dataService.FixCondition)
         {
-            if (_dataService.FixationsList.Where(x => x.Fix_Id == cond.Key && x.Fix_Plan_Id == SelectedItemPlan.PlanId).Any())
+            if (_dataService.GetFixationList().Where(x => x.Fix_Id == cond.Key && x.Fix_Plan_Id == SelectedItemPlan.Plan_Id).Any())
                 dataCollection.FixConditionPairs.Add(new KeyValuePairDTO { Key = cond.Key, Value = cond.Value });
         }
 
         // Данные о состоянии отметок
         foreach (var cond in _dataService.MarkCondition)
         {
-            if (_dataService.MarksList.Where(x => x.Mark_Id == cond.Key && x.Mark_Plan_Id == SelectedItemPlan.PlanId).Any())
+            if (_dataService.GetMarkList().Where(x => x.Mark_Id == cond.Key && x.Mark_Plan_Id == SelectedItemPlan.Plan_Id).Any())
                 dataCollection.MarkConditionPairs.Add(new KeyValuePairDTO { Key = cond.Key, Value = cond.Value });
         }
 
@@ -577,7 +564,7 @@ public class PanelViewModel : ObservableObject
     {
         Log.Send(EventLevel.Info, logSender, "Обработка данных из файла");
         // Проверяем, загружен ли такой же план
-        bool planExists = _dataService.PlansList.Any(x => x.Plan_Id == data.Plan.PlanId);
+        bool planExists = _dataService.GetPlanList().Any(x => x.Plan_Id == data.Plan.PlanId);
 
         if (planExists)
         {
@@ -587,7 +574,7 @@ public class PanelViewModel : ObservableObject
             {
                 Log.Send(EventLevel.Info, logSender, "Перезапись данных");
                 // Находим и удаляем все элементы плана
-                var delPlan = _dataService.PlansList.First(x => x.Plan_Id == data.Plan.PlanId);      
+                var delPlan = _dataService.GetPlanList().First(x => x.Plan_Id == data.Plan.PlanId);
                 if (_dataService.PlanCondition.Any(x => x.Key == delPlan.Plan_Id && x.Value == 1))
                     _dataService.PlanCondition.Remove(delPlan.Plan_Id);
                 else
@@ -595,17 +582,17 @@ public class PanelViewModel : ObservableObject
                     _dataService.PlanCondition.Remove(delPlan.Plan_Id);
                     _dataService.PlanCondition.Add(delPlan.Plan_Id, 2);
                 }
-                _dataService.PlansList.Remove(delPlan);
+                _dataService.RemovePlanList(delPlan);
 
 
-                foreach (var plan in _dataService.OperationsList.Where(x => x.Oper_Plan_Id == delPlan.Plan_Id))
-                    _dataService.OperationsList.Remove(plan);
+                foreach (var plan in _dataService.GetOperationsList().Where(x => x.Oper_Plan_Id == delPlan.Plan_Id))
+                    _dataService.RemoveOperationsList(plan);
 
-                foreach (var mark in _dataService.MarksList.Where(x => x.Mark_Plan_Id == delPlan.Plan_Id))
-                    _dataService.MarksList.Remove(mark);
+                foreach (var mark in _dataService.GetMarkList().Where(x => x.Mark_Plan_Id == delPlan.Plan_Id))
+                    _dataService.RemoveMarkList(mark);
 
-                foreach (var fix in _dataService.FixationsList.Where(x => x.Fix_Plan_Id == delPlan.Plan_Id))
-                    _dataService.FixationsList.Remove(fix);
+                foreach (var fix in _dataService.GetFixationList().Where(x => x.Fix_Plan_Id == delPlan.Plan_Id))
+                    _dataService.RemoveFixationList(fix);
             }
             else
                 _dataService.PlanCondition.Add(data.Plan.PlanId, 1);
@@ -616,7 +603,7 @@ public class PanelViewModel : ObservableObject
 
         // Добавляем в приложение данные из файла
         // Данные о плане
-        _dataService.PlansList.Add(new Plans
+        _dataService.AddPlanList(new PlansDTO
         {
             Plan_Id = data.Plan.PlanId,
             Plan_Name = data.Plan.PlanName,
@@ -626,7 +613,7 @@ public class PanelViewModel : ObservableObject
 
         // Данные об операциях
         foreach (var oper in data.Operations)
-            _dataService.OperationsList.Add(new Operations
+            _dataService.AddOperationsList(new OperationsDTO
             {
                 Oper_Id = oper.OperId,
                 Oper_Plan_Id = oper.OperPlanId,
@@ -639,19 +626,19 @@ public class PanelViewModel : ObservableObject
             });
 
         // Данные об отметках
-        foreach(var mark in data.Marks)
-            _dataService.MarksList.Add(new Marks
+        foreach (var mark in data.Marks)
+            _dataService.AddMarkList(new MarksDTO
             {
                 Mark_Id = mark.MarkId,
                 Mark_Plan_Id = mark.MarkPlanId,
                 Mark_Name = mark.MarkName,
-                Mark_Date = mark.MarkDate  
+                Mark_Date = mark.MarkDate
             });
 
 
         // Данные о фкисациях
-        foreach(var fix in data.Fixations)
-            _dataService.FixationsList.Add(new Fixations
+        foreach (var fix in data.Fixations)
+            _dataService.AddFixationList(new FixationsDTO
             {
                 Fix_Id = fix.FixId,
                 Fix_Plan_Id = fix.FixPlanId,
@@ -660,16 +647,16 @@ public class PanelViewModel : ObservableObject
                 Category_Name = fix.FixCategory,
                 Fix_Sum = fix.FixSum,
                 Fix_Completed = fix.FixCompleted,
-                Fix_Next_Date = fix.FixNextDate              
+                Fix_Next_Date = fix.FixNextDate
             });
 
-        foreach(var cond in data.OperConditionPairs)
+        foreach (var cond in data.OperConditionPairs)
             _dataService.OperCondition.Add(cond.Key, cond.Value);
 
-        foreach(var cond in data.MarkConditionPairs)
+        foreach (var cond in data.MarkConditionPairs)
             _dataService.MarkCondition.Add(cond.Key, cond.Value);
 
-        foreach(var cond in data.FixConditionPairs)
+        foreach (var cond in data.FixConditionPairs)
             _dataService.FixCondition.Add(cond.Key, cond.Value);
 
         Log.Send(EventLevel.Info, logSender, "Обработка завершена");

@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CoinPlanner.Contracts\CoinPlanner.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

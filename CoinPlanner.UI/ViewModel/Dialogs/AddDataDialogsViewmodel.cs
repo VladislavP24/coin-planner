@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using CoinPlanner.DataBase;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.ViewModel;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
 using CoinPlanner.LogService;
-using CoinPlanner.UI.Interface;
-using CoinPlanner.UI.Model;
-using CoinPlanner.UI.View.Dialogs;
-using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -19,24 +12,25 @@ namespace CoinPlanner.UI.ViewModel.Dialogs;
 
 public class AddDataDialogsViewmodel : ObservableObject, IViewModelDialogs
 {
-    public AddDataDialogsViewmodel(DataService dataService, PanelViewModel panelViewModel, ContentViewModel contentViewModel) 
+    public AddDataDialogsViewmodel(IDataService dataService, IPanelControls panel, IContentControls content)
     {
-        _panelViewModel = panelViewModel;
         _dataService = dataService;
-        _contentViewModel = contentViewModel;
+        _panel = panel;
+        _content = content;
 
-        foreach (var category in _panelViewModel.Categories)
+        foreach (var category in _panel.Categories)
             CategoryItems.Add(category.Value);
 
         Ok = new RelayCommand<Window>(OkCommand);
         Cancel = new RelayCommand<Window>(CancelCommand);
 
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
+        _panel = panel;
     }
 
-    private DataService _dataService;
-    private PanelViewModel _panelViewModel;
-    private ContentViewModel _contentViewModel;
+    private readonly IDataService _dataService;
+    private readonly IContentControls _content;
+    private readonly IPanelControls _panel;
 
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
@@ -69,12 +63,12 @@ public class AddDataDialogsViewmodel : ObservableObject, IViewModelDialogs
     private string _categorySelected;
 
 
-    public void OkCommand(Window window)
+    public void OkCommand(object currWindow)
     {
         Guid newGuid = Guid.NewGuid();
         _dataService.OperCondition.Add(newGuid, 1);
 
-        _dataService.OperationsList.Add(new DataBase.ModelsDB.Operations
+        _dataService.AddOperationsList(new Contracts.DTO.DataServieDTO.OperationsDTO
         {
             Oper_Id = newGuid,
             Oper_Name = Name,
@@ -83,19 +77,23 @@ public class AddDataDialogsViewmodel : ObservableObject, IViewModelDialogs
             Oper_Sum = Sum,
             Oper_Completed = Completed,
             Oper_Next_Date = Date,
-            Oper_Plan_Id = _panelViewModel.SelectedItemPlan.PlanId,
+            Oper_Plan_Id = _panel.SelectedItemPlan.Plan_Id,
         });
 
         Log.Send(EventLevel.Info, logSender, "Операция добавлена");
 
-        _panelViewModel.UpdateDatePlan();
-        _contentViewModel.UpdateOperation();
+        _panel.UpdateDatePlan();
+        _content.UpdateOperation();
+
+        Window window = currWindow as Window;
         window.Close();
     }
 
-    public void CancelCommand(Window window)
+    public void CancelCommand(object currWindow)
     {
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
+
+        Window window = currWindow as Window;
         window.Close();
     }
 }

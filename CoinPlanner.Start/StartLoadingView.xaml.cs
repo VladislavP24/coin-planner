@@ -1,9 +1,11 @@
 ﻿using System.IO;
 using System.Windows;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.View;
 using CoinPlanner.DataBase;
+using CoinPlanner.DI;
 using CoinPlanner.LogService;
 using CoinPlanner.UI.View;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 
 namespace CoinPlanner.Start
@@ -22,23 +24,25 @@ namespace CoinPlanner.Start
         }
 
         private const string logSender = "Loading Window";
-        private DataService _dataService;
+        private IDataService _dataService;
         private bool isEnd = false;
 
         /// <summary>
         /// Событие запуска основного окна и имитация загрузки
         /// </summary>
         private async void StartLoadingView_Loaded(object sender, RoutedEventArgs e)
-        {       
+        {
             InitLogging();
             Log.Send(EventLevel.Info, logSender, "Начало загрузки окна");
             await SomeLongRunningTask();
-            
+
             Log.Send(EventLevel.Info, logSender, "Открытие главного окна");
             Dispatcher.Invoke(() =>
             {
-                MainWindowView mainWindowView = new MainWindowView(_dataService);
-                mainWindowView.Show();
+                ServiceModule di = ServiceModule.GetInstance();
+                IView view = di.View(_dataService);
+
+                view.Show();
                 this.Close();
             });
         }
@@ -59,7 +63,7 @@ namespace CoinPlanner.Start
             }
             else
             {
-                MessageBox.Show("Не удалось подключиться к базе данных. Проверьте соединение. Работа программы переходит в Offline-режим.", 
+                MessageBox.Show("Не удалось подключиться к базе данных. Проверьте соединение. Работа программы переходит в Offline-режим.",
                                 "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 

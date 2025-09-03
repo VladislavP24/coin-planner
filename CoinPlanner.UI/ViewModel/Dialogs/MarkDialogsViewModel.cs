@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using CoinPlanner.DataBase;
-using CoinPlanner.DataBase.ModelsDb;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.ViewModel;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
+using CoinPlanner.Contracts.DTO.DataServieDTO;
 using CoinPlanner.LogService;
-using CoinPlanner.UI.Interface;
 using CoinPlanner.UI.Model;
-using CoinPlanner.UI.View.Dialogs;
-using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -20,13 +14,13 @@ namespace CoinPlanner.UI.ViewModel.Dialogs;
 
 public class MarkDialogsViewModel : ObservableObject, IViewModelDialogs
 {
-    public MarkDialogsViewModel(DataService dataService, CalendarViewModel calendarViewModel, PanelViewModel panelViewModel)
+    public MarkDialogsViewModel(IDataService dataService, ICalendarControls calendar, IPanelControls panel)
     {
-        _calendarViewModel = calendarViewModel;
         _dataService = dataService;
-        _panelViewModel = panelViewModel;
+        _calendar = calendar;
+        _panel = panel;
 
-        foreach (var item in _dataService.MarksList.Where(x => x.Mark_Plan_Id == _panelViewModel.SelectedItemPlan.PlanId))
+        foreach (var item in _dataService.GetMarkList().Where(x => x.Mark_Plan_Id == _panel.SelectedItemPlan.Plan_Id))
             Items.Add(new MarkModel()
             {
                 MarkId = item.Mark_Id,
@@ -43,9 +37,9 @@ public class MarkDialogsViewModel : ObservableObject, IViewModelDialogs
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
-    private DataService _dataService { get; }
-    private CalendarViewModel _calendarViewModel { get; }
-    private PanelViewModel _panelViewModel { get; }
+    private readonly IDataService _dataService;
+    private readonly ICalendarControls _calendar;
+    private readonly IPanelControls _panel;
 
 
     public ICommand Ok { get; set; }
@@ -56,7 +50,7 @@ public class MarkDialogsViewModel : ObservableObject, IViewModelDialogs
     public ObservableCollection<MarkModel> Items { get; set; } = new();
     private const string logSender = "Mark";
 
-    private void AddItemCommand()
+    public void AddItemCommand()
     {
         Guid guid = Guid.NewGuid();
 
@@ -66,7 +60,7 @@ public class MarkDialogsViewModel : ObservableObject, IViewModelDialogs
             MarkId = guid,
             MarkName = " ",
             MarkDate = DateTime.Now,
-            MarkPlanId = _panelViewModel.SelectedItemPlan.PlanId
+            MarkPlanId = _panel.SelectedItemPlan.Plan_Id
         });
 
         Log.Send(EventLevel.Info, logSender, "Добавлена новая отметка");
@@ -77,12 +71,12 @@ public class MarkDialogsViewModel : ObservableObject, IViewModelDialogs
         if (_dataService.MarkCondition.Any(x => x.Key == markModel.MarkId && x.Value == 1))
         {
             _dataService.MarkCondition.Remove(markModel.MarkId);
-            _dataService.MarksList.RemoveAll(x => x.Mark_Id == markModel.MarkId);
+            _dataService.RemoveAllMarkList(markModel.MarkId);
             Items.Remove(markModel);
         }
         else
         {
-            _dataService.MarksList.RemoveAll(x => x.Mark_Id == markModel.MarkId);
+            _dataService.RemoveAllMarkList(markModel.MarkId);
             _dataService.MarkCondition.Add(markModel.MarkId, 3);
         }
 
@@ -90,22 +84,26 @@ public class MarkDialogsViewModel : ObservableObject, IViewModelDialogs
         Log.Send(EventLevel.Info, logSender, $"Удалена ометка : {markModel.MarkName}");
     }
 
-    public void OkCommand(Window window)
+    public void OkCommand(object currWindow)
     {
         foreach (MarkModel mark in Items)
             SaveMarks(mark);
 
-        _panelViewModel.UpdateDatePlan();
-        _calendarViewModel.UpdateButtons();
+        _panel.UpdateDatePlan();
+        _calendar.UpdateButtons();
+
+        Window window = currWindow as Window;
         window.Close();
     }
 
-    public void CancelCommand(Window window)
+    public void CancelCommand(object currWindow)
     {
         foreach (MarkModel mark in Items)
             SaveMarks(mark);
 
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
+
+        Window window = currWindow as Window;
         window.Close();
     }
 
@@ -115,7 +113,7 @@ public class MarkDialogsViewModel : ObservableObject, IViewModelDialogs
     private void SaveMarks(MarkModel markModel)
     {
         Log.Send(EventLevel.Info, logSender, "Сохранение отметок и проверка их");
-        var newMark = new DataBase.ModelsDb.Marks
+        var newMark = new MarksDTO
         {
             Mark_Id = markModel.MarkId,
             Mark_Name = markModel.MarkName,
@@ -123,16 +121,16 @@ public class MarkDialogsViewModel : ObservableObject, IViewModelDialogs
             Mark_Plan_Id = markModel.MarkPlanId
         };
 
-        if (!_dataService.MarksList.Any(x => x.Mark_Id == markModel.MarkId))
-            _dataService.MarksList.Add(newMark);
-        else if (_dataService.MarksList.Where(x => x.Mark_Id == markModel.MarkId)
-                                       .Where(x => x.Mark_Name == markModel.MarkName)
-                                       .Where(x => x.Mark_Date == markModel.MarkDate)
-                                       .FirstOrDefault() == null)
+        if (!_dataService.GetMarkList().Any(x => x.Mark_Id == markModel.MarkId))
+            _dataService.AddMarkList(newMark);
+        else if (_dataService.GetMarkList().Where(x => x.Mark_Id == markModel.MarkId)
+                                           .Where(x => x.Mark_Name == markModel.MarkName)
+                                           .Where(x => x.Mark_Date == markModel.MarkDate)
+                                           .FirstOrDefault() == null)
         {
             _dataService.MarkCondition.Remove(markModel.MarkId);
             _dataService.MarkCondition.Add(markModel.MarkId, 2);
-            _dataService.MarksList.Add(newMark);
+            _dataService.AddMarkList(newMark);
         }
 
         Log.Send(EventLevel.Info, logSender, "Отметки сохранены");

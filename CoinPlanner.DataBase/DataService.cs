@@ -1,18 +1,16 @@
-﻿using CoinPlanner.DataBase.ModelsDb;
+﻿using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.DTO.DataServieDTO;
+using CoinPlanner.DataBase.ModelsDb;
 using CoinPlanner.DataBase.ModelsDB;
 using CoinPlanner.LogService;
 using Microsoft.EntityFrameworkCore;
-using System.Numerics;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace CoinPlanner.DataBase;
 
-public class DataService
+public class DataService : IDataService
 {
-    public DataService() {}
+    public DataService() { }
 
-    public delegate void WarningEventHandler(object sender, string message);
     public event WarningEventHandler OnWarning;
     public bool IsDownLoad { get; set; }
     public static string logSender = "Data Service";
@@ -24,10 +22,10 @@ public class DataService
     public List<Marks> MarksList { get; set; } = new();
 
     //Переменные для хранения изменений
-    public Dictionary<Guid, int> PlanCondition = new();
-    public Dictionary<Guid, int> OperCondition = new();
-    public Dictionary<Guid, int> FixCondition = new();
-    public Dictionary<Guid, int> MarkCondition = new();
+    public Dictionary<Guid, int> PlanCondition { get; set; } = new();
+    public Dictionary<Guid, int> OperCondition { get; set; } = new();
+    public Dictionary<Guid, int> FixCondition { get; set; } = new();
+    public Dictionary<Guid, int> MarkCondition { get; set; } = new();
 
     /// <summary>
     /// Проверка подключения к БД
@@ -69,7 +67,7 @@ public class DataService
             {
                 CategoriesList = await db.categories.FromSqlRaw("SELECT * FROM categories ORDER BY category_id").ToListAsync();
                 planDBList = await db.plans.FromSqlRaw("SELECT * FROM plans ORDER BY plan_id").ToListAsync();
-                markDBList = await db.marks.FromSqlRaw("SELECT * FROM marks ORDER BY mark_id").ToListAsync();               
+                markDBList = await db.marks.FromSqlRaw("SELECT * FROM marks ORDER BY mark_id").ToListAsync();
                 operDBList = await db.Database.SqlQueryRaw<Operations>("SELECT o.oper_id, t.type_name AS type_name, ct.category_name AS category_name, o.oper_name, o.oper_sum, o.oper_completed, o.oper_next_date, o.oper_plan_id " +
                                                                        "FROM operations o " +
                                                                        "JOIN plans p ON o.oper_plan_id = p.plan_id " +
@@ -96,11 +94,11 @@ public class DataService
                     OperationsList.AddRange(operDBList.Where(x => x.Oper_Plan_Id == plan.Plan_Id));
                     MarksList.AddRange(markDBList.Where(x => x.Mark_Plan_Id == plan.Plan_Id));
                     FixationsList.AddRange(fixDBList.Where(x => x.Fix_Plan_Id == plan.Plan_Id));
-                }    
+                }
                 else
                 {
                     OnWarning?.Invoke(this, $"Информация о загружаемом плане:\nID: {plan.Plan_Id}\nИмя: {plan.Plan_Name}\nДата создания: {plan.Date_Create}\nДата изменения: {plan.Date_Update}");
-                    if(IsDownLoad)
+                    if (IsDownLoad)
                     {
                         PlansList.RemoveAll(x => x.Plan_Id == plan.Plan_Id);
                         PlansList.Add(plan);
@@ -152,7 +150,7 @@ public class DataService
                 foreach (var condition in PlanCondition.Where(x => x.Key == planId))
                 {
                     var plan = PlansList.Where(x => x.Plan_Id == condition.Key).First();
-                    if (condition.Value == 1)                   
+                    if (condition.Value == 1)
                         db.Database.ExecuteSqlRaw($"INSERT INTO plans (plan_id, plan_name, date_create, date_update) " +
                                                   $"VALUES ('{plan.Plan_Id}', '{plan.Plan_Name}', '{plan.Date_Create}', '{plan.Date_Update}')");
                     else if (condition.Value == 2)
@@ -214,7 +212,7 @@ public class DataService
                 }
                 MarkCondition.Clear();
 
-                db.SaveChangesAsync(); 
+                db.SaveChangesAsync();
             }
 
             return true;
@@ -226,6 +224,7 @@ public class DataService
     }
 
 
+    #region Convert
     public int ConvertOperType(Operations oper)
         => oper.Type_Name == "Зачисление" ? 1 : 2;
     public int ConvertFixType(Fixations fix)
@@ -236,4 +235,160 @@ public class DataService
 
     public int ConvertFixCategory(Fixations fix)
         => CategoriesList.Where(x => x.Category_Name == fix.Category_Name).Select(x => x.Category_Id).First();
+
+    #endregion
+
+
+    #region GetDataList
+    public ICollection<PlansDTO> GetPlanList() => PlansList.Select(plan => new PlansDTO
+    {
+        Plan_Id = plan.Plan_Id,
+        Plan_Name = plan.Plan_Name,
+        Date_Create = plan.Date_Create,
+        Date_Update = plan.Date_Update
+    }).ToList();
+
+    public ICollection<OperationsDTO> GetOperationsList() => OperationsList.Select(oper => new OperationsDTO
+    {
+        Oper_Id = oper.Oper_Id,
+        Oper_Plan_Id = oper.Oper_Plan_Id,
+        Oper_Name = oper.Oper_Name,
+        Type_Name = oper.Type_Name,
+        Category_Name = oper.Category_Name,
+        Oper_Sum = oper.Oper_Sum,
+        Oper_Completed = oper.Oper_Completed,
+        Oper_Next_Date = oper.Oper_Next_Date
+    }).ToList();
+
+    public ICollection<CategoriesDTO> GetCategoryList() => CategoriesList.Select(category => new CategoriesDTO
+    {
+        Category_Id = category.Category_Id,
+        Category_Name = category.Category_Name
+    }).ToList();
+
+    public ICollection<FixationsDTO> GetFixationList() => FixationsList.Select(fix => new FixationsDTO
+    {
+        Fix_Id = fix.Fix_Id,
+        Fix_Plan_Id = fix.Fix_Plan_Id,
+        Fix_Name = fix.Fix_Name,
+        Type_Name = fix.Type_Name,
+        Category_Name = fix.Category_Name,
+        Fix_Sum = fix.Fix_Sum,
+        Fix_Completed = fix.Fix_Completed,
+        Fix_Next_Date = fix.Fix_Next_Date
+    }).ToList();
+
+    public ICollection<MarksDTO> GetMarkList() => MarksList.Select(mark => new MarksDTO
+    {
+        Mark_Id = mark.Mark_Id,
+        Mark_Name = mark.Mark_Name,
+        Mark_Date = mark.Mark_Date,
+        Mark_Plan_Id = mark.Mark_Plan_Id
+    }).ToList();
+
+    #endregion
+
+
+    #region AddDataList
+    public void AddPlanList(PlansDTO plan) => PlansList.Add(new Plans
+    {
+        Plan_Id = plan.Plan_Id,
+        Plan_Name = plan.Plan_Name,
+        Date_Create = plan.Date_Create,
+        Date_Update = plan.Date_Update,
+    });
+
+    public void AddOperationsList(OperationsDTO oper) => OperationsList.Add(new Operations
+    {
+        Oper_Id = oper.Oper_Id,
+        Oper_Plan_Id = oper.Oper_Plan_Id,
+        Oper_Name = oper.Oper_Name,
+        Type_Name = oper.Type_Name,
+        Category_Name = oper.Category_Name,
+        Oper_Sum = oper.Oper_Sum,
+        Oper_Completed = oper.Oper_Completed,
+        Oper_Next_Date = oper.Oper_Next_Date
+    });
+
+    public void AddCategoryList(CategoriesDTO category) => CategoriesList.Add(new Categories
+    {
+        Category_Id = category.Category_Id,
+        Category_Name = category.Category_Name
+    });
+
+    public void AddFixationList(FixationsDTO fix) => FixationsList.Add(new Fixations
+    {
+        Fix_Id = fix.Fix_Id,
+        Fix_Plan_Id = fix.Fix_Plan_Id,
+        Fix_Name = fix.Fix_Name,
+        Type_Name = fix.Type_Name,
+        Category_Name = fix.Category_Name,
+        Fix_Sum = fix.Fix_Sum,
+        Fix_Completed = fix.Fix_Completed,
+        Fix_Next_Date = fix.Fix_Next_Date
+    });
+
+    public void AddMarkList(MarksDTO mark) => MarksList.Add(new Marks
+    {
+        Mark_Id = mark.Mark_Id,
+        Mark_Name = mark.Mark_Name,
+        Mark_Date = mark.Mark_Date,
+        Mark_Plan_Id = mark.Mark_Plan_Id
+    });
+    #endregion
+
+
+    #region RemoveDataList
+    public void RemovePlanList(PlansDTO plan) => PlansList.Remove(new Plans
+    {
+        Plan_Id = plan.Plan_Id,
+        Plan_Name = plan.Plan_Name,
+        Date_Create = plan.Date_Create,
+        Date_Update = plan.Date_Update,
+    });
+
+    public void RemoveOperationsList(OperationsDTO oper) => OperationsList.Remove(new Operations
+    {
+        Oper_Id = oper.Oper_Id,
+        Oper_Plan_Id = oper.Oper_Plan_Id,
+        Oper_Name = oper.Oper_Name,
+        Type_Name = oper.Type_Name,
+        Category_Name = oper.Category_Name,
+        Oper_Sum = oper.Oper_Sum,
+        Oper_Completed = oper.Oper_Completed,
+        Oper_Next_Date = oper.Oper_Next_Date
+    });
+
+    public void RemoveCategoryList(CategoriesDTO category) => CategoriesList.Remove(new Categories
+    {
+        Category_Id = category.Category_Id,
+        Category_Name = category.Category_Name
+    });
+
+    public void RemoveFixationList(FixationsDTO fix) => FixationsList.Remove(new Fixations
+    {
+        Fix_Id = fix.Fix_Id,
+        Fix_Plan_Id = fix.Fix_Plan_Id,
+        Fix_Name = fix.Fix_Name,
+        Type_Name = fix.Type_Name,
+        Category_Name = fix.Category_Name,
+        Fix_Sum = fix.Fix_Sum,
+        Fix_Completed = fix.Fix_Completed,
+        Fix_Next_Date = fix.Fix_Next_Date
+    });
+
+    public void RemoveMarkList(MarksDTO mark) => MarksList.Remove(new Marks
+    {
+        Mark_Id = mark.Mark_Id,
+        Mark_Name = mark.Mark_Name,
+        Mark_Date = mark.Mark_Date,
+        Mark_Plan_Id = mark.Mark_Plan_Id
+    });
+    #endregion
+
+    #region RemoveAllDataList
+    public void RemoveAllFixationList(Guid id) => FixationsList.RemoveAll(x => x.Fix_Id == id);
+
+    public void RemoveAllMarkList(Guid id) => MarksList.RemoveAll(x => x.Mark_Id == id);
+    #endregion
 }

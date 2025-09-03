@@ -533,7 +533,7 @@
                                    Height="45"
                                    Margin="0,5,0,0"
                                    SnapsToDevicePixels="True"/>
-                            <TextBlock Text="{Binding SelectedItemPlan.PlanName, UpdateSourceTrigger=PropertyChanged}"
+                            <TextBlock Text="{Binding SelectedItemPlan.Plan_Name, UpdateSourceTrigger=PropertyChanged}"
                                        FontSize="12"
                                        Height="14"
                                        Margin="5,0"
@@ -550,7 +550,7 @@
                           VerticalAlignment="Center"
                           HorizontalAlignment="Center"
                           ItemsSource="{Binding DataContext.Items, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
-                          DisplayMemberPath="PlanName"
+                          DisplayMemberPath="Plan_Name"
                           SelectedItem="{Binding DataContext.SelectedItemPlan, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=local:PanelControl}}"
                           Style="{StaticResource CustomComboBoxStyle}"/>
 

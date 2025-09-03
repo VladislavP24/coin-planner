@@ -1,5 +1,7 @@
 ﻿using System.Windows;
-using CoinPlanner.DataBase;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.View;
+using CoinPlanner.Contracts.Abstractions.ViewModel;
 using CoinPlanner.UI.ViewModel;
 
 namespace CoinPlanner.UI.View
@@ -7,13 +9,13 @@ namespace CoinPlanner.UI.View
     /// <summary>
     /// Логика взаимодействия для MainWindowView.xaml
     /// </summary>
-    public partial class MainWindowView : Window
+    public partial class MainWindowView : Window, IView
     {
-        public MainWindowView(DataService dataService)
+        public MainWindowView(IMainWindowViewModel mainWindowViewModel)
         {
             InitializeComponent();
 
-            DataContext = new MainWindowViewModel(dataService);
+            DataContext = mainWindowViewModel;
         }
     }
 }

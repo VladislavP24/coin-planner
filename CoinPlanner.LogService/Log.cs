@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -107,8 +102,8 @@ public static class Log
         {
             case EventLevel.Trace: { log.Trace(logString); break; }
             case EventLevel.Debug: { log.Debug(logString); break; }
-            case EventLevel.Info:  { log.Info(logString); break;  }
-            case EventLevel.Warn:  { log.Warn(logString); break;  }
+            case EventLevel.Info: { log.Info(logString); break; }
+            case EventLevel.Warn: { log.Warn(logString); break; }
             case EventLevel.Error: { log.Error(logString); break; }
             case EventLevel.Fatal: { log.Fatal(logString); break; }
             default: break;

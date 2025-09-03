@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CoinPlanner.Contracts\CoinPlanner.Contracts.csproj" />
     <ProjectReference Include="..\CoinPlanner.LogService\CoinPlanner.LogService.csproj" />
   </ItemGroup>
 

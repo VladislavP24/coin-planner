@@ -1,28 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
-using CoinPlanner.DataBase;
-using CoinPlanner.UI.View.Dialogs;
-using CoinPlanner.UI.ViewModel.Controls;
+using System.Windows.Input;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.ViewModel;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
+using CoinPlanner.LogService;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CoinPlanner.LogService;
-using CoinPlanner.UI.Interface;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
 public class DeletePlanDialogsViewModel : ObservableObject, IViewModelDialogs
 {
-    public DeletePlanDialogsViewModel(PanelViewModel panelViewModel, DataService dataService)
+    public DeletePlanDialogsViewModel(IPanelControls panel, IDataService dataService)
     {
         _dataService = dataService;
-        _panelViewModel = panelViewModel;
-        foreach (var plan in _dataService.PlansList.Select(x => x.Plan_Name))
+        _panel = panel;
+
+        foreach (var plan in _dataService.GetPlanList().Select(x => x.Plan_Name))
             Items.Add(plan);
 
         Ok = new RelayCommand<Window>(OkCommand);
@@ -31,8 +26,8 @@ public class DeletePlanDialogsViewModel : ObservableObject, IViewModelDialogs
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
-    private PanelViewModel _panelViewModel;
-    private DataService _dataService;
+    private readonly IPanelControls _panel;
+    private readonly IDataService _dataService;
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
     public ObservableCollection<string> Items { get; set; } = new();
@@ -45,9 +40,9 @@ public class DeletePlanDialogsViewModel : ObservableObject, IViewModelDialogs
     }
     private string _selectedItem;
 
-    public void OkCommand(Window window)
+    public void OkCommand(object currWindow)
     {
-        var plan = _dataService.PlansList.Where(x => x.Plan_Name == SelectedItem).First();
+        var plan = _dataService.GetPlanList().Where(x => x.Plan_Name == SelectedItem).First();
 
         if (_dataService.PlanCondition.Any(x => x.Key == plan.Plan_Id && x.Value == 1))
             _dataService.PlanCondition.Remove(plan.Plan_Id);
@@ -56,29 +51,32 @@ public class DeletePlanDialogsViewModel : ObservableObject, IViewModelDialogs
             _dataService.PlanCondition.Remove(plan.Plan_Id);
             _dataService.PlanCondition.Add(plan.Plan_Id, 3);
         }
-            
 
-        _dataService.PlansList.Remove(plan);
+
+        _dataService.RemovePlanList(plan);
         Log.Send(EventLevel.Info, logSender, $"План {plan.Plan_Name} удалён");
 
-        if (_panelViewModel.SelectedItemPlan != null && plan.Plan_Name == _panelViewModel.SelectedItemPlan.PlanName)
+        if (_panel.SelectedItemPlan != null && plan.Plan_Name == _panel.SelectedItemPlan.Plan_Name)
         {
-            _panelViewModel.SelectedItemPlan = null;
-            _panelViewModel.PlanUpdate();
-        }       
+            _panel.SelectedItemPlan = null;
+            _panel.PlanUpdate();
+        }
         else
         {
-            var saveSelectedPlan = _panelViewModel.SelectedItemPlan;
-            _panelViewModel.PlanUpdate();
-            _panelViewModel.SelectedItemPlan = saveSelectedPlan;
+            var saveSelectedPlan = _panel.SelectedItemPlan;
+            _panel.PlanUpdate();
+            _panel.SelectedItemPlan = saveSelectedPlan;
         }
 
+        Window window = currWindow as Window;
         window.Close();
     }
 
-    public void CancelCommand(Window window)
+    public void CancelCommand(object currWindow)
     {
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
+
+        Window window = currWindow as Window;
         window.Close();
     }
 }

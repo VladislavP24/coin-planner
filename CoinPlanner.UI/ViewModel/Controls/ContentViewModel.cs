@@ -1,26 +1,27 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
-using CoinPlanner.DataBase;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
+using CoinPlanner.Contracts.DTO.DataServieDTO;
 using CoinPlanner.LogService;
-using CoinPlanner.UI.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
 
 namespace CoinPlanner.UI.ViewModel.Controls;
 
-public class ContentViewModel : ObservableObject
+public class ContentViewModel : ObservableObject, IContentControls
 {
-    public ContentViewModel(DataService dataService, DiagramViewModel diagramViewModel) 
+    public ContentViewModel(IDataService dataService)
     {
         _dataService = dataService;
-        _diagramViewModel = diagramViewModel;
     }
 
-    private DataService _dataService;
-    private DiagramViewModel _diagramViewModel;
+    private readonly IDataService _dataService;
+
+    public delegate void EventHandler(object sender, Guid guid);
+    public event EventHandler OnCreateDiagram;
+
     public DateTime? StartDate { get; set; }
     public DateTime? EndDate { get; set; }
-    public PlanModel? Plan { get; set; }
+    public PlansDTO? Plan { get; set; }
     public string IsType { get; set; } = "Все операции";
     private const string logSender = "Content/Table";
 
@@ -43,22 +44,21 @@ public class ContentViewModel : ObservableObject
             return;
 
         int i = 1;
-        foreach (var oper in _dataService.OperationsList.Where(x => x.Oper_Next_Date >= StartDate
-                                                                 && x.Oper_Next_Date <= EndDate)
-                                                        .Where(x => x.Oper_Plan_Id == Plan.PlanId)
-                                                        .Where(x => x.Type_Name == IsType || IsType == "Все операции"))
-        {       
-            DynamicOperationCollection.Add(new OperationModel
+        foreach (var oper in _dataService.GetOperationsList().Where(x => x.Oper_Next_Date >= StartDate && x.Oper_Next_Date <= EndDate)
+                                                             .Where(x => x.Oper_Plan_Id == Plan.Plan_Id)
+                                                             .Where(x => x.Type_Name == IsType || IsType == "Все операции"))
+        {
+            DynamicOperationCollection.Add(new OperationsDTO
             {
-                OperIdTable = i,
-                OperId = oper.Oper_Id,
-                OperName = oper.Oper_Name,
-                OperType = oper.Type_Name,
-                OperCategory = oper.Category_Name,
-                OperSum = oper.Oper_Sum,
-                OperCompleted = oper.Oper_Completed == true ? "Да" : "Нет",
-                OperNextDate = oper.Oper_Next_Date.ToString("HH:mm  dd-MM-yyyy 'г.'"),
-                OperPlanId = oper.Oper_Plan_Id
+                Oper_Id_Table = i,
+                Oper_Id = oper.Oper_Id,
+                Oper_Name = oper.Oper_Name,
+                Type_Name = oper.Type_Name,
+                Category_Name = oper.Category_Name,
+                Oper_Sum = oper.Oper_Sum,
+                Oper_Completed = oper.Oper_Completed,
+                Oper_Next_Date = oper.Oper_Next_Date,
+                Oper_Plan_Id = oper.Oper_Plan_Id
             });
 
             i++;
@@ -72,27 +72,27 @@ public class ContentViewModel : ObservableObject
     /// <summary>
     /// Коллекция операций
     /// </summary>
-    public ObservableCollection<OperationModel> DynamicOperationCollection
+    public ObservableCollection<OperationsDTO> DynamicOperationCollection
     {
         get => _dynamicOperationCollection;
         set
         {
             SetProperty(ref _dynamicOperationCollection, value, nameof(DynamicOperationCollection));
-            _diagramViewModel.CreatDiagram(Plan.PlanId);
+            OnCreateDiagram.Invoke(this, Plan.Plan_Id);
         }
     }
-    private ObservableCollection<OperationModel> _dynamicOperationCollection = new();
+    private ObservableCollection<OperationsDTO> _dynamicOperationCollection = new();
 
 
     /// <summary>
     /// Выбранная строчка в плане
     /// </summary>
-    public OperationModel? CurSelectedOperation
+    public OperationsDTO? CurSelectedOperation
     {
         get => _curSelectedOperation;
         set => SetProperty(ref _curSelectedOperation, value, nameof(CurSelectedOperation));
     }
-    private OperationModel? _curSelectedOperation;
+    private OperationsDTO? _curSelectedOperation;
 
 
     #region Нижняя панель контента
@@ -102,16 +102,16 @@ public class ContentViewModel : ObservableObject
     /// </summary>
     public void CalculationOfParameters()
     {
-        SavingsAccountAllTime = _dataService.OperationsList.Where(x => x.Oper_Plan_Id == Plan.PlanId && x.Category_Name == "Накопления").Sum(x => x.Oper_Sum);
-        LoansAllTime = _dataService.OperationsList.Where(x => x.Oper_Plan_Id == Plan.PlanId && x.Category_Name == "Кредит").Sum(x => x.Oper_Sum);
-        EnrollmentsAllTime = _dataService.OperationsList.Where(x => x.Oper_Plan_Id == Plan.PlanId && x.Type_Name == "Зачисление").Sum(x => x.Oper_Sum);
-        PaymentsAllTime = _dataService.OperationsList.Where(x => x.Oper_Plan_Id == Plan.PlanId && x.Type_Name == "Оплата").Sum(x => x.Oper_Sum);
+        SavingsAccountAllTime = _dataService.GetOperationsList().Where(x => x.Oper_Plan_Id == Plan.Plan_Id && x.Category_Name == "Накопления").Sum(x => x.Oper_Sum);
+        LoansAllTime = _dataService.GetOperationsList().Where(x => x.Oper_Plan_Id == Plan.Plan_Id && x.Category_Name == "Кредит").Sum(x => x.Oper_Sum);
+        EnrollmentsAllTime = _dataService.GetOperationsList().Where(x => x.Oper_Plan_Id == Plan.Plan_Id && x.Type_Name == "Зачисление").Sum(x => x.Oper_Sum);
+        PaymentsAllTime = _dataService.GetOperationsList().Where(x => x.Oper_Plan_Id == Plan.Plan_Id && x.Type_Name == "Оплата").Sum(x => x.Oper_Sum);
         RemaindersAllTime = EnrollmentsAllTime - PaymentsAllTime;
 
-        SavingsAccountSelectTime = DynamicOperationCollection.Where(x => x.OperCategory == "Накопления").Sum(x => x.OperSum);
-        LoansSelectTime = DynamicOperationCollection.Where(x => x.OperCategory == "Кредит").Sum(x => x.OperSum);
-        EnrollmentsSelectTime = DynamicOperationCollection.Where(x => x.OperType == "Зачисление").Sum(x => x.OperSum);
-        PaymentsSelectTime = DynamicOperationCollection.Where(x => x.OperType == "Оплата").Sum(x => x.OperSum);
+        SavingsAccountSelectTime = DynamicOperationCollection.Where(x => x.Category_Name == "Накопления").Sum(x => x.Oper_Sum);
+        LoansSelectTime = DynamicOperationCollection.Where(x => x.Category_Name == "Кредит").Sum(x => x.Oper_Sum);
+        EnrollmentsSelectTime = DynamicOperationCollection.Where(x => x.Category_Name == "Зачисление").Sum(x => x.Oper_Sum);
+        PaymentsSelectTime = DynamicOperationCollection.Where(x => x.Category_Name == "Оплата").Sum(x => x.Oper_Sum);
         RemaindersSelectTime = EnrollmentsSelectTime - PaymentsSelectTime;
     }
 

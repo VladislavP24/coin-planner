@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using CoinPlanner.UI.ViewModel.Controls;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
 using CoinPlanner.UI.ViewModel.Dialogs;
 
 namespace CoinPlanner.UI.View.Dialogs
@@ -9,11 +9,11 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class TypeDialogs : Window
     {
-        public TypeDialogs(CalendarViewModel calendarViewModel)
+        public TypeDialogs(ICalendarControls calendar)
         {
             InitializeComponent();
 
-            DataContext = new TypeDialogsViewModel(calendarViewModel);
+            DataContext = new TypeDialogsViewModel(calendar);
         }
     }
 }

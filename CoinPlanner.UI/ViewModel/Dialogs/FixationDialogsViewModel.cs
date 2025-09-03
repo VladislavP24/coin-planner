@@ -1,35 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using System.Xml.Linq;
-using CoinPlanner.DataBase;
-using CoinPlanner.DataBase.ModelsDb;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.ViewModel;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
+using CoinPlanner.Contracts.DTO.DataServieDTO;
 using CoinPlanner.LogService;
-using CoinPlanner.UI.Interface;
 using CoinPlanner.UI.Model;
-using CoinPlanner.UI.View.Dialogs;
-using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
 public class FixationDialogsViewModel : ObservableObject, IViewModelDialogs
 {
 
-    public FixationDialogsViewModel(PanelViewModel panelViewModel, DataService dataService, ContentViewModel contentViewModel)
+    public FixationDialogsViewModel(IPanelControls panel, IDataService dataService, IContentControls content)
     {
-        _panelViewModel = panelViewModel;
         _dataService = dataService;
-        _contentViewModel = contentViewModel;
+        _content = content;
+        _panel = panel;
 
-        foreach (var item in _dataService.FixationsList.Where(x => x.Fix_Plan_Id == _panelViewModel.SelectedItemPlan.PlanId))
+        foreach (var item in _dataService.GetFixationList().Where(x => x.Fix_Plan_Id == _panel.SelectedItemPlan.Plan_Id))
             Items.Add(new FixationModel()
             {
                 FixId = item.Fix_Id,
@@ -43,7 +35,7 @@ public class FixationDialogsViewModel : ObservableObject, IViewModelDialogs
                 IsCheckFix = false,
             });
 
-        foreach (var category in _panelViewModel.Categories)
+        foreach (var category in _panel.Categories)
             CategoryItems.Add(category.Value);
 
         AddItem = new RelayCommand(AddItemCommand);
@@ -54,9 +46,10 @@ public class FixationDialogsViewModel : ObservableObject, IViewModelDialogs
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
-    private PanelViewModel _panelViewModel { get; }
-    private DataService _dataService { get; }
-    private ContentViewModel _contentViewModel { get; }
+    private readonly IDataService _dataService;
+    private readonly IPanelControls _panel;
+    private readonly IContentControls _content;
+
     private const string logSender = "Fixation";
 
     public ICommand Ok { get; set; }
@@ -82,7 +75,7 @@ public class FixationDialogsViewModel : ObservableObject, IViewModelDialogs
             FixSum = 0,
             FixCompleted = false,
             FixNextDate = DateTime.Now,
-            FixPlanId = _panelViewModel.SelectedItemPlan.PlanId,
+            FixPlanId = _panel.SelectedItemPlan.Plan_Id,
             IsCheckFix = false
         });
 
@@ -94,12 +87,12 @@ public class FixationDialogsViewModel : ObservableObject, IViewModelDialogs
         if (_dataService.FixCondition.Any(x => x.Key == fixation.FixId && x.Value == 1))
         {
             _dataService.FixCondition.Remove(fixation.FixId);
-            _dataService.FixationsList.RemoveAll(x => x.Fix_Id == fixation.FixId);
+            _dataService.RemoveAllFixationList(fixation.FixId);
             Items.Remove(fixation);
-        }            
+        }
         else
         {
-            _dataService.FixationsList.RemoveAll(x => x.Fix_Id == fixation.FixId);
+            _dataService.RemoveAllFixationList(fixation.FixId);
             _dataService.FixCondition.Add(fixation.FixId, 3);
         }
 
@@ -107,7 +100,7 @@ public class FixationDialogsViewModel : ObservableObject, IViewModelDialogs
         Log.Send(EventLevel.Info, logSender, $"Удалена фиксация: {fixation.FixName}");
     }
 
-    public void OkCommand(Window window)
+    public void OkCommand(object currWindow)
     {
         foreach (FixationModel fixation in Items)
         {
@@ -116,17 +109,21 @@ public class FixationDialogsViewModel : ObservableObject, IViewModelDialogs
                 AddDataOperations(fixation);
         }
 
-        _panelViewModel.UpdateDatePlan();
-        _contentViewModel.UpdateOperation();
+        _panel.UpdateDatePlan();
+        _content.UpdateOperation();
+
+        Window window = currWindow as Window;
         window.Close();
     }
 
-    public void CancelCommand(Window window)
+    public void CancelCommand(object currWindow)
     {
         foreach (FixationModel fixation in Items)
             SaveFixations(fixation);
 
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
+
+        Window window = currWindow as Window;
         window.Close();
     }
 
@@ -138,7 +135,7 @@ public class FixationDialogsViewModel : ObservableObject, IViewModelDialogs
     {
         Log.Send(EventLevel.Info, logSender, "Сохранение фиксаций и их состояний");
 
-        var newFixation = new DataBase.ModelsDb.Fixations
+        var newFixation = new Contracts.DTO.DataServieDTO.FixationsDTO
         {
             Fix_Id = fixation.FixId,
             Fix_Name = fixation.FixName,
@@ -150,20 +147,20 @@ public class FixationDialogsViewModel : ObservableObject, IViewModelDialogs
             Fix_Plan_Id = fixation.FixPlanId
         };
 
-        if (!_dataService.FixationsList.Any(x => x.Fix_Id == fixation.FixId))
-            _dataService.FixationsList.Add(newFixation);
-        else if (_dataService.FixationsList.Where(x => x.Fix_Id == fixation.FixId)
-                                           .Where(x => x.Fix_Name == fixation.FixName)
-                                           .Where(x => x.Type_Name == fixation.FixType)
-                                           .Where(x => x.Category_Name == fixation.FixCategory)
-                                           .Where(x => x.Fix_Sum == fixation.FixSum)
-                                           .Where(x => x.Fix_Completed == fixation.FixCompleted)
-                                           .Where(x => x.Fix_Next_Date == fixation.FixNextDate)
-                                           .FirstOrDefault() == null)
+        if (!_dataService.GetFixationList().Any(x => x.Fix_Id == fixation.FixId))
+            _dataService.AddFixationList(newFixation);
+        else if (_dataService.GetFixationList().Where(x => x.Fix_Id == fixation.FixId)
+                                               .Where(x => x.Fix_Name == fixation.FixName)
+                                               .Where(x => x.Type_Name == fixation.FixType)
+                                               .Where(x => x.Category_Name == fixation.FixCategory)
+                                               .Where(x => x.Fix_Sum == fixation.FixSum)
+                                               .Where(x => x.Fix_Completed == fixation.FixCompleted)
+                                               .Where(x => x.Fix_Next_Date == fixation.FixNextDate)
+                                               .FirstOrDefault() == null)
         {
             _dataService.FixCondition.Remove(fixation.FixId);
             _dataService.FixCondition.Add(fixation.FixId, 2);
-            _dataService.FixationsList.Add(newFixation);
+            _dataService.AddFixationList(newFixation);
         }
 
         Log.Send(EventLevel.Info, logSender, "Фиксации сохранены");
@@ -178,7 +175,7 @@ public class FixationDialogsViewModel : ObservableObject, IViewModelDialogs
 
         _dataService.OperCondition.Add(guid, 1);
 
-        _dataService.OperationsList.Add(new DataBase.ModelsDB.Operations
+        _dataService.AddOperationsList(new OperationsDTO
         {
             Oper_Id = guid,
             Oper_Name = fixation.FixName,
@@ -187,11 +184,11 @@ public class FixationDialogsViewModel : ObservableObject, IViewModelDialogs
             Oper_Sum = fixation.FixSum,
             Oper_Completed = fixation.FixCompleted,
             Oper_Next_Date = fixation.FixNextDate,
-            Oper_Plan_Id = _panelViewModel.SelectedItemPlan.PlanId,
+            Oper_Plan_Id = _panel.SelectedItemPlan.Plan_Id,
         });
 
         Log.Send(EventLevel.Info, logSender, "Добавлены фиксции в операции");
-        _panelViewModel.UpdateDatePlan();
-        _contentViewModel.UpdateOperation();
+        _panel.UpdateDatePlan();
+        _content.UpdateOperation();
     }
 }

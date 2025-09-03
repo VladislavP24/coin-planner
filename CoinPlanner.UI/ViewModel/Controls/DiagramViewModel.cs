@@ -1,11 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using System.Numerics;
-using System.Windows.Input;
-using CoinPlanner.DataBase;
-using CoinPlanner.DataBase.ModelsDb;
-using CoinPlanner.DataBase.ModelsDB;
+﻿using System.Windows.Input;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
+using CoinPlanner.Contracts.DTO.DataServieDTO;
 using CoinPlanner.LogService;
-using CoinPlanner.UI.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using LiveCharts;
@@ -13,9 +10,9 @@ using LiveCharts.Wpf;
 
 namespace CoinPlanner.UI.ViewModel.Controls;
 
-public class DiagramViewModel : ObservableObject
+public class DiagramViewModel : ObservableObject, IDiagramControls
 {
-    public DiagramViewModel(DataService dataService)
+    public DiagramViewModel(IDataService dataService)
     {
         _dataService = dataService;
         CategoryFilling();
@@ -24,15 +21,15 @@ public class DiagramViewModel : ObservableObject
         SelectTime = new RelayCommand(SelectTimeCommand);
     }
 
-    private DataService _dataService { get; set; }
+    private readonly IDataService _dataService;
     public ICommand AllTime { get; set; }
     public ICommand SelectTime { get; set; }
     private Guid selectedPlanId;
     public DateTime? Start { get; set; }
     public DateTime? End { get; set; }
 
-    private readonly List<string> categories = new() 
-    { 
+    private readonly List<string> categories = new()
+    {
         "Зарплата и аванс", "Продукт. магазины", "Медицина", "Авто", "Рестораны и кафе", "Развлечения", "Налоги",
         "Электронная техника", "Транспорт и такси", "Отдых", "Одежда и обувь", "Материалы и мебель", "Накопления", "Кредит"
     };
@@ -84,13 +81,13 @@ public class DiagramViewModel : ObservableObject
     /// </summary>
     public void CreatDiagram(Guid planId)
     {
-        List<Operations> operations = new();
+        List<OperationsDTO> operations = new();
         selectedPlanId = planId;
 
         if (IsSelectTime)
-            operations = _dataService.OperationsList.Where(x => x.Oper_Next_Date >= Start && x.Oper_Next_Date <= End).ToList();
+            operations = _dataService.GetOperationsList().Where(x => x.Oper_Next_Date >= Start && x.Oper_Next_Date <= End).ToList();
         else
-            operations = _dataService.OperationsList;
+            operations = _dataService.GetOperationsList().ToList();
 
         Log.Send(EventLevel.Info, logSender, "Получение данных для отображения диаграммы");
 
@@ -129,10 +126,10 @@ public class DiagramViewModel : ObservableObject
 
     public void AllTimeCommand()
     {
-        if(IsAllTime)
+        if (IsAllTime)
         {
             IsAllTime = true;
-            IsSelectTime = false;            
+            IsSelectTime = false;
         }
         else
         {
@@ -165,10 +162,10 @@ public class DiagramViewModel : ObservableObject
     /// </summary>
     public void CategoryFilling()
     {
-        if (_dataService.CategoriesList.Count == 0)
+        if (_dataService.GetCategoryList().Count == 0)
             return;
 
         foreach (var category in categories)
-            _dataService.CategoriesList.Add(new Categories { Category_Id = _dataService.CategoriesList.Count + 1, Category_Name = category });
+            _dataService.GetCategoryList().Add(new CategoriesDTO { Category_Id = _dataService.GetCategoryList().Count + 1, Category_Name = category });
     }
 }

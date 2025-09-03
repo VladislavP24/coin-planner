@@ -1,7 +1,6 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
-namespace CoinPlanner.FileService.DTO;
+namespace CoinPlanner.Contracts.DTO.FileServiceDTO;
 
 [XmlRoot("Mark")]
 public class MarkDTO

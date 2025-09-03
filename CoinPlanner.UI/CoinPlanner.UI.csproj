@@ -36,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CoinPlanner.Contracts\CoinPlanner.Contracts.csproj" />
     <ProjectReference Include="..\CoinPlanner.DataBase\CoinPlanner.DataBase.csproj" />
     <ProjectReference Include="..\CoinPlanner.FileService\CoinPlanner.FileService.csproj" />
     <ProjectReference Include="..\CoinPlanner.LogService\CoinPlanner.LogService.csproj" />

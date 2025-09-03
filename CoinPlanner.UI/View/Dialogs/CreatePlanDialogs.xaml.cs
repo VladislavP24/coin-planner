@@ -1,6 +1,6 @@
 ﻿using System.Windows;
-using CoinPlanner.DataBase;
-using CoinPlanner.UI.ViewModel.Controls;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
 using CoinPlanner.UI.ViewModel.Dialogs;
 
 namespace CoinPlanner.UI.View.Dialogs
@@ -10,11 +10,11 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class CreatePlanDialogs : Window
     {
-        public CreatePlanDialogs(PanelViewModel panelViewModel, DataService dataService)
+        public CreatePlanDialogs(IPanelControls panel, IDataService dataService)
         {
             InitializeComponent();
 
-            DataContext = new CreatePlanDialogsViewModel(panelViewModel, dataService);
+            DataContext = new CreatePlanDialogsViewModel(panel, dataService);
         }
     }
 }

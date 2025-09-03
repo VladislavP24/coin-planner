@@ -1,54 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows;
 using System.Windows.Input;
-using CoinPlanner.DataBase;
-using CoinPlanner.UI.View.Dialogs;
-using CoinPlanner.UI.ViewModel.Controls;
-using System.Xml.Linq;
-using CommunityToolkit.Mvvm.Input;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.ViewModel;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
 using CoinPlanner.LogService;
-using System.Windows;
-using CoinPlanner.UI.Interface;
+using CommunityToolkit.Mvvm.Input;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
 public class DeleteDataDialogsViewModel : IViewModelDialogs
 {
-    public DeleteDataDialogsViewModel(DataService dataService, ContentViewModel contentViewModel, PanelViewModel panelViewModel) 
+    public DeleteDataDialogsViewModel(IPanelControls panel, IDataService dataService, IContentControls content)
     {
-        _contentViewModel = contentViewModel;
         _dataService = dataService;
-        _panelViewModel = panelViewModel;
+        _content = content;
+        _panel = panel;
+
         Ok = new RelayCommand<Window>(OkCommand);
         Cancel = new RelayCommand<Window>(CancelCommand);
 
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
-    private DataService _dataService;
-    private ContentViewModel _contentViewModel;
-    private PanelViewModel _panelViewModel;
+    private readonly IDataService _dataService;
+    private readonly IContentControls _content;
+    private readonly IPanelControls _panel;
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
     public int NumberRow { get; set; }
 
     private const string logSender = "Delete Data";
 
-    public void OkCommand(Window window)
+    public void OkCommand(object currWindow)
     {
-        if (_panelViewModel.SelectedItemPlan == null)
+        Window window = currWindow as Window;
+
+        if (_panel.SelectedItemPlan == null)
         {
             window.Close();
             return;
         }
 
         int row = 0;
-        foreach (var oper in _dataService.OperationsList.Where(x => x.Oper_Next_Date >= _contentViewModel.StartDate && x.Oper_Next_Date <= _contentViewModel.EndDate)
-                                                         .Where(x => x.Oper_Plan_Id == _contentViewModel.Plan.PlanId))
+        foreach (var oper in _dataService.GetOperationsList().Where(x => x.Oper_Next_Date >= _content.StartDate && x.Oper_Next_Date <= _content.EndDate)
+                                                             .Where(x => x.Oper_Plan_Id == _content.Plan.Plan_Id))
         {
             row++;
             if (row == NumberRow)
@@ -61,19 +56,22 @@ public class DeleteDataDialogsViewModel : IViewModelDialogs
 
                 Log.Send(EventLevel.Info, logSender, $"Операция {oper.Oper_Name} удалена");
                 _dataService.OperCondition.Remove(oper.Oper_Id);
-                _dataService.OperationsList.Remove(oper);
+                _dataService.RemoveOperationsList(oper);
                 break;
             }
         }
 
-        _panelViewModel.UpdateDatePlan();
-        _contentViewModel.UpdateOperation();
+        _panel.UpdateDatePlan();
+        _content.UpdateOperation();
+
         window.Close();
     }
 
-    public void CancelCommand(Window window)
+    public void CancelCommand(object currWindow)
     {
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
+
+        Window window = currWindow as Window;
         window.Close();
     }
 }

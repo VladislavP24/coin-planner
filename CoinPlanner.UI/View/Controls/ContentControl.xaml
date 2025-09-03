@@ -75,12 +75,12 @@
                         <DataGrid.Columns>
 
                             <!-- Столбец номер строки -->
-                            <DataGridTemplateColumn Header="№" Width="0.2*" IsReadOnly="True" SortMemberPath="OperIdTable"
+                            <DataGridTemplateColumn Header="№" Width="0.2*" IsReadOnly="True" SortMemberPath="Oper_Id_Table"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid HorizontalAlignment="Stretch">
-                                            <TextBlock Text="{Binding OperIdTable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            <TextBlock Text="{Binding Oper_Id_Table, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        Margin="3,0,0,0"
                                                        TextAlignment="Center"
                                                        Foreground="Black"
@@ -93,12 +93,12 @@
                             </DataGridTemplateColumn>
 
                             <!-- Стобец Наиманование -->
-                            <DataGridTemplateColumn Header="Наиманование" Width="1*" SortMemberPath="OperName"
+                            <DataGridTemplateColumn Header="Наиманование" Width="1*" SortMemberPath="Oper_Name"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid HorizontalAlignment="Stretch">
-                                            <TextBlock Text="{Binding OperName, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            <TextBlock Text="{Binding Oper_Name, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        Margin="3,0,0,0"
                                                        TextAlignment="Left"
                                                        HorizontalAlignment="Stretch" 
@@ -110,12 +110,12 @@
                             </DataGridTemplateColumn>
 
                             <!-- Столбец Вид операции -->
-                            <DataGridTemplateColumn Header="Вид операции" Width="0.8*" SortMemberPath="OperType"
+                            <DataGridTemplateColumn Header="Вид операции" Width="0.8*" SortMemberPath="Type_Name"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid HorizontalAlignment="Stretch">
-                                            <TextBlock Text="{Binding OperType, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            <TextBlock Text="{Binding Type_Name, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        Margin="3,0,0,0"
                                                        HorizontalAlignment="Stretch"
                                                        VerticalAlignment="Stretch"
@@ -128,12 +128,12 @@
 
 
                             <!-- Столбец Категория -->
-                            <DataGridTemplateColumn Header="Категория" Width="1.2*" SortMemberPath="OperCategory"
+                            <DataGridTemplateColumn Header="Категория" Width="1.2*" SortMemberPath="Category_Name"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid HorizontalAlignment="Stretch">
-                                            <TextBlock Text="{Binding OperCategory, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                            <TextBlock Text="{Binding Category_Name, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        Margin="3,0,0,0"
                                                        HorizontalAlignment="Stretch"
                                                        VerticalAlignment="Stretch"
@@ -146,11 +146,11 @@
 
 
                             <!-- Столбец Сумма, руб. -->
-                            <DataGridTemplateColumn Header="Сумма, руб." Width="1*" SortMemberPath="OperSum"
+                            <DataGridTemplateColumn Header="Сумма, руб." Width="1*" SortMemberPath="Oper_Sum"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding OperSum, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
+                                        <TextBlock Text="{Binding Oper_Sum, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
                                                    Margin="3,0,0,0"
                                                    HorizontalAlignment="Stretch" 
                                                    VerticalAlignment="Stretch"
@@ -162,14 +162,14 @@
 
 
                             <!-- Столбец Выполнен -->
-                            <DataGridTemplateColumn Header="Выполнен" Width="0.5*" SortMemberPath="OperCompleted"
+                            <DataGridTemplateColumn Header="Выполнен" Width="0.5*" SortMemberPath="Oper_Completed"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyleRight}">
                                 <DataGridTemplateColumn.CellStyle>
                                     <Style TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellStyleRight}" />
                                 </DataGridTemplateColumn.CellStyle>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding OperCompleted, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
+                                        <TextBlock Text="{Binding Oper_Completed, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
                                                    Margin="3,0,0,0"
                                                    HorizontalAlignment="Stretch" 
                                                    VerticalAlignment="Stretch"
@@ -181,7 +181,7 @@
 
 
                             <!--Столбец Время -->
-                            <DataGridTemplateColumn Header="Время" Width="1*" SortMemberPath="OperNextDate"
+                            <DataGridTemplateColumn Header="Время" Width="1*" SortMemberPath="Oper_Next_Date"
                                                     IsReadOnly="True"
                                                     HeaderStyle="{StaticResource DataGridColumnHeaderStyleRight}">
                                 <DataGridTemplateColumn.CellStyle>
@@ -189,7 +189,7 @@
                                 </DataGridTemplateColumn.CellStyle>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding OperNextDate, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                        <TextBlock Text="{Binding Oper_Next_Date, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                                    Margin="3,0,0,0"
                                                    HorizontalAlignment="Stretch" 
                                                    VerticalAlignment="Stretch"

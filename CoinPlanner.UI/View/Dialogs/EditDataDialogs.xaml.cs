@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using CoinPlanner.DataBase;
-using CoinPlanner.UI.ViewModel.Controls;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
 using CoinPlanner.UI.ViewModel.Dialogs;
 
 namespace CoinPlanner.UI.View.Dialogs
@@ -22,11 +12,11 @@ namespace CoinPlanner.UI.View.Dialogs
     /// </summary>
     public partial class EditDataDialogs : Window
     {
-        public EditDataDialogs(PanelViewModel panelViewModel, DataService dataService, ContentViewModel contentViewModel)
+        public EditDataDialogs(IPanelControls panel, IDataService dataService, IContentControls content)
         {
             InitializeComponent();
 
-            DataContext = new EditDataDialogsViewModel(dataService, contentViewModel, panelViewModel);
+            DataContext = new EditDataDialogsViewModel(dataService, content, panel);
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)

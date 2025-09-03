@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CoinPlanner.UI.Model;
+﻿using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
+using CoinPlanner.UI.Model;
 
 namespace CoinPlanner.UI.View.Converters;
 

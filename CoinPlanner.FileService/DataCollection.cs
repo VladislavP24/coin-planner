@@ -1,5 +1,5 @@
 ﻿using System.Xml.Serialization;
-using CoinPlanner.FileService.DTO;
+using CoinPlanner.Contracts.DTO.FileServiceDTO;
 
 namespace CoinPlanner.FileService;
 

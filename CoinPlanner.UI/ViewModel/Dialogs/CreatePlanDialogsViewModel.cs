@@ -1,30 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Xml.Linq;
-using CoinPlanner.DataBase;
-using CoinPlanner.DataBase.ModelsDB;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.ViewModel;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
+using CoinPlanner.Contracts.DTO.DataServieDTO;
 using CoinPlanner.LogService;
-using CoinPlanner.UI.Interface;
-using CoinPlanner.UI.View.Dialogs;
-using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
 public class CreatePlanDialogsViewModel : ObservableObject, IViewModelDialogs
 {
-    public CreatePlanDialogsViewModel(PanelViewModel panelViewModel, DataService dataService) 
-    { 
+    public CreatePlanDialogsViewModel(IPanelControls panel, IDataService dataService)
+    {
         _dataService = dataService;
-        _panelViewModel = panelViewModel;
+        _panel = panel;
 
         Ok = new RelayCommand<Window>(OkCommand);
         Cancel = new RelayCommand<Window>(CancelCommand);
@@ -32,20 +23,20 @@ public class CreatePlanDialogsViewModel : ObservableObject, IViewModelDialogs
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
-    private PanelViewModel _panelViewModel;
-    private DataService _dataService;
+    private readonly IPanelControls _panel;
+    private readonly IDataService _dataService;
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
     public string InputName { get; set; }
 
     private const string logSender = "Create Plan";
 
-    public void OkCommand(Window window)
+    public void OkCommand(object currWindow)
     {
         Guid guid = Guid.NewGuid();
         _dataService.PlanCondition.Add(guid, 1);
 
-        _dataService.PlansList.Add(new Plans
+        _dataService.AddPlanList(new PlansDTO
         {
             Plan_Id = guid,
             Plan_Name = InputName,
@@ -54,16 +45,19 @@ public class CreatePlanDialogsViewModel : ObservableObject, IViewModelDialogs
         });
 
         Log.Send(EventLevel.Info, logSender, "План добавлен");
-        var saveSelectedPlan = _panelViewModel.SelectedItemPlan;
-        _panelViewModel.PlanUpdate();
-        _panelViewModel.SelectedItemPlan = saveSelectedPlan;
+        var saveSelectedPlan = _panel.SelectedItemPlan;
+        _panel.PlanUpdate();
+        _panel.SelectedItemPlan = saveSelectedPlan;
 
+        Window window = currWindow as Window;
         window.Close();
     }
 
-    public void CancelCommand(Window window)
+    public void CancelCommand(object currWindow)
     {
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
+
+        Window window = currWindow as Window;
         window.Close();
-    } 
+    }
 }

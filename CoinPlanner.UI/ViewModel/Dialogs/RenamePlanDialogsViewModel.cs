@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using CoinPlanner.DataBase;
-using CoinPlanner.DataBase.ModelsDB;
+using CoinPlanner.Contracts.Abstractions.DataBase;
+using CoinPlanner.Contracts.Abstractions.ViewModel;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
+using CoinPlanner.Contracts.DTO.DataServieDTO;
 using CoinPlanner.LogService;
-using CoinPlanner.UI.Interface;
-using CoinPlanner.UI.View.Dialogs;
-using CoinPlanner.UI.ViewModel.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -19,11 +13,12 @@ namespace CoinPlanner.UI.ViewModel.Dialogs;
 
 public class RenamePlanDialogsViewModel : ObservableObject, IViewModelDialogs
 {
-    public RenamePlanDialogsViewModel(PanelViewModel panelViewModel, DataService dataService)
+    public RenamePlanDialogsViewModel(IPanelControls panel, IDataService dataService)
     {
         _dataService = dataService;
-        _panelViewModel = panelViewModel;
-        foreach (var plan in _dataService.PlansList.Select(x => x.Plan_Name))
+        _panel = panel;
+
+        foreach (var plan in _dataService.GetPlanList().Select(x => x.Plan_Name))
             Items.Add(plan);
 
         Ok = new RelayCommand<Window>(OkCommand);
@@ -32,8 +27,8 @@ public class RenamePlanDialogsViewModel : ObservableObject, IViewModelDialogs
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
-    private PanelViewModel _panelViewModel;
-    private DataService _dataService;
+    private readonly IDataService _dataService;
+    private readonly IPanelControls _panel;
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
     public string InputName { get; set; }
@@ -47,11 +42,11 @@ public class RenamePlanDialogsViewModel : ObservableObject, IViewModelDialogs
     }
     private string _selectedItem;
 
-    public void OkCommand(Window window)
+    public void OkCommand(object currWindow)
     {
-        var plan = _dataService.PlansList.Where(x => x.Plan_Name == SelectedItem).First();
+        var plan = _dataService.GetPlanList().Where(x => x.Plan_Name == SelectedItem).First();
 
-        if (InputName != _dataService.PlansList.Where(x => x.Plan_Name == InputName).Select(x => x.Plan_Name).FirstOrDefault())
+        if (InputName != _dataService.GetPlanList().Where(x => x.Plan_Name == InputName).Select(x => x.Plan_Name).FirstOrDefault())
         {
             Log.Send(EventLevel.Info, logSender, $"План {plan.Plan_Name} переименован на {InputName}");
             plan.Plan_Name = InputName;
@@ -61,7 +56,7 @@ public class RenamePlanDialogsViewModel : ObservableObject, IViewModelDialogs
             {
                 _dataService.PlanCondition.Remove(plan.Plan_Id);
                 _dataService.PlanCondition.Add(plan.Plan_Id, 2);
-            }  
+            }
         }
         else
         {
@@ -69,27 +64,33 @@ public class RenamePlanDialogsViewModel : ObservableObject, IViewModelDialogs
             return;
         }
 
-        if (SelectedItem == _panelViewModel.SelectedItemPlan.PlanName)
+        if (SelectedItem == _panel.SelectedItemPlan.Plan_Name)
         {
-            _panelViewModel.PlanUpdate();
-            _panelViewModel.SelectedItemPlan = new Model.PlanModel {PlanId = plan.Plan_Id, 
-                                                                    PlanName = plan.Plan_Name, 
-                                                                    DateCreate = plan.Date_Create, 
-                                                                    DataUpdate = plan.Date_Update};
-        }   
+            _panel.PlanUpdate();
+            _panel.SelectedItemPlan = new PlansDTO
+            {
+                Plan_Id = plan.Plan_Id,
+                Plan_Name = plan.Plan_Name,
+                Date_Create = plan.Date_Create,
+                Date_Update = plan.Date_Update
+            };
+        }
         else
         {
-            var saveSelectedPlan = _panelViewModel.SelectedItemPlan;
-            _panelViewModel.PlanUpdate();
-            _panelViewModel.SelectedItemPlan = saveSelectedPlan;
+            var saveSelectedPlan = _panel.SelectedItemPlan;
+            _panel.PlanUpdate();
+            _panel.SelectedItemPlan = saveSelectedPlan;
         }
 
+        Window window = currWindow as Window;
         window.Close();
     }
 
-    public void CancelCommand(Window window)
+    public void CancelCommand(object currWindow)
     {
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
+
+        Window window = currWindow as Window;
         window.Close();
     }
 }

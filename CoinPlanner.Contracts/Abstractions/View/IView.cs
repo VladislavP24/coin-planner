@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoinPlanner.Contracts.DTO
+namespace CoinPlanner.Contracts.Abstractions.View
 {
-    internal class OperationDTO
+    public interface IView
     {
+        void Show();
     }
 }

@@ -1,30 +1,29 @@
-﻿using CoinPlanner.LogService;
-using CoinPlanner.UI.Interface;
-using CoinPlanner.UI.View.Dialogs;
-using CoinPlanner.UI.ViewModel.Controls;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+using CoinPlanner.Contracts.Abstractions.ViewModel;
+using CoinPlanner.Contracts.Abstractions.ViewModel.Controls;
+using CoinPlanner.LogService;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace CoinPlanner.UI.ViewModel.Dialogs;
 
 public class TypeDialogsViewModel : ObservableObject, IViewModelDialogs
 {
-    public TypeDialogsViewModel(CalendarViewModel calendarViewModel)
+    public TypeDialogsViewModel(ICalendarControls calendar)
     {
         Ok = new RelayCommand<Window>(OkCommand);
         Cancel = new RelayCommand<Window>(CancelCommand);
-        _calendarViewModel = calendarViewModel;
-        _selectedItem = calendarViewModel.Type;
+        _calendar = calendar;
+        _selectedItem = _calendar.Type;
 
         Items = new ObservableCollection<string> { "Год", "Месяц", "Неделя", "День", "Интервал" };
 
         Log.Send(EventLevel.Info, logSender, "Открытие окна");
     }
 
-    private CalendarViewModel _calendarViewModel { get; }
+    private readonly ICalendarControls _calendar;
     public ICommand Ok { get; set; }
     public ICommand Cancel { get; set; }
 
@@ -38,21 +37,25 @@ public class TypeDialogsViewModel : ObservableObject, IViewModelDialogs
     }
     private string _selectedItem;
 
-    public void OkCommand(Window window)
+    public void OkCommand(object currWindow)
     {
         if (SelectedItem == null)
             return;
 
         Log.Send(EventLevel.Info, logSender, "Тип календаря установлен.");
 
-        _calendarViewModel.Type = SelectedItem;
-        _calendarViewModel.UpdateButtons();
+        _calendar.Type = SelectedItem;
+        _calendar.UpdateButtons();
+        Window window = currWindow as Window;
         window.Close();
     }
 
-    public void CancelCommand(Window window)
+    public void CancelCommand(object currWindow)
     {
         Log.Send(EventLevel.Info, logSender, "Окно закрыто");
+
+        Window window = currWindow as Window;
+        window.Close();
         window.Close();
     }
 }
