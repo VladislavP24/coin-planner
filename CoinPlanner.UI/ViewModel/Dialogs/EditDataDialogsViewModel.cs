@@ -146,6 +146,8 @@ public class EditDataDialogsViewModel : ObservableObject, IViewModelDialogs
                     _dataService.OperCondition.Remove(oper.Oper_Id);
                     _dataService.OperCondition.Add(oper.Oper_Id, 2);
                 }
+                else
+                    _dataService.OperCondition.Add(oper.Oper_Id, 2);
 
                 Log.Send(EventLevel.Info, logSender, "Изменения операции применены");
                 break;
