@@ -339,25 +339,9 @@ public class DataService : IDataService
 
 
     #region RemoveDataList
-    public void RemovePlanList(PlansDTO plan) => PlansList.Remove(new Plans
-    {
-        Plan_Id = plan.Plan_Id,
-        Plan_Name = plan.Plan_Name,
-        Date_Create = plan.Date_Create,
-        Date_Update = plan.Date_Update,
-    });
+    public void RemovePlanList(PlansDTO plan) => PlansList.Remove(PlansList.Where(x => x.Plan_Id == plan.Plan_Id).First());
 
-    public void RemoveOperationsList(OperationsDTO oper) => OperationsList.Remove(new Operations
-    {
-        Oper_Id = oper.Oper_Id,
-        Oper_Plan_Id = oper.Oper_Plan_Id,
-        Oper_Name = oper.Oper_Name,
-        Type_Name = oper.Type_Name,
-        Category_Name = oper.Category_Name,
-        Oper_Sum = oper.Oper_Sum,
-        Oper_Completed = oper.Oper_Completed,
-        Oper_Next_Date = oper.Oper_Next_Date
-    });
+    public void RemoveOperationsList(OperationsDTO oper) => OperationsList.Remove(OperationsList.Where(x => x.Oper_Id == oper.Oper_Id).First());
 
     public void RemoveCategoryList(CategoriesDTO category) => CategoriesList.Remove(new Categories
     {
@@ -365,25 +349,9 @@ public class DataService : IDataService
         Category_Name = category.Category_Name
     });
 
-    public void RemoveFixationList(FixationsDTO fix) => FixationsList.Remove(new Fixations
-    {
-        Fix_Id = fix.Fix_Id,
-        Fix_Plan_Id = fix.Fix_Plan_Id,
-        Fix_Name = fix.Fix_Name,
-        Type_Name = fix.Type_Name,
-        Category_Name = fix.Category_Name,
-        Fix_Sum = fix.Fix_Sum,
-        Fix_Completed = fix.Fix_Completed,
-        Fix_Next_Date = fix.Fix_Next_Date
-    });
+    public void RemoveFixationList(FixationsDTO fix) => FixationsList.Remove(FixationsList.Where(x => x.Fix_Id == fix.Fix_Id).First());
 
-    public void RemoveMarkList(MarksDTO mark) => MarksList.Remove(new Marks
-    {
-        Mark_Id = mark.Mark_Id,
-        Mark_Name = mark.Mark_Name,
-        Mark_Date = mark.Mark_Date,
-        Mark_Plan_Id = mark.Mark_Plan_Id
-    });
+    public void RemoveMarkList(MarksDTO mark) => MarksList.Remove(MarksList.Where(x => x.Mark_Id == mark.Mark_Id).First());
     #endregion
 
     #region RemoveAllDataList
