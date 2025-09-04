@@ -11,6 +11,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <converters:OperationTypeToBrushConverter x:Key="OperationTypeToBrushConverter" />
+            <converters:BooleanToYesNoConverter x:Key="BooleanToYesNoConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/CoinPlanner.UI;component/Styles/ContentStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -169,7 +170,7 @@
                                 </DataGridTemplateColumn.CellStyle>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Oper_Completed, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"   
+                                        <TextBlock Text="{Binding Oper_Completed, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BooleanToYesNoConverter}}"   
                                                    Margin="3,0,0,0"
                                                    HorizontalAlignment="Stretch" 
                                                    VerticalAlignment="Stretch"
@@ -189,7 +190,7 @@
                                 </DataGridTemplateColumn.CellStyle>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Oper_Next_Date, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                        <TextBlock Text="{Binding Oper_Next_Date, TargetNullValue=Пусто, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:HH:mm  dd-MM-yyyy 'г.'}}" 
                                                    Margin="3,0,0,0"
                                                    HorizontalAlignment="Stretch" 
                                                    VerticalAlignment="Stretch"
