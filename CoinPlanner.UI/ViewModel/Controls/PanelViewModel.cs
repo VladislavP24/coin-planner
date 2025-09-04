@@ -125,7 +125,9 @@ public class PanelViewModel : ObservableObject, IPanelControls
     {
         Log.Send(EventLevel.Info, logSender, "Обновление даты последнего изменения плана");
         var plan = _dataService.GetPlanList().Where(x => x.Plan_Id == SelectedItemPlan.Plan_Id).First();
+        _dataService.RemovePlanList(plan);
         plan.Date_Update = DateTime.Now;
+        _dataService.AddPlanList(plan);
 
         if (_dataService.PlanCondition.Where(x => x.Key == plan.Plan_Id && x.Value == 1) == null)
         {
@@ -227,16 +229,31 @@ public class PanelViewModel : ObservableObject, IPanelControls
             {
                 Guid newGuid = Guid.NewGuid();
 
-                _dataService.GetPlanList().First(x => x.Plan_Id == SelectedItemPlan.Plan_Id).Plan_Id = newGuid;
+                var plan = _dataService.GetPlanList().First(x => x.Plan_Id == SelectedItemPlan.Plan_Id);
+                _dataService.RemovePlanList(plan);
+                plan.Plan_Id = newGuid;
+                _dataService.AddPlanList(plan);
 
                 foreach (var oper in _dataService.GetOperationsList().Where(x => x.Oper_Plan_Id == SelectedItemPlan.Plan_Id))
+                {
+                    _dataService.RemoveOperationsList(oper);
                     oper.Oper_Plan_Id = newGuid;
+                    _dataService.AddOperationsList(oper);
+                }
 
                 foreach (var mark in _dataService.GetMarkList().Where(x => x.Mark_Plan_Id == SelectedItemPlan.Plan_Id))
+                {
+                    _dataService.RemoveMarkList(mark);
                     mark.Mark_Plan_Id = newGuid;
+                    _dataService.AddMarkList(mark);
+                }
 
                 foreach (var fix in _dataService.GetFixationList().Where(x => x.Fix_Plan_Id == SelectedItemPlan.Plan_Id))
+                {
+                    _dataService.RemoveFixationList(fix);
                     fix.Fix_Plan_Id = newGuid;
+                    _dataService.AddFixationList(fix);
+                }
 
                 UpdateKeyInDictionary(_dataService.PlanCondition, SelectedItemPlan.Plan_Id, newGuid);
                 UpdateKeyInDictionary(_dataService.OperCondition, SelectedItemPlan.Plan_Id, newGuid);

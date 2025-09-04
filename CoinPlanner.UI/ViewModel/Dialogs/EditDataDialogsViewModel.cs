@@ -128,6 +128,7 @@ public class EditDataDialogsViewModel : ObservableObject, IViewModelDialogs
             row++;
             if (row == NumberRow)
             {
+                _dataService.RemoveOperationsList(oper);
                 oper.Oper_Name = Name;
                 oper.Type_Name = TypeSelected;
                 oper.Category_Name = CategorySelected;
@@ -135,6 +136,7 @@ public class EditDataDialogsViewModel : ObservableObject, IViewModelDialogs
                 oper.Oper_Completed = Completed;
                 oper.Oper_Next_Date = Date;
                 oper.Oper_Plan_Id = _panel.SelectedItemPlan.Plan_Id;
+                _dataService.AddOperationsList(oper);
 
                 if (_dataService.OperCondition.Where(x => x.Key == oper.Oper_Id && x.Value == 1) == null)
                 {

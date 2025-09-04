@@ -45,12 +45,15 @@ public class RenamePlanDialogsViewModel : ObservableObject, IViewModelDialogs
     public void OkCommand(object currWindow)
     {
         var plan = _dataService.GetPlanList().Where(x => x.Plan_Name == SelectedItem).First();
+        _dataService.RemovePlanList(plan);
 
         if (InputName != _dataService.GetPlanList().Where(x => x.Plan_Name == InputName).Select(x => x.Plan_Name).FirstOrDefault())
         {
             Log.Send(EventLevel.Info, logSender, $"План {plan.Plan_Name} переименован на {InputName}");
             plan.Plan_Name = InputName;
             plan.Date_Update = DateTime.Now;
+
+            _dataService.AddPlanList(plan);
 
             if (!_dataService.PlanCondition.Any(x => x.Key == plan.Plan_Id && x.Value == 1))
             {
