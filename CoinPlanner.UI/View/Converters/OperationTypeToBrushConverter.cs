@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
+using CoinPlanner.Contracts.DTO.DataServieDTO;
 using CoinPlanner.UI.Model;
 
 namespace CoinPlanner.UI.View.Converters;
@@ -13,9 +14,9 @@ public class OperationTypeToBrushConverter : IValueConverter
 
     public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
     {
-        if (value is OperationModel operation)
+        if (value is OperationsDTO operation)
         {
-            switch (operation.OperType)
+            switch (operation.Type_Name)
             {
                 case "Зачисление":
                     return DepositBrush;
